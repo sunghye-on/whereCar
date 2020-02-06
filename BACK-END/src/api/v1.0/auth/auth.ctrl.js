@@ -17,5 +17,25 @@ exports.localRegister = async (ctx) => {
     return;
   }
 
-  ctx.body = body;
+  const { displayName, email, password } = body;
+  try {
+    // check email existancy
+    const exists = User.findByEmail(email)
+      .then(result => result)
+      .catch(e => console.log(`❌  Error occured at User.findByEmail: ${e}`));
+    if(exists) {
+      ctx.status = 409;
+      ctx.body = {
+        message: 'email exists'
+      };
+      return;
+    }
+    // creates user account
+    const user = await User.localRegister({
+      displayName, email, password
+    });
+    ctx.body = user;
+  } catch (error) {
+    ctx.throw(500);
+  }
 };
