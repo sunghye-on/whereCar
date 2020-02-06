@@ -1,28 +1,32 @@
-import mongoose from 'mongoose';
-import passportLocalMongoose from 'passport-local-mongoose';
+const mongoose = require('mongoose');
+const { PASSWORD_HASH_KEY: secret } = process.env;
+const crypto = require('crypto');
+
+// 사용법: console.log(hash('1234'));
+const hash = (password) => crypto.createHmac('sha256', secret).update(password).digest('hex');
 
 const UserSchema = new mongoose.Schema({
-  name: String,
+  displayName: String,
   email: String,
-  avatarUrl: String,
-  facebookId: Number,
-  githubId: Number,
-  comments: [
-    {
-      type: mongoose.Schema.Types.ObjectId,
-      ref: 'Comment'
+  social: {
+    facebook: {
+      id: String,
+      accessToken: String
+    },
+    google: {
+      id: String,
+      accessToken: String
     }
-  ],
-  videos: [
-    {
-      type: mongoose.Schema.Types.ObjectId,
-      ref: 'Video'
-    }
-  ]
+  },
+  password: String,
+  createdAt: {
+    type: Date,
+    default: Date.now
+  },
+  metaInfo: {
+    activated: Boolean,
+    default: false
+  }
 });
 
-UserSchema.plugin(passportLocalMongoose, { usernameField: 'email' });
-
-const model = mongoose.model('User', UserSchema);
-
-export default model;
+module.exports = mongoose.model('User', UserSchema);

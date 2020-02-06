@@ -35,3 +35,29 @@ Env
 --------------
 
 BACK-END
+
+joi 사용
+
+`yarn add joi`
+
+bodypaser
+
+`yarn add koa-bodyparser`
+
+
+
+
+
+secret-key 만들기
+
+```javascript
+const crypto = require('crypto');
+
+const password = 'abc123';
+const secret = 'MySecretKey1$1$234';
+
+const hashed = crypto.createHmac('sha256', secret).update(password).digest('hex');
+
+console.log(hashed);
+```
+
