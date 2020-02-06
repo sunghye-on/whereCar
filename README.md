@@ -21,6 +21,9 @@ BACK-END
 
 * SocketIO
   * `yarn add soketIO`
+* Server
+  * `yarn add --dev nodemon`
+  * `yarn add dotenv`
 
 Env
 
@@ -29,3 +32,6 @@ Env
   * `yarn add eslint`
   * `eslint init`
 
+--------------
+
+BACK-END
