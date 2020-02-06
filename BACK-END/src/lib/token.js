@@ -1,13 +1,13 @@
 const jwt = require('jsonwebtoken');
-const { JWT_SECRET: secret } = process.env;
+const { JET_SECRET: secret } = process.env;
 
-function generateToken(payload) {
+function generateToken(payload, subject) {
   return new Promise(
     (resolve, reject) => {
       jwt.sign(payload, secret, {
-        issure: 'wherecar.com',
+        issuer: 'wherecar.com',
         expiresIn: '7d',
-        subject: 'User'
+        subject
       }, (error, token) => {
         if(error) reject(error);
         resolve(token);
