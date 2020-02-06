@@ -1,5 +1,5 @@
 const Joi = require('joi');
-const User = require('../../../db/models/User');
+const User = require('db/models/User');
 
 exports.localRegister = async (ctx) => {
   const { body } = ctx.request;
