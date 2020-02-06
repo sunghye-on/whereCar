@@ -38,15 +38,19 @@ BACK-END
 
 joi 사용
 
-`yarn add joi`
+* `yarn add joi`
 
 bodypaser
 
-`yarn add koa-bodyparser`
+* `yarn add koa-bodyparser`
 
+NODE_PATH=src 추가하기
 
+* `yarn add cross-env`
 
+JWT 사용하기 ( 웹토큰 )
 
+* `yarn add jsonwebtoken`
 
 secret-key 만들기
 

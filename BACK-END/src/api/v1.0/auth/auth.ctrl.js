@@ -24,8 +24,9 @@ exports.localRegister = async (ctx) => {
       .catch(e => console.log(`❌  Error occured at User.findByEmail: ${e}`));
     if(exists) {
       ctx.status = 409;
+      const key = exists.email === email ? 'email' : 'displayName';
       ctx.body = {
-        message: 'already exists Email or DisplayName'
+        message: `Already exists [${key}]` 
       };
       return;
     }
