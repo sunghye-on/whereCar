@@ -45,7 +45,7 @@ exports.localRegister = async (ctx) => {
     }, 'user')
       .catch(error => console.log(error));
 
-    // configure accessToken to httpOnly cookie
+    // configure accessToken to httpOnly cookie || 쿠키설정
     ctx.cookies.set('access_token', accessToken, {
       httpOnly: true,
       maxAge: 1000 * 60 * 60 * 24 * 7

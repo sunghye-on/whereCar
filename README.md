@@ -38,6 +38,9 @@ BACK-END
 
 joi 사용
 
+* What is the joi???
+  * <https://thebook.io/006946/ch19/08/02-01/>
+
 * `yarn add joi`
 
 bodypaser
