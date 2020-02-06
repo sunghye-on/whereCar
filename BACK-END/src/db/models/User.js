@@ -33,6 +33,19 @@ User.statics.findByEmail = function(email) {
   return this.findOne({ email });
 };
 
+User.statics.findByDisplayName = function(displayName) {
+  return this.findOne({ displayName });
+};
+
+User.statics.findExistancy = function({ email, displayName }) {
+  return this.findOne({
+    $or: [
+      { email },
+      { displayName }
+    ]
+  });
+};
+
 User.statics.localRegister = function({ displayName, email, password }) {
   const user = new this({
     displayName,
