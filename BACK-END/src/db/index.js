@@ -5,12 +5,12 @@ const {
 } = process.env;
 
 
-module.exports = (() => {
+module.exports = (function() {
   mongoose.promise = global.Promise;
 
   return {
     connect() {
-      mongoose.createConnection(mongoUri, {
+      mongoose.connect(mongoUri, {
         useNewUrlParser: true,
         useUnifiedTopology: true
       }).then(

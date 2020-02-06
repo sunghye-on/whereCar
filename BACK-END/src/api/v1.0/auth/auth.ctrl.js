@@ -20,10 +20,10 @@ exports.localRegister = async (ctx) => {
   const { displayName, email, password } = body;
   try {
     // check email existancy
-    const exists = User.findByEmail(email)
-      .then(result => result)
+    const exists = await User.findByEmail(email)
       .catch(e => console.log(`❌  Error occured at User.findByEmail: ${e}`));
     if(exists) {
+      console.log(exists);
       ctx.status = 409;
       ctx.body = {
         message: 'email exists'
