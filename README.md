@@ -68,3 +68,17 @@ const hashed = crypto.createHmac('sha256', secret).update(password).digest('hex'
 console.log(hashed);
 ```
 
+
+
+
+
+--------------
+
+## mongoose study
+
+
+
+methods와 statics의 차이
+
+* methods는 새로 만든 객체를 통해 작업을 할 경우 선언해 사용하고, statics는 객체 선언이나 데이터 대입 없이 조회와 같은 기능을 선언해 사용하면 됩니다.
+
