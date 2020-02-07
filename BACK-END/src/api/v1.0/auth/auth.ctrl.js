@@ -1,6 +1,5 @@
 const Joi = require('joi');
 const User = require('db/models/User');
-const token = require('lib/token');
 
 // local register function
 exports.localRegister = async (ctx) => {
@@ -37,7 +36,12 @@ exports.localRegister = async (ctx) => {
       displayName, email, password
     });
 
-    ctx.body = user;
+    ctx.body = {
+      displayName,
+      _id: user._id,
+      metaInfo: user.metaInfo
+    };
+
     const accessToken = await user.generateToken()
       .catch(error => console.log(error));
 
@@ -66,6 +70,7 @@ exports.localLogin = async (ctx) => {
   // Schema error 
   if(result.error) {
     ctx.status = 400;
+    ctx.body = result.error;
     return;
   }
 
@@ -97,7 +102,29 @@ exports.localLogin = async (ctx) => {
       httpOnly: true,
       maxAge: 1000 * 60 * 60 * 24 * 7
     });
+    const { _id, displayName, metaInfo } = user;
+
+    ctx.body = {
+      displayName,
+      _id,
+      metaInfo
+    };
   } catch (error) {
     ctx.throw(error);
   }
+};
+
+exports.check = (ctx) => {
+  const { user } = ctx.request;
+
+  // user session이 없다면
+  if(!user) {
+    ctx.status = 403;
+    ctx.body = 'Any session not founded!';
+    return;
+  }
+
+  ctx.body = {
+    user
+  };
 };
