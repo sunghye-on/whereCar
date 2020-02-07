@@ -1,6 +1,7 @@
 const mongoose = require('mongoose');
 const { PASSWORD_HASH_KEY: secret } = process.env;
 const crypto = require('crypto');
+const token = require('lib/token');
 
 // 사용법: console.log(hash('1234'));
 const hash = (password) => crypto.createHmac('sha256', secret).update(password).digest('hex');
@@ -58,6 +59,22 @@ User.statics.localRegister = function({ displayName, email, password }) {
   });
   user.save();
   return user;
+}; 
+
+User.methods.generateToken = function() {
+  const { _id, displayName } = this;
+  return token.generateToken({
+    user: {
+      _id,
+      displayName 
+    }
+  }, 'user');
+};
+
+// 해당 유저의 비밀번호 일치여부 체크
+User.methods.validatePassword = function(password) {
+  const hashed = hash(password);
+  return this.password === hashed;
 };
 
 module.exports = mongoose.model('User', User);
