@@ -15,6 +15,7 @@ exports.localRegister = async (ctx) => {
   // Schema error 
   if(result.error) {
     ctx.status = 400;
+    ctx.body = 'Schema error';
     return;
   }
 
