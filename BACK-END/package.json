@@ -16,6 +16,7 @@
     "jsonwebtoken": "^8.5.1",
     "koa": "^2.11.0",
     "koa-bodyparser": "^4.2.1",
+    "koa-helmet": "^5.2.0",
     "koa-router": "^8.0.6",
     "mongoose": "^5.8.11",
     "sass-loader": "^8.0.2"

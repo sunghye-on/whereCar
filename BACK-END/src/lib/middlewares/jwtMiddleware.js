@@ -1,4 +1,4 @@
-const { generateToken ,decodeToken } = require('../token');
+const { generateToken, decodeToken } = require('../token');
 
 module.exports = async (ctx, next) => {
   // cookie로 부터 access_token을 받습니다.
