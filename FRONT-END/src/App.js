@@ -1,13 +1,13 @@
 import React from 'react';
-import logo from './logo.svg';
-import './App.css';
-import LoginPage from './pages/LoginPage';
+import { Route } from 'react-router-dom';
+import { Home, Auth } from 'pages';
 
 function App() {
   return (
-    <div className="App">
-      <LoginPage />
-    </div>
+    <>
+      <Route exact path="/" component={Home}/>
+      <Route path="/auth" component={Auth}/>
+    </>
   );
 }
 
