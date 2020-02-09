@@ -2,6 +2,7 @@ import React, { useEffect } from 'react';
 import { connect } from 'react-redux';
 import { bindActionCreators } from 'redux';
 import * as baseActions from 'redux/modules/base';
+import { AuthWrapper } from '../components/Auth';
 
 function Auth({ BaseActions }) {
   useEffect(() => {
@@ -12,9 +13,9 @@ function Auth({ BaseActions }) {
   }, [BaseActions]);
 
   return (
-    <div>
-        Auth
-    </div>
+    <AuthWrapper>
+      
+    </AuthWrapper>
   );
 };
 
