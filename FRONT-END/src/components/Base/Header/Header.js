@@ -64,7 +64,7 @@ const Header = ({children}) => {
         <Positioner>
             <WhiteBackground>
                 <HeaderContents>
-                    <Logo>HEURM</Logo>
+                    <Logo>WHERE-CAR</Logo>
                     <Spacer/>
                     {children}
                 </HeaderContents>

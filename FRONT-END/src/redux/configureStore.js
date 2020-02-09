@@ -1,10 +1,12 @@
-import { createStore } from 'redux';
-
+import { createStore, applyMiddleware } from 'redux';
+import logger from 'redux-logger';
+import { composeWithDevTools } from 'redux-devtools-extension'; 
+import ReduxThunk from 'redux-thunk';   
 import modules from './modules';
 
-// Todo: 미들웨어, react-hot-loader 적용
+// Store를 생성해서 반환하는 fuction 입니다.
 const configureStore = (initialState) => {
-    const store = createStore(modules, window.__REDUX_DEVTOOLS_EXTENSION__ && window.__REDUX_DEVTOOLS_EXTENSION__());
+    const store = createStore(modules, composeWithDevTools(applyMiddleware(ReduxThunk, logger)));
     return store;
 }
 
