@@ -1,10 +1,17 @@
-import React from 'react';
+import React, { useEffect } from 'react';
 import { AuthContent, InputWithLabel, AuthButton, RightAlignedLink } from 'components/Auth';
 import { connect } from 'react-redux';
 import { bindActionCreators } from 'redux';
 import * as authActions from 'redux/modules/auth';
 
 function Register({ form, AuthActions }) {
+
+  useEffect(() => {
+
+    return () => {
+      AuthActions.initializeForm('register');
+    };
+  }, [AuthActions]);
 
   const handleChange = e => {
     const { name, value } = e.target;
