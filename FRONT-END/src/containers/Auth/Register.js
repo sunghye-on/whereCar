@@ -6,6 +6,7 @@ import * as authActions from 'redux/modules/auth';
 import {isEmail, isLength, isAlphanumeric} from 'validator';
 import debounce from 'lodash/debounce';
 
+
 function Register({ form, error, exists, result, AuthActions, history }) {
   const { email, displayName, password, passwordConfirm } = form.toJS();
 
@@ -29,7 +30,7 @@ function Register({ form, error, exists, result, AuthActions, history }) {
       return true;
     },
     displayName: value => {
-      if(!isAlphanumeric(value) || isLength(value, { min: 4, max: 15 })) {
+      if(!isAlphanumeric(value) || !isLength(value, { min: 4, max: 15 })) {
         setError('아이디는 4~15 글자의 알파벳 혹은 숫자로 이뤄져야 합니다.');
         return false;
       }
@@ -40,6 +41,7 @@ function Register({ form, error, exists, result, AuthActions, history }) {
         setError('비밀번호를 6자 이상 입력하세요.');
         return false
       }
+      setError(null); // 이메일과 아이디는 에러 null 처리를 중복확인 부분에서 하게 됩니다
       return true;
     },
     passwordConfirm: value => {
@@ -47,14 +49,16 @@ function Register({ form, error, exists, result, AuthActions, history }) {
         setError('비밀번호 확인이 일치하지 않습니다.');
         return false;
       }
+      setError(null);
       return true;
     }
   };
 
-  const checkEmailExists = debounce(async email => {
+  const checkEmailExists = debounce(async (email) => {
     try {
-      await AuthActions.checkEmailExists(email);
-      if(exists.get('email')) {
+      const result = await AuthActions.checkEmailExists(email);
+      console.log(result.data.exists, exists.get('email'))
+      if(result.data.exists) {
         setError('이미 존재하는 이메일입니다.');
       } else {
         setError(null);
@@ -66,8 +70,8 @@ function Register({ form, error, exists, result, AuthActions, history }) {
 
   const checkDisplayNameExists = debounce(async displayName => {
     try {
-      await AuthActions.checkDisplayNameExists(displayName);
-      if(exists.get('displayName')) {
+      const result = await AuthActions.checkDisplayNameExists(displayName);
+      if(result.data.exists) {
         setError('이미 존재하는 아이디입니다.');
       } else {
         setError(null);

@@ -138,7 +138,7 @@ exports.exists = async (ctx) => {
 
   try {
     // key 에 따라 findByEmail 혹은 findByDisplayName 을 실행합니다.
-    user = await (key === 'email' ? User.findByEmail(value) : User.findByDisplayName(value));    
+    user = await (key === 'email' ? User.findByEmail(value) : User.findByDisplayName(value));
   } catch (e) {
     ctx.throw(500, e);
   }
