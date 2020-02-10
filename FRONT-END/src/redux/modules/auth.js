@@ -10,7 +10,7 @@ const INITIALIZE_FORM = 'auth/INITIALIZE_FORM'; // form 초기화
 
 /* ****************   email & id valid checker **************** */
 const CHECK_EMAIL_EXISTS = 'auth/CHECK_EMAIL_EXISTS'; // 이메일 중복 확인
-const CHECK_USERNAME_EXISTS = 'auth/CHECK_USERNAME_EXISTS'; // 아이디 중복 확인
+const CHECK_DISPLAYNAME_EXISTS = 'auth/CHECK_DISPLAYNAME_EXISTS'; // 아이디 중복 확인
 
 /* ****************   Login & Logout checker **************** */
 const LOCAL_REGISTER = 'auth/LOCAL_REGISTER'; // 이메일 가입
@@ -25,7 +25,7 @@ export const changeInput = createAction(CHANGE_INPUT); //  { form, name, value }
 export const initializeForm = createAction(INITIALIZE_FORM); // form 
 
 export const checkEmailExists = createAction(CHECK_EMAIL_EXISTS, AuthAPI.checkEmailExists); // email
-export const checkUsernameExists = createAction(CHECK_USERNAME_EXISTS, AuthAPI.checkDisplayNameExists); // username
+export const checkDisplayNameExists = createAction(CHECK_DISPLAYNAME_EXISTS, AuthAPI.checkDisplayNameExists); // displayName
 
 export const localRegister = createAction(LOCAL_REGISTER, AuthAPI.localRegister); // { email, username, password }
 export const localLogin = createAction(LOCAL_LOGIN, AuthAPI.localLogin); // { email, password }
@@ -44,6 +44,7 @@ const initialState = Map({
         }),
         exists: Map({
             email: false,
+            displayName: false,
             password: false
         }),
         error: null
@@ -72,8 +73,8 @@ export default handleActions({
         onSuccess: (state, action) => state.setIn(['register', 'exists', 'email'], action.payload.data.exists)
     }),
     ...pender({
-        type: CHECK_USERNAME_EXISTS,
-        onSuccess: (state, action) => state.setIn(['register', 'exists', 'username'], action.payload.data.exists)
+        type: CHECK_DISPLAYNAME_EXISTS,
+        onSuccess: (state, action) => state.setIn(['register', 'exists', 'displayName'], action.payload.data.exists)
     }),
     ...pender({
         type: LOCAL_LOGIN,

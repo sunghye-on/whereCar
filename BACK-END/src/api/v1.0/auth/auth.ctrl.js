@@ -132,13 +132,13 @@ exports.check = (ctx) => {
 
 // 이메일 / 아이디 존재유무 확인
 exports.exists = async (ctx) => {
-  // /exists/:key(email|username)/:value
+  // /exists/:key(email|displayName)/:value
   const { key, value } = ctx.params;
   let user = null;
 
   try {
-    // key 에 따라 findByEmail 혹은 findByUsername 을 실행합니다.
-    user = await (key === 'email' ? User.findByEmail(value) : User.findByUsername(value));    
+    // key 에 따라 findByEmail 혹은 findByDisplayName 을 실행합니다.
+    user = await (key === 'email' ? User.findByEmail(value) : User.findByDisplayName(value));    
   } catch (e) {
     ctx.throw(500, e);
   }
