@@ -129,3 +129,30 @@ exports.check = (ctx) => {
     user
   };
 };
+
+// 이메일 / 아이디 존재유무 확인
+exports.exists = async (ctx) => {
+  // /exists/:key(email|username)/:value
+  const { key, value } = ctx.params;
+  let user = null;
+
+  try {
+    // key 에 따라 findByEmail 혹은 findByUsername 을 실행합니다.
+    user = await (key === 'email' ? User.findByEmail(value) : User.findByUsername(value));    
+  } catch (e) {
+    ctx.throw(500, e);
+  }
+
+  ctx.body = {
+    exists: user !== null
+  };
+};
+
+// 로그아웃
+exports.logout = (ctx) => {
+  ctx.cookies.set('access_token', null, {
+    maxAge: 0, 
+    httpOnly: true
+  });
+  ctx.status = 204;
+};

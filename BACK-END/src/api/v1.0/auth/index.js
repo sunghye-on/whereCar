@@ -9,6 +9,8 @@ auth.get('/', (ctx) => {
 });
 auth.post('/register/local', authCtrl.localRegister);
 auth.post('/login/local', authCtrl.localLogin);
+auth.get('/exists/:key(email|displayName)/:value', authCtrl.exists);
 auth.get('/check', authCtrl.check);
+auth.post('/logout', authCtrl.logout);
 
 module.exports = auth;
