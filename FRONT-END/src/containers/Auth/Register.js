@@ -4,6 +4,7 @@ import { connect } from 'react-redux';
 import { bindActionCreators } from 'redux';
 import * as authActions from 'redux/modules/auth';
 import {isEmail, isLength, isAlphanumeric} from 'validator';
+import debounce from 'lodash/debounce';
 
 function Register({ form, error, exists, AuthActions }) {
   const { email, displayName, password, passwordConfirm } = form.toJS();
@@ -50,7 +51,7 @@ function Register({ form, error, exists, AuthActions }) {
     }
   };
 
-  const checkEmailExists = async email => {
+  const checkEmailExists = debounce(async email => {
     try {
       await AuthActions.checkEmailExists(email);
       if(exists.get('email')) {
@@ -61,9 +62,9 @@ function Register({ form, error, exists, AuthActions }) {
     } catch (error) {
       console.log(error);
     }
-  }
+  }, 300);
 
-  const checkDisplayNameExists = async displayName => {
+  const checkDisplayNameExists = debounce(async displayName => {
     try {
       await AuthActions.checkDisplayNameExists(displayName);
       if(exists.get('displayName')) {
@@ -74,7 +75,7 @@ function Register({ form, error, exists, AuthActions }) {
     } catch (error) {
       console.log(error);
     }
-  }
+  }, 300);
 
   const handleChange = e => {
     const { name, value } = e.target;
