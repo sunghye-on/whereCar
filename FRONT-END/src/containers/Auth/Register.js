@@ -45,8 +45,11 @@ function Register({ form, error, exists, result, AuthActions, history }) {
       return true;
     },
     passwordConfirm: value => {
-      if(form.get('password') !== value) {
-        setError('비밀번호 확인이 일치하지 않습니다.');
+      if(!isLength(value, { min: 6 })){
+        setError('비밀번호를 6자 이상 입력하세요.');
+        return false
+      } else if(form.get('password') !== value) {
+        setError(`비밀번호 확인이 일치하지 않습니다.`);
         return false;
       }
       setError(null);
