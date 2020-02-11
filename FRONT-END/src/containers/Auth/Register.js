@@ -3,11 +3,13 @@ import { AuthContent, InputWithLabel, AuthButton, RightAlignedLink, AuthError } 
 import { connect } from 'react-redux';
 import { bindActionCreators } from 'redux';
 import * as authActions from 'redux/modules/auth';
+import * as userActions from 'redux/modules/user';
+import storage from 'lib/storage';
 import {isEmail, isLength, isAlphanumeric} from 'validator';
 import debounce from 'lodash/debounce';
 
 
-function Register({ form, error, exists, result, AuthActions, history }) {
+function Register({ form, error, exists, result, AuthActions, UserActions, history }) {
   const { email, displayName, password, passwordConfirm } = form.toJS();
 
   useEffect(() => {
@@ -115,7 +117,9 @@ function Register({ form, error, exists, result, AuthActions, history }) {
       });
 
       const loggedInfo = result.toJS();
-      console.log(loggedInfo);
+      storage.set('loggedInfo', loggedInfo);
+      UserActions.setLoggedInfo(loggedInfo);
+      UserActions.setValidated(true);
 
       history.push('/'); // 회원가입 성공시 홈페이지로 이동
     } catch (error) {
@@ -152,6 +156,7 @@ export default connect(
     result: state.auth.get('result')
   }),
   (dispatch) => ({
-    AuthActions: bindActionCreators(authActions, dispatch)
+    AuthActions: bindActionCreators(authActions, dispatch),
+    UserActions: bindActionCreators(userActions, dispatch)
   })
 )(Register);
