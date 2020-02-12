@@ -114,12 +114,13 @@ function Register({ form, error, exists, result, AuthActions, UserActions, histo
         email,
         displayName,
         password
+      }).then(
+        result => {
+          const loggedInfo = result.data;
+          storage.set('loggedInfo', loggedInfo);
+          UserActions.setLoggedInfo(loggedInfo);
+          UserActions.setValidated(true);
       });
-
-      const loggedInfo = result.toJS();
-      storage.set('loggedInfo', loggedInfo);
-      UserActions.setLoggedInfo(loggedInfo);
-      UserActions.setValidated(true);
 
       history.push('/'); // 회원가입 성공시 홈페이지로 이동
     } catch (error) {

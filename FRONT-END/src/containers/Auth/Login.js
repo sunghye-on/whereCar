@@ -32,12 +32,14 @@ function Login({ form, result, error, AuthActions, UserActions, history }) {
     const { email, password } = form.toJS();
 
     try {
-      await AuthActions.localLogin({email, password});
-      const loggedInfo = result.toJS();
-
-      UserActions.setLoggedInfo(loggedInfo);
-      history.push('/');
-      storage.set('loggedInfo', loggedInfo);
+      await AuthActions.localLogin({email, password})
+        .then( result => {
+          const loggedInfo = result.data;
+          console.log(loggedInfo);
+          UserActions.setLoggedInfo(loggedInfo);
+          history.push('/');
+          storage.set('loggedInfo', loggedInfo);
+        });
     } catch (error) {
       setError('잘못된 계정정보입니다.')
     }

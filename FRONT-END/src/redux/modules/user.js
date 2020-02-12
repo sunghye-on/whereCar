@@ -17,18 +17,19 @@ export const checkStatus = createAction(CHECK_STATUS, AuthAPI.checkStatus);
 const initialState = Map({
   loggedInfo: Map({
     displayName: null,
-    email: null
+    _id: null,
+    metaInfo: null
   }),
   logged: false, // 현재 로그인중인지 알려준다.
   validated: false // 이 값은 현재 로그인중인지 아닌지 한번 서버측에 검증했음을 의미
 })
 
 export default handleActions({
-  [SET_LOGGED_INFO]: (state, action) => state.set('loggedInfo', Map(action.payload).set('logged', true)),
+  [SET_LOGGED_INFO]: (state, action) => state.set('loggedInfo', Map(action.payload)).set('logged', true),
   [SET_VALIDATED]: (state, action) => state.set('validated', action.payload),
   ...pender({
     type: CHECK_STATUS,
-    onSuccess: (state, action) => state.set('loggedInfo', Map(action.payload)).set('validated', true),
+    onSuccess: (state, action) => state.set('loggedInfo', Map(action.payload.data)).set('validated', true),
     onFailure: (state, action) => initialState
   })
 }, initialState);

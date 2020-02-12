@@ -76,11 +76,12 @@ exports.localLogin = async (ctx) => {
   }
 
   const { email, password } = body;
-
+  
   // associate with DB handling 
   try {
     // find user
     const user = await User.findByEmail(email);
+    
     if(!user) {
       // user dose not exist
       ctx.status = 409;
@@ -95,7 +96,7 @@ exports.localLogin = async (ctx) => {
       ctx.body = 'Password is not equal!';
       return;
     }
-
+    
     // access token 을 생성한다.
     const accessToken = await user.generateToken();
     // access_token이라는 이름으로 access token 을 발급한다.
@@ -117,16 +118,17 @@ exports.localLogin = async (ctx) => {
 
 exports.check = (ctx) => {
   const { user } = ctx.request;
-
+  
   // user session이 없다면
   if(!user) {
     ctx.status = 403;
     ctx.body = 'Any session not founded!';
     return;
   }
-
+  
   ctx.body = {
-    user
+    ...user,
+    metaInfo: {}
   };
 };
 
