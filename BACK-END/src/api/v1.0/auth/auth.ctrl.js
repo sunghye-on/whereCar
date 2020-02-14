@@ -180,7 +180,6 @@ exports.updateUser = async (ctx) => {
   // recieved Client request data
   const { displayName, email, password } = body;
   try {
-    // find user
     const user = await User.findByEmail(email);
     if(!user) {
       // user dose not exist
@@ -189,8 +188,8 @@ exports.updateUser = async (ctx) => {
       return;
     }
     // update user data
-    const result = await User.updateUser({ displayName, password, email });
-    console.log(result);
+    await User.updateUser({ displayName, password, email });
+    // send data to client
     ctx.body = {
       displayName,
       email,

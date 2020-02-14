@@ -42,7 +42,7 @@ const StyledMenuItem = withStyles(theme => ({
   },
 }))(MenuItem);
 
-export default function LogoutButton({displayName, handleLogout}) {
+export default function ProfileButton({displayName, handleLogout}) {
   const [anchorEl, setAnchorEl] = React.useState(null);
 
   const handleClick = event => {
