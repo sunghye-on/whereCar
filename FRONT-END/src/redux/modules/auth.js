@@ -18,6 +18,9 @@ const LOCAL_LOGIN = 'auth/LOCAL_LOGIN'; // 이메일 로그인
 
 const LOGOUT = 'auth/LOGOUT'; // 로그아웃
 
+/* ****************   Update UserDB **************** */
+const UPDATE_USER = 'auth/UPDATE_USER'; // 로그아웃
+
 /* ****************   Error Setter **************** */
 const SET_ERROR = 'auth/SET_ERROR'; // 오류 설정
 
@@ -31,6 +34,8 @@ export const localRegister = createAction(LOCAL_REGISTER, AuthAPI.localRegister)
 export const localLogin = createAction(LOCAL_LOGIN, AuthAPI.localLogin); // { email, password }
 
 export const logout = createAction(LOGOUT, AuthAPI.logout);
+
+export const updateUser = createAction(UPDATE_USER, AuthAPI.updateUser); // {email, displayName, password}
 
 export const setError = createAction(SET_ERROR); // { form, message }
 
@@ -82,6 +87,10 @@ export default handleActions({
     }),
     ...pender({
         type: LOCAL_REGISTER,
+        onSuccess: (state, action) => state.set('result', Map(action.payload.data))
+    }),
+    ...pender({
+        type: UPDATE_USER,
         onSuccess: (state, action) => state.set('result', Map(action.payload.data))
     }),
     [SET_ERROR]: (state, action) => {

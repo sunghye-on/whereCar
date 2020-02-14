@@ -1,5 +1,5 @@
-import React, { Component } from 'react';
-import Header, { LoginButton } from 'components/Base/Header';
+import React from 'react';
+import Header, { LoginButton, LogoutButton } from 'components/Base/Header';
 import { connect } from 'react-redux';
 import * as userActions from 'redux/modules/user';
 import storage from 'lib/storage';
@@ -27,11 +27,7 @@ function HeaderContainer({ visible, user, UserActions }) {
   return (
       <Header>
         { user.get('logged')
-          ? (
-            <div>
-              {user.getIn(['loggedInfo', 'displayName'])} <div onClick={handleLogout}>(로그아웃)</div>
-            </div>
-          )
+          ? <LogoutButton displayName={user.getIn(['loggedInfo', 'displayName'])} handleLogout={handleLogout}/>
           : <LoginButton/>
         }
       </Header>

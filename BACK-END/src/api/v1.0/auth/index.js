@@ -12,5 +12,7 @@ auth.post('/login/local', authCtrl.localLogin);
 auth.get('/exists/:key(email|displayName)/:value', authCtrl.exists);
 auth.get('/check', authCtrl.check);
 auth.post('/logout', authCtrl.logout);
+auth.post('/profile', authCtrl.updateUser); // profile update
+auth.get('/profile'); // profile Read
 
 module.exports = auth;

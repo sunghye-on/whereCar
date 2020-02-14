@@ -9,3 +9,5 @@ export const localLogin = ({email, password}) => axios.post(`/api/v1.0/auth/logi
 
 export const checkStatus = () => axios.get(`/api/v1.0/auth/check`);
 export const logout = () => axios.post(`/api/v1.0/auth/logout`);
+
+export const updateUser = ({email, displayName, password}) => axios.post('/api/v1.0/auth/profile', { email, displayName, password });

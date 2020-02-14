@@ -17,6 +17,7 @@ export const checkStatus = createAction(CHECK_STATUS, AuthAPI.checkStatus);
 const initialState = Map({
   loggedInfo: Map({
     displayName: null,
+    email: null,
     _id: null,
     metaInfo: null
   }),

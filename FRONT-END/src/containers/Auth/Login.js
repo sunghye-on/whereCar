@@ -5,19 +5,27 @@ import {bindActionCreators} from 'redux';
 import * as authActions from 'redux/modules/auth';
 import * as userActions from 'redux/modules/user';
 import storage from 'lib/storage';
+import queryString from 'query-string';
 
-function Login({ form, result, error, AuthActions, UserActions, history }) {
-  
+function Login({ form, result, error, location, AuthActions, UserActions, history }) {
+  // componentWillUnmount
   useEffect(() => {
     return () => {
       AuthActions.initializeForm('login');
     };
-  }, [AuthActions])
+  }, [AuthActions]);
+  // componentDidMount 
+  useEffect(() => {
+    const query = queryString.parse(location.search);
+    if(query.expired !== undefined) {
+      setError('세션에 만료되었습니다. 다시 로그인하세요.')
+    }
+  }, [])
 
   const setError = message => {
     AuthActions.setError({form: 'login', message});
     return false;
-  }
+  };
 
   const handleChange = e => {
     const { name, value } = e.target;

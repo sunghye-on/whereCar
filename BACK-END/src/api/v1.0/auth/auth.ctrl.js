@@ -39,6 +39,7 @@ exports.localRegister = async (ctx) => {
 
     ctx.body = {
       displayName,
+      email,
       _id: user._id,
       metaInfo: user.metaInfo
     };
@@ -104,11 +105,12 @@ exports.localLogin = async (ctx) => {
       httpOnly: true,
       maxAge: 1000 * 60 * 60 * 24 * 7
     });
-    const { _id, displayName, metaInfo } = user;
 
+    const { _id, displayName, metaInfo } = user;
     ctx.body = {
       displayName,
       _id,
+      email,
       metaInfo
     };
   } catch (error) {
@@ -118,7 +120,6 @@ exports.localLogin = async (ctx) => {
 
 exports.check = (ctx) => {
   const { user } = ctx.request;
-  
   // user session이 없다면
   if(!user) {
     ctx.status = 403;
@@ -157,4 +158,56 @@ exports.logout = (ctx) => {
     httpOnly: true
   });
   ctx.status = 204;
+};
+
+// Profile Update
+exports.updateUser = async (ctx) => {
+  const { body } = ctx.request;
+
+  const schema = Joi.object({
+    displayName: Joi.string().regex(/^[a-zA-Z0-9ㄱ-힣]{3,12}$/).required(),
+    email: Joi.string().email().required(),
+    password: Joi.string().min(6).max(30)
+  });
+
+  const result = Joi.validate(body, schema);
+  // Schema error 
+  if(result.error) {
+    ctx.status = 400;
+    ctx.body = 'Schema error';
+    return;
+  }
+  // recieved Client request data
+  const { displayName, email, password } = body;
+  try {
+    // find user
+    const user = await User.findByEmail(email);
+    if(!user) {
+      // user dose not exist
+      ctx.status = 409;
+      ctx.body = `user[${email}] dose not exist`;
+      return;
+    }
+    // update user data
+    const result = await User.updateUser({ displayName, password, email });
+    console.log(result);
+    ctx.body = {
+      displayName,
+      email,
+      _id: user._id,
+      metaInfo: user.metaInfo
+    };
+
+    const accessToken = await user.generateToken()
+      .catch(error => console.log(error));
+
+    // configure accessToken to httpOnly cookie || 쿠키설정
+    ctx.cookies.set('access_token', accessToken, {
+      httpOnly: true,
+      maxAge: 1000 * 60 * 60 * 24 * 7
+    });
+  } catch (error) {
+    console.log(error);
+    ctx.throw(500);
+  }
 };

@@ -62,13 +62,25 @@ User.statics.localRegister = function({ displayName, email, password }) {
 }; 
 
 User.methods.generateToken = function() {
-  const { _id, displayName } = this;
+  const { _id, displayName, email } = this;
   return token.generateToken({
     user: {
       _id,
-      displayName 
+      displayName,
+      email
     }
   }, 'user');
+};
+
+User.methods.updateUser = async function(displayName, password) {
+  console.log(displayName, hash(password));
+  const hashed = hash(password);
+  await this.updateOne({ displayName }, { password: hashed });
+  console.log(this);
+};
+
+User.statics.updateUser = async function({ displayName, password, email }) {
+  await this.update({ email }, { displayName, password: hash(password) });
 };
 
 // 해당 유저의 비밀번호 일치여부 체크
