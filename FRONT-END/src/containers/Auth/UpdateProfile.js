@@ -134,7 +134,7 @@ function UpdateProfile({ form, error, user, result, AuthActions, UserActions, hi
   return (
     <AuthContent title="프로필 수정">
         <InputWithLabel meta={email} label="이메일"/>
-        <InputWithLabel value={displayName} label="아이디" name="displayName" placeholder="아이디" onChange={handleChange} />
+        <InputWithLabel value={displayName} label="닉네임" name="displayName" placeholder="닉네임" onChange={handleChange} />
         <InputWithLabel value={password} label="비밀번호" name="password" placeholder="비밀번호" type="password" onChange={handleChange} />
         <InputWithLabel value={passwordConfirm} label="비밀번호 확인" name="passwordConfirm" placeholder="비밀번호 확인" type="password" onChange={handleChange} />
         {

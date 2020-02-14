@@ -137,7 +137,7 @@ function Register({ form, error, exists, result, AuthActions, UserActions, histo
   return (
     <AuthContent title="회원가입">
         <InputWithLabel value={email} label="이메일" name="email" placeholder="이메일" onChange={handleChange} />
-        <InputWithLabel value={displayName} label="아이디" name="displayName" placeholder="아이디" onChange={handleChange} />
+        <InputWithLabel value={displayName} label="닉네임" name="displayName" placeholder="닉네임" onChange={handleChange} />
         <InputWithLabel value={password} label="비밀번호" name="password" placeholder="비밀번호" type="password" onChange={handleChange} />
         <InputWithLabel value={passwordConfirm} label="비밀번호 확인" name="passwordConfirm" placeholder="비밀번호 확인" type="password" onChange={handleChange} />
         {

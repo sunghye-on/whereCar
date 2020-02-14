@@ -25,8 +25,6 @@ const BorderedButton = styled(Link)`
         /* 마우스 클릭시 아래로 미세하게 움직임 */
         transform: translateY(3px);
     }
-
-
 `;
 
 const LoginButton = () => (

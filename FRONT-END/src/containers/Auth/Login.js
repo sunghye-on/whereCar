@@ -55,7 +55,7 @@ function Login({ form, result, error, location, AuthActions, UserActions, histor
 
   return (
     <AuthContent title="로그인">
-      <InputWithLabel label="아이디" name="email" placeholder="이메일" onChange={handleChange}/>
+      <InputWithLabel label="E-mail" name="email" placeholder="이메일" onChange={handleChange}/>
       <InputWithLabel label="비밀번호" name="password" placeholder="비밀번호" type="password" onChange={handleChange}/>
       {
         error && <AuthError>{ error }</AuthError>
