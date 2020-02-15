@@ -1,8 +1,6 @@
 import React from 'react';
 import styled from 'styled-components';
-import oc from 'open-color';
 import { shadow } from 'lib/styleUtils';
-import { Link } from 'react-router-dom';
 import { media } from 'lib/styleUtils';
 
 // 화면의 중앙에 위치시킨다
@@ -28,39 +26,10 @@ const ShadowedBox = styled.div`
     ${shadow(2)}
 `;
 
-// 로고
-const LogoWrapper = styled.div`
-    background: ${oc.teal[7]};
-    height: 5rem;
-    display: flex;
-    align-items: center;
-    justify-content: center;
-`;
-
-const Logo = styled(Link)`
-    color: white;
-    font-family: 'Rajdhani';
-    font-size: 2.4rem;
-    letter-spacing: 5px;
-    text-decoration: none;
-`;
-
-// children 이 들어가는 곳
-const Contents = styled.div`
-    background: white;
-    padding: 2rem;
-    height: auto;
-`;
-
-const AuthWrapper = ({children, title}) => (
+const AuthWrapper = ({children}) => (
     <Positioner>
         <ShadowedBox>
-            <LogoWrapper>
-                <Logo to="/">{title ? title : 'List'}</Logo>
-            </LogoWrapper>
-            <Contents>
-                {children}
-            </Contents>
+            {children}
         </ShadowedBox>
     </Positioner>
 );
