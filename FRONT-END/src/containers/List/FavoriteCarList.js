@@ -2,7 +2,7 @@ import React from 'react';
 import { makeStyles } from '@material-ui/core/styles';
 import List from '@material-ui/core/List';
 import { CarItem } from 'components/List/Car';
-import { LogoWrapper, CarToggleButton } from 'components/List/Car';
+import { LogoWrapper } from 'components/List/Car';
 import { ListWrapper } from 'components/List';
 import styled from 'styled-components';
 
