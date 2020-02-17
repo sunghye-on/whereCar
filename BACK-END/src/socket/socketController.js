@@ -2,7 +2,8 @@
 
 // socket: 연결된 소켓, io: 전역소켓(Server Socket)
 const socketController = (socket, io) => {
-  console.log('✅  socket connect success!!');
+  console.log('❤  socket connecting success!!');
+  socket.emit('test', { data: 'hello socketIO!!' });
 };
 
 module.exports = socketController;

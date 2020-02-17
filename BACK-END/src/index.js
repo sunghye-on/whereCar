@@ -46,3 +46,4 @@ const io = socketIO.listen(server);
 
 // create connection event
 io.on('connection', socket => socketController(socket, io));
+// io.on('connection', () => console.log('connected!!'));
