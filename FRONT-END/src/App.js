@@ -6,9 +6,11 @@ import HeaderContainer from 'containers/Base/HeaderContainer';
 import storage from 'lib/storage';
 import { connect } from 'react-redux';
 import * as userActions from 'redux/modules/user';
+import * as socketActions from 'redux/modules/socket';
 import { bindActionCreators } from 'redux';
+import socketIOClient from "socket.io-client";
 
-function App({ UserActions, DriverActions, driverList }) {
+function App({ UserActions, SocketActions }) {
   useEffect(() => {
     initializeUserInfo();
   },[]);
@@ -40,6 +42,7 @@ export default connect(
   (state) => ({
   }),
   (dispatch) => ({
-    UserActions: bindActionCreators(userActions, dispatch)
+    UserActions: bindActionCreators(userActions, dispatch),
+    SocketActions: bindActionCreators(socketActions, dispatch)
   })
 )(App);

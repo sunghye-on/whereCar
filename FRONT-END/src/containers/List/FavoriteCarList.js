@@ -9,7 +9,7 @@ import styled from 'styled-components';
 import socketIOClient from "socket.io-client";
 import { connect } from 'react-redux';
 import { bindActionCreators } from 'redux';
-import * as driverActions from 'redux/modules/driverList';
+import * as socketActions from 'redux/modules/socket';
 
 const useStyles = makeStyles(theme => ({
   root: {
@@ -97,35 +97,44 @@ const initialSocketInfo = {
   driverList: dummyDriver
 };
 
-function FavoriteCarList({children}) {
+function FavoriteCarList({children, myList, driverList, SocketActions}) {
   const classes = useStyles();
   const [checked, setChecked] = React.useState([0]);
 
   const [socketInfo, setSocketInfo] = React.useState(initialSocketInfo);
-  const {endpoint, response, driverList} = socketInfo;
+  const {endpoint, response, } = socketInfo;
 
   React.useEffect(() => {
     // socket 작업
     const socket = socketIOClient(endpoint); 
     
     // socket io test를 위한 소스
+    SocketActions.setDriverList();
+
     // driverList 받아오기[API]
     socket.emit("driverActive", {driver: driver1, active: true}); // test용 driver 활성화 [test]
     socket.emit("driverActive", {driver: driver2, active: true}); // test용 driver 활성화 [test]
     socket.on("sendNotifDriverActive", ({driver, active}) => {
-      setSocketInfo({ 
-        ...socketInfo, 
-        driverList: driverList.map(d => {
-          if(d.driverName === driver.driverName){
-            d.active = active;
-          }
-          return d;
-        }) 
+      const updateList = driverList.map( list => {
+        if(list.driverName === driver.driverName) {
+          list.active = active;
+        }
+        return list;
       });
+      console.log('update::: ',updateList, driverList);
+      SocketActions.setDriverStatus({updateList});
+      // setSocketInfo({ 
+      //   ...socketInfo, 
+      //   driverList: driverList.map(d => {
+      //     if(d.driverName === driver.driverName){
+      //       d.active = active;
+      //     }
+      //     return d;
+      //   }) 
+      // });
     });
-
   },[]);
-  console.log(driverList);
+  
   const handleToggle = value => () => {
     const currentIndex = checked.indexOf(value);
     const newChecked = [...checked];
@@ -138,7 +147,7 @@ function FavoriteCarList({children}) {
 
     setChecked(newChecked);
   };
-  
+  console.log(driverList);
   return (
     <ListWrapper>
       <LogoWrapper title="My Car List" titleUrl="/">
@@ -147,7 +156,7 @@ function FavoriteCarList({children}) {
         <List dense className={classes.root} subheader={<li />}>
           {
             driverList ? 
-              driverList.map(value => {
+            driverList.map(value => {
                 const labelId = `checkbox-list-secondary-label-${value.id}`;
                 return (
                   value.active ?
@@ -165,9 +174,10 @@ function FavoriteCarList({children}) {
 
 export default connect(
   (state) => ({
-    driverList: state.driver.get('driverList'),
+    myList: state.socket.get('myList'),
+    driverList: state.socket.getIn(['myList', 'driverList']).toJS(),
   }),
   (dispatch) => ({
-    DriverActions: bindActionCreators(driverActions, dispatch)
+    SocketActions: bindActionCreators(socketActions, dispatch)
   })
 )(FavoriteCarList);
