@@ -1,7 +1,10 @@
 import React from 'react';
-import { ListItem, ListItemAvatar, Avatar, ListItemText, ListItemSecondaryAction, Checkbox } from "@material-ui/core";
+import { ListItem, ListItemAvatar, Avatar, ListItemText, ListItemSecondaryAction, Checkbox, ListItemIcon } from "@material-ui/core";
 
-export default function CarItem({ checked, value, labelId, handleToggle }) {
+import DeleteIcon from '@material-ui/icons/Delete';
+import FaceIcon from '@material-ui/icons/Face';
+
+export default function CarItem({ value, labelId, bottomValue }) {
   return (
     <ListItem key={value.id} button>
       <ListItemAvatar>
@@ -12,13 +15,18 @@ export default function CarItem({ checked, value, labelId, handleToggle }) {
       </ListItemAvatar>
       <ListItemText id={labelId} primary={`${value.driverName}`} />
       <ListItemSecondaryAction>
-        <Checkbox
-          edge="end"
-          onChange={handleToggle(value.id)}
-          checked={checked.indexOf(value.id) !== -1}
-          inputProps={{ 'aria-labelledby': labelId }}
-        />
+        { bottomValue === 2 ?
+          <DeleteIcon/>
+          : null
+        }
+        
       </ListItemSecondaryAction>
+      <ListItemIcon>
+        { value.active ?
+            <FaceIcon color="secondary"/>
+          : <FaceIcon />
+        }
+      </ListItemIcon>
     </ListItem>
   );
 }

@@ -8,7 +8,6 @@ import { connect } from 'react-redux';
 import * as userActions from 'redux/modules/user';
 import * as socketActions from 'redux/modules/socket';
 import { bindActionCreators } from 'redux';
-import socketIOClient from "socket.io-client";
 
 function App({ UserActions, SocketActions }) {
   useEffect(() => {

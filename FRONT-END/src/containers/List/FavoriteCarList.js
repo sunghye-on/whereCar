@@ -3,13 +3,15 @@ import { makeStyles } from '@material-ui/core/styles';
 import List from '@material-ui/core/List';
 import { CarItem } from 'components/List/Car';
 import { LogoWrapper } from 'components/List/Car';
-import { ListWrapper } from 'components/List';
+import { ListWrapper, BottomNav } from 'components/List';
 import styled from 'styled-components';
+import { media } from 'lib/styleUtils';
 
 import socketIOClient from "socket.io-client";
 import { connect } from 'react-redux';
 import { bindActionCreators } from 'redux';
 import * as socketActions from 'redux/modules/socket';
+import { driverListSoc } from 'sockets';
 
 const useStyles = makeStyles(theme => ({
   root: {
@@ -32,44 +34,11 @@ const useStyles = makeStyles(theme => ({
 // children 이 들어가는 곳
 const Contents = styled.div`
     background: white;
-    padding: 2rem;
+    padding: 1rem 0 1rem 0;
     height: auto;
 `;
 
-// dummyData
-const dummyDriver = [
-  {
-    id: 0,
-    driverName: '홍길동1',
-    routes: [
-      { locationName: '1', Latitude: '0', longitude: '0' },
-      { locationName: '2', Latitude: '0', longitude: '0' },
-      { locationName: '3', Latitude: '0', longitude: '0' }
-    ],
-    currentLoc: { Latitude: '0', longitude: '0' }
-  },
-  {
-    id: 1,
-    driverName: '홍길동2',
-    routes: [
-      { locationName: '1', Latitude: '0', longitude: '0' },
-      { locationName: '2', Latitude: '0', longitude: '0' },
-      { locationName: '3', Latitude: '0', longitude: '0' }
-    ],
-    currentLoc: { Latitude: '0', longitude: '0' }
-  },
-  {
-    id: 2,
-    driverName: '홍길동3',
-    routes: [
-      { locationName: '1', Latitude: '0', longitude: '0' },
-      { locationName: '2', Latitude: '0', longitude: '0' },
-      { locationName: '3', Latitude: '0', longitude: '0' }
-    ],
-    currentLoc: { Latitude: '0', longitude: '0' }
-  }
-];
-
+// dummy Data [ test용 ]
 const driver1 = {
   id: 0,
   driverName: '홍길동1',
@@ -91,62 +60,24 @@ const driver2 = {
   currentLoc: { Latitude: '0', longitude: '0' }
 };
 
-const initialSocketInfo = {
-  response: null,
-  endpoint: 'http://localhost:4000',
-  driverList: dummyDriver
-};
-
-function FavoriteCarList({children, myList, driverList, SocketActions}) {
+function FavoriteCarList({children, driverList, SocketActions}) {
   const classes = useStyles();
-  const [checked, setChecked] = React.useState([0]);
-
-  const [socketInfo, setSocketInfo] = React.useState(initialSocketInfo);
-  const {endpoint, response, } = socketInfo;
+  const [bottomValue, setBottomValue] = React.useState(0);
+  // socket 작업
+  const endpoint = 'http://localhost:4000';
+  const socket = socketIOClient(endpoint);
 
   React.useEffect(() => {
-    // socket 작업
-    const socket = socketIOClient(endpoint); 
+
+    // driverList 소켓통신 관련
+    driverListSoc(socket, SocketActions);
     
-    // socket io test를 위한 소스
-    SocketActions.setDriverList();
-
-    // driverList 받아오기[API]
-    socket.emit("driverActive", {driver: driver1, active: true}); // test용 driver 활성화 [test]
-    socket.emit("driverActive", {driver: driver2, active: true}); // test용 driver 활성화 [test]
-    socket.on("sendNotifDriverActive", ({driver, active}) => {
-      const updateList = driverList.map( list => {
-        if(list.driverName === driver.driverName) {
-          list.active = active;
-        }
-        return list;
-      });
-      console.log('update::: ',updateList, driverList);
-      SocketActions.setDriverStatus({updateList});
-      // setSocketInfo({ 
-      //   ...socketInfo, 
-      //   driverList: driverList.map(d => {
-      //     if(d.driverName === driver.driverName){
-      //       d.active = active;
-      //     }
-      //     return d;
-      //   }) 
-      // });
-    });
   },[]);
-  
-  const handleToggle = value => () => {
-    const currentIndex = checked.indexOf(value);
-    const newChecked = [...checked];
 
-    if (currentIndex === -1) {
-      newChecked.push(value);
-    } else {
-      newChecked.splice(currentIndex, 1);
-    }
+  // test용입니다. [Server에서 사용되는 소스]
+  socket.emit("driverActive", {driver: driver1, active: true}); // test용 driver 활성화 [test]
+  socket.emit("driverActive", {driver: driver2, active: true}); // test용 driver 활성화 [test]
 
-    setChecked(newChecked);
-  };
   console.log(driverList);
   return (
     <ListWrapper>
@@ -159,22 +90,20 @@ function FavoriteCarList({children, myList, driverList, SocketActions}) {
             driverList.map(value => {
                 const labelId = `checkbox-list-secondary-label-${value.id}`;
                 return (
-                  value.active ?
-                  <CarItem checked={checked} value={value} labelId={labelId} handleToggle={handleToggle} />
-                  : null
+                  <CarItem value={value} labelId={labelId} bottomValue={bottomValue}/>
                 );
               })
             : null
           }
         </List>
       </Contents>
+      <BottomNav value={bottomValue} setValue={setBottomValue}/>
     </ListWrapper>
   );
 }
 
 export default connect(
   (state) => ({
-    myList: state.socket.get('myList'),
     driverList: state.socket.getIn(['myList', 'driverList']).toJS(),
   }),
   (dispatch) => ({
