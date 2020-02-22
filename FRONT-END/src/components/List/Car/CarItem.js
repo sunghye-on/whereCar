@@ -1,12 +1,19 @@
 import React from 'react';
-import { ListItem, ListItemAvatar, Avatar, ListItemText, ListItemSecondaryAction, Checkbox, ListItemIcon } from "@material-ui/core";
+import { ListItem, ListItemAvatar, Avatar, ListItemText, ListItemSecondaryAction, ListItemIcon, makeStyles } from "@material-ui/core";
 
 import DeleteIcon from '@material-ui/icons/Delete';
 import FaceIcon from '@material-ui/icons/Face';
 
+const useStyles = makeStyles(theme => ({
+  root: {
+    marginTop: '1rem'
+  },
+}));
+
 export default function CarItem({ value, labelId, bottomValue }) {
+  const classes = useStyles();
   return (
-    <ListItem key={value.id} button>
+    <ListItem key={value.id} button className={classes.root}>
       <ListItemAvatar>
         <Avatar
           alt={`Avatar n°${value.id + 1}`}

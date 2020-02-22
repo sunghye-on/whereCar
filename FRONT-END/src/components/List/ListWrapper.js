@@ -18,7 +18,7 @@ const ShadowedBox = styled.div`
         width: 100%;
     `}
     ${media.tablet`
-        width: 20rem;
+        width: 30rem;
     `}
     ${media.phone`
         width: 20rem;

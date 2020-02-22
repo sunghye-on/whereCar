@@ -5,7 +5,6 @@ import { CarItem } from 'components/List/Car';
 import { LogoWrapper } from 'components/List/Car';
 import { ListWrapper, BottomNav } from 'components/List';
 import styled from 'styled-components';
-import { media } from 'lib/styleUtils';
 
 import socketIOClient from "socket.io-client";
 import { connect } from 'react-redux';
@@ -16,11 +15,12 @@ import { driverListSoc } from 'sockets';
 const useStyles = makeStyles(theme => ({
   root: {
     width: '100%',
+    height: '21rem',
     // maxWidth: 400,
     backgroundColor: theme.palette.background.paper,
     position: 'relative',
     overflow: 'auto',
-    maxHeight: '23rem',
+    maxHeight: '21rem',
   },
   listSection: {
     backgroundColor: 'inherit',
