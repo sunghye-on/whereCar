@@ -9,6 +9,7 @@ import AccountCircleIcon from '@material-ui/icons/AccountCircle';
 import AccountBoxIcon from '@material-ui/icons/AccountBox';
 import FaceIcon from '@material-ui/icons/Face';
 import ExitToAppIcon from '@material-ui/icons/ExitToApp';
+import SupervisedUserCircleIcon from '@material-ui/icons/SupervisedUserCircle';
 
 const StyledMenu = withStyles({
   paper: {
