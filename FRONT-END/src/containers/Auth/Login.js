@@ -17,6 +17,7 @@ function Login({ form, result, error, location, AuthActions, UserActions, histor
   // componentDidMount 
   useEffect(() => {
     const query = queryString.parse(location.search);
+    console.log('query:::', location);
     if(query.expired !== undefined) {
       setError('세션에 만료되었습니다. 다시 로그인하세요.')
     }

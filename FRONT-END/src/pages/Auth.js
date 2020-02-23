@@ -4,9 +4,9 @@ import { bindActionCreators } from 'redux';
 import * as baseActions from 'redux/modules/base';
 import { AuthWrapper } from '../components/Auth';
 import { Login, Register, UpdateProfile } from '../containers/Auth';
-import { Route } from 'react-router-dom';
+import { Route, Redirect } from 'react-router-dom';
 
-function Auth({ BaseActions }) {
+function Auth({ BaseActions, loggedIn }) {
   useEffect(() => {
     BaseActions.setHeaderVisibility(false);
     return () => {
@@ -16,16 +16,22 @@ function Auth({ BaseActions }) {
 
   return (
     <AuthWrapper>
-      <Route path="/auth/login" component={ Login } />
-      <Route path="/auth/register" component={ Register } />
-      <Route path="/auth/profile" component={ UpdateProfile } />
+      <Route path="/auth/login" component={ Login } >
+        {loggedIn && <Redirect to="/" />}
+      </Route>
+      <Route path="/auth/register" component={ Register } >
+        {loggedIn && <Redirect to="/" />}
+      </Route>
+      <Route path="/auth/profile" component={ UpdateProfile } >
+        {!loggedIn && <Redirect to="/" />}
+      </Route>
     </AuthWrapper>
   );
 };
 
 export default connect(
   (state) => ({
-
+    loggedIn: state.user.get('logged')
   }),
   (dispatch) => ({
       BaseActions: bindActionCreators(baseActions, dispatch)
