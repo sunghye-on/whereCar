@@ -9,7 +9,7 @@ import AccountCircleIcon from '@material-ui/icons/AccountCircle';
 import AccountBoxIcon from '@material-ui/icons/AccountBox';
 import FaceIcon from '@material-ui/icons/Face';
 import ExitToAppIcon from '@material-ui/icons/ExitToApp';
-import SupervisedUserCircleIcon from '@material-ui/icons/SupervisedUserCircle';
+import { withRouter } from 'react-router-dom';
 
 const StyledMenu = withStyles({
   paper: {
@@ -42,7 +42,7 @@ const StyledMenuItem = withStyles(theme => ({
   },
 }))(MenuItem);
 
-export default function ProfileButton({displayName, handleLogout}) {
+const ProfileButton = withRouter(({displayName, handleLogout, history}) => {
   const [anchorEl, setAnchorEl] = React.useState(null);
 
   const handleClick = event => {
@@ -54,7 +54,7 @@ export default function ProfileButton({displayName, handleLogout}) {
   };
 
   const handleProfile = () => {
-    window.location.href = '/auth/profile';
+    history.push('/auth/profile');
   };
 
   return (
@@ -95,4 +95,6 @@ export default function ProfileButton({displayName, handleLogout}) {
       </StyledMenu>
     </div>
   );
-}
+})
+
+export default ProfileButton;
