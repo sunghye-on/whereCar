@@ -55,7 +55,7 @@ export default function ProfileButton({displayName, handleLogout}) {
 
   const handleProfile = () => {
     window.location.href = '/auth/profile';
-  }
+  };
 
   return (
     <div>
