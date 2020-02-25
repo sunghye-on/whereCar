@@ -61,6 +61,22 @@ const initialState = Map({
         }),
         error: null
     }),
+    admin: Map({
+        from: Map({
+            groupType: '',
+            groupName: '',
+            groupTell: '',
+            groupLoc: '',
+            groupDesc: '',
+            groupCertifi: ''
+        }),
+        exists: Map({
+            email: false,
+            displayName: false,
+            password: false
+        }),
+        error: null
+    }),
     result: Map({})
 });
 

@@ -17,10 +17,13 @@ const useStyles = makeStyles(theme => ({
     marginTop: theme.spacing(1),
     marginBottom: theme.spacing(1),
   },
+  buttonStyle: {
+    marginRight: theme.spacing(1)
+  }
 }));
 
 function getSteps() {
-  return ['단체 기본정보 기입하기', '상세정보 기입하기'];
+  return ['기본정보 기입하기', '상세정보 기입하기'];
 }
 
 function getStepContent(step) {
@@ -87,7 +90,7 @@ export default function AdminStepper() {
   };
 
   return (
-    <div className={classes.root}>
+    <div>
       <Stepper nonLinear activeStep={activeStep}>
         {steps.map((label, index) => (
           <Step key={label}>
@@ -109,13 +112,14 @@ export default function AdminStepper() {
           <div>
             <Typography className={classes.instructions}>{getStepContent(activeStep)}</Typography>
             <div>
-              <Button disabled={activeStep === 0} onClick={handleBack}>
+              <Button disabled={activeStep === 0} onClick={handleBack} className={classes.buttonStyle}>
                 Back
               </Button>
               <Button
                 variant="contained"
                 color="primary"
                 onClick={handleNext}
+                className={classes.buttonStyle}
               >
                 Next
               </Button>
@@ -125,7 +129,7 @@ export default function AdminStepper() {
                     Step {activeStep + 1} already completed
                   </Typography>
                 ) : (
-                  <Button variant="contained" color="primary" onClick={handleComplete}>
+                  <Button variant="contained" color="primary" onClick={handleComplete} className={classes.buttonStyle}>
                     {completedSteps() === totalSteps() - 1 ? 'Finish' : 'Complete'}
                   </Button>
                 ))}

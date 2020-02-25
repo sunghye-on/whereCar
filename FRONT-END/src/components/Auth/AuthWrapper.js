@@ -47,6 +47,9 @@ const Contents = styled.div`
     background: white;
     padding: 2rem;
     height: auto;
+    ${media.phone`
+        padding: 1rem;
+    `}
 `;
 
 const AuthWrapper = ({children}) => (
