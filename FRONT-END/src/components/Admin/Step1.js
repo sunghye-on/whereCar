@@ -17,20 +17,20 @@ const useStyles = makeStyles(theme => ({
   },
 }));
 
-export default function Step1() {
+export default function Step1({handleChange, form}) {
+  const { type, name, tell } = form;
   return (
     <>
-      <SlideBtn/>
-      <InputWithLabel label="단체/학원이름" name="groupName" placeholder="학원이름"/>
-      <InputWithLabel label="단체 연락처" name="groupTell" placeholder="010-1234-5678"/>
+      <SlideBtn handleChange={handleChange} type={type}/>
+      <InputWithLabel label="단체/학원이름" name="name" placeholder="학원이름" onChange={handleChange} value={name}/>
+      <InputWithLabel label="단체 연락처" name="tell" placeholder="010-1234-5678" onChange={handleChange} value={tell}/>
     </>
   )
 }
 
 // <InputWithLabel label="단체유형" name="groupType" placeholder="단체유형"/>
-const SlideBtn = () => {
+const SlideBtn = ({handleChange, type}) => {
   const classes = useStyles();
-  const [age, setAge] = React.useState('');
 
   const inputLabel = React.useRef(null);
   const [labelWidth, setLabelWidth] = React.useState(0);
@@ -38,9 +38,6 @@ const SlideBtn = () => {
     setLabelWidth(inputLabel.current.offsetWidth);
   }, []);
 
-  const handleChange = event => {
-    setAge(event.target.value);
-  };
   return (
     <FormControl variant="outlined" className={classes.formControl}>
       <InputLabel ref={inputLabel} id="demo-simple-select-outlined-label">
@@ -49,17 +46,18 @@ const SlideBtn = () => {
       <Select
         labelId="demo-simple-select-outlined-label"
         id="demo-simple-select-outlined"
-        value={age}
+        name="type"
+        value={type}
         onChange={handleChange}
         labelWidth={labelWidth}
       >
         <MenuItem value="">
           <em>None</em>
         </MenuItem>
-        <MenuItem value={10}>학원</MenuItem>
-        <MenuItem value={20}>유치원</MenuItem>
-        <MenuItem value={30}>학교</MenuItem>
-        <MenuItem value={30}>기타</MenuItem>
+        <MenuItem value={"Academy"}>학원</MenuItem>
+        <MenuItem value={"kindergarden"}>유치원</MenuItem>
+        <MenuItem value={"school"}>학교</MenuItem>
+        <MenuItem value={"etc"}>기타</MenuItem>
       </Select>
     </FormControl>
   )

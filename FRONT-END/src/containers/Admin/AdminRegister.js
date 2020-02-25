@@ -11,7 +11,7 @@ import debounce from 'lodash/debounce';
 
 
 function AdminRegister({ form, error, exists, result, AuthActions, UserActions, history }) {
-  const { email, displayName, password, passwordConfirm } = form.toJS();
+  const { type, name, tell, location, description, certification } = form.toJS();
 
   useEffect(() => {
 
@@ -21,58 +21,54 @@ function AdminRegister({ form, error, exists, result, AuthActions, UserActions, 
   }, [AuthActions]);
 
   const setError = (message) => {
-    AuthActions.setError({ form: 'register', message });
+    AuthActions.setError({ form: 'admin', message });
   }
 
   const validate = {
-    email: value => {
-      if(!isEmail(value)) {
-        setError('잘못된 이메일 형식입니다.');
+    type: value => {
+      if(!isAlphanumeric(value) || !isLength(value, { min: 3, max: 15 })) {
+        setError('그룹의 형식이 맞지 않습니다.');
         return false;
       }
       return true;
     },
-    displayName: value => {
+    name: value => {
       if(!isAlphanumeric(value) || !isLength(value, { min: 4, max: 15 })) {
-        setError('아이디는 4~15 글자의 알파벳 혹은 숫자로 이뤄져야 합니다.');
+        setError('그룹명은 4~15 글자의 알파벳 혹은 숫자로 이뤄져야 합니다.');
         return false;
       }
       return true;
     },
-    password: value => {
-      if(!isLength(value, { min: 6 })){
-        setError('비밀번호를 6자 이상 입력하세요.');
-        return false
+    location: value => {
+      if(!isAlphanumeric(value) || !isLength(value, { min: 4, max: 30 })) {
+        setError('location위치는 30자 이내어야 합니다.');
+        return false;
       }
-      setError(null); // 이메일과 아이디는 에러 null 처리를 중복확인 부분에서 하게 됩니다
       return true;
     },
-    passwordConfirm: value => {
-      if(!isLength(value, { min: 6 })){
-        setError('비밀번호를 6자 이상 입력하세요.');
-        return false
-      } else if(form.get('password') !== value) {
-        setError(`비밀번호 확인이 일치하지 않습니다.`);
+    description: value => {
+      if(!isAlphanumeric(value) || !isLength(value, { min: 4, max: 50 })) {
+        setError('description은 30자 이내어야 합니다.');
         return false;
+      }
+      return true;
+    },
+    certification: value => {
+      if(!isAlphanumeric(value) || !isLength(value, { min: 4, max: 30 })) {
+        setError('certification은 30자 이내어야 합니다.');
+        return false;
+      }
+      return true;
+    },
+    tell: value => {
+      if(!isLength(value, { min: 6 })){
+        setError('연락처가 짧거나, "-" 을 빼주세요.');
+        return false
       }
       setError(null);
       return true;
     }
   };
-
-  const checkEmailExists = debounce(async (email) => {
-    try {
-      const result = await AuthActions.checkEmailExists(email);
-      console.log(result.data.exists, exists.get('email'))
-      if(result.data.exists) {
-        setError('이미 존재하는 이메일입니다.');
-      } else {
-        setError(null);
-      }
-    } catch (error) {
-      console.log(error);
-    }
-  }, 300);
 
   const checkDisplayNameExists = debounce(async displayName => {
     try {
@@ -92,29 +88,33 @@ function AdminRegister({ form, error, exists, result, AuthActions, UserActions, 
     AuthActions.changeInput({
       name,
       value,
-      form: 'register'
+      form: 'admin'
     });
     
     const validation = validate[name](value);
     if(name.indexOf('password') > -1 || !validation) return; // 비밀번호 검증이거나, 검증 실패하면 여기서 마침
 
-    const check = name === 'email' ? checkEmailExists : checkDisplayNameExists;
-    check(value);
+    checkDisplayNameExists(value);
   };
 
   const handleLocalRegister = async () => {
     if(error) return; // 현재 에러가 있는 상태라면 진행하지 않음
 
-    if(!validate['email'](email)||
-      !validate['displayName'](displayName)||
-      !validate['password'](password)||
-      !validate['passwordConfirm'](passwordConfirm)) return; // 하나라도 실패하면 진행하지 않음
+    if(!validate['type'](type)||
+      !validate['name'](name)||
+      !validate['tell'](tell)||
+      !validate['description'](description)||
+      !validate['certification'](certification)||
+      !validate['location'](location)) return; // 하나라도 실패하면 진행하지 않음
     
     try {
       await AuthActions.localRegister({
-        email,
-        displayName,
-        password
+        type,
+        name,
+        tell,
+        description,
+        certification,
+        location
       }).then(
         result => {
           const loggedInfo = result.data;
@@ -137,7 +137,7 @@ function AdminRegister({ form, error, exists, result, AuthActions, UserActions, 
 
   return (
     <AuthContent title="관리자 신청서">
-        <AdminStepper />
+        <AdminStepper handleChange={handleChange} form={form.toJS()}/>
         {
           error && <AuthError>{error}</AuthError>
         }
@@ -148,9 +148,9 @@ function AdminRegister({ form, error, exists, result, AuthActions, UserActions, 
 
 export default connect(
   (state) => ({
-    form: state.auth.getIn(['register', 'form']),
-    error: state.auth.getIn(['register', 'error']),
-    exists: state.auth.getIn(['register', 'exists']),
+    form: state.auth.getIn(['admin', 'form']),
+    error: state.auth.getIn(['admin', 'error']),
+    exists: state.auth.getIn(['admin', 'exists']),
     result: state.auth.get('result')
   }),
   (dispatch) => ({

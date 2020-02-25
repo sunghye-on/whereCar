@@ -15,6 +15,7 @@ const CHECK_DISPLAYNAME_EXISTS = 'auth/CHECK_DISPLAYNAME_EXISTS'; // 아이디 �
 /* ****************   Login & Logout checker **************** */
 const LOCAL_REGISTER = 'auth/LOCAL_REGISTER'; // 이메일 가입
 const LOCAL_LOGIN = 'auth/LOCAL_LOGIN'; // 이메일 로그인
+const ADMIN_REGISTER = 'auth/ADMIN_REGISTER'; // 관리자 계정 가입
 
 const LOGOUT = 'auth/LOGOUT'; // 로그아웃
 
@@ -24,19 +25,25 @@ const UPDATE_USER = 'auth/UPDATE_USER'; // 로그아웃
 /* ****************   Error Setter **************** */
 const SET_ERROR = 'auth/SET_ERROR'; // 오류 설정
 
+/* about input */
 export const changeInput = createAction(CHANGE_INPUT); //  { form, name, value }
 export const initializeForm = createAction(INITIALIZE_FORM); // form 
-
+/* checking */
 export const checkEmailExists = createAction(CHECK_EMAIL_EXISTS, AuthAPI.checkEmailExists); // email
 export const checkDisplayNameExists = createAction(CHECK_DISPLAYNAME_EXISTS, AuthAPI.checkDisplayNameExists); // displayName
-
+/* Login & Register */
 export const localRegister = createAction(LOCAL_REGISTER, AuthAPI.localRegister); // { email, displayName, password }
 export const localLogin = createAction(LOCAL_LOGIN, AuthAPI.localLogin); // { email, password }
+// Todo socialLogin...
 
+// Admin Register
+export const adminRegister = createAction(ADMIN_REGISTER, AuthAPI.adminRegister) // { type, name, tell, location, description, certification}
+
+/* Logout */
 export const logout = createAction(LOGOUT, AuthAPI.logout);
 
 export const updateUser = createAction(UPDATE_USER, AuthAPI.updateUser); // {email, displayName, password}
-
+/* Error */
 export const setError = createAction(SET_ERROR); // { form, message }
 
 const initialState = Map({
@@ -62,13 +69,13 @@ const initialState = Map({
         error: null
     }),
     admin: Map({
-        from: Map({
-            groupType: '',
-            groupName: '',
-            groupTell: '',
-            groupLoc: '',
-            groupDesc: '',
-            groupCertifi: ''
+        form: Map({
+            type: '',
+            name: '',
+            tell: '',
+            location: '',
+            description: '',
+            certification: ''
         }),
         exists: Map({
             email: false,
@@ -103,6 +110,10 @@ export default handleActions({
     }),
     ...pender({
         type: LOCAL_REGISTER,
+        onSuccess: (state, action) => state.set('result', Map(action.payload.data))
+    }),
+    ...pender({
+        type: ADMIN_REGISTER,
         onSuccess: (state, action) => state.set('result', Map(action.payload.data))
     }),
     ...pender({
