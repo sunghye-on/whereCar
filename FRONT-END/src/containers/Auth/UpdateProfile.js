@@ -17,6 +17,7 @@ function UpdateProfile({ form, error, user, result, AuthActions, UserActions, hi
     return () => {
       AuthActions.changeInput({
         name: 'email',
+        //  해결해야함... 값을 읽어오지 못함.
         value: loggedInfo.email,
         form: 'register'
       });
