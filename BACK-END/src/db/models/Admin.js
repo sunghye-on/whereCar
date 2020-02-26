@@ -22,6 +22,11 @@ const Admin = new mongoose.Schema({
   }
 });
 
+// 이메일 찾기
+Admin.statics.findByUser = function(user) {
+  return this.findOne({ user });
+};
+
 // admin 회원가입
 Admin.statics.adminRegister = function({ role, user, group }) {
   const admin = new this({

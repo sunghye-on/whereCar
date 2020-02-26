@@ -84,6 +84,8 @@ exports.localLogin = async (ctx) => {
   try {
     // find user
     const user = await User.findByEmail(email);
+    // find admin
+    const admin = await Admin.findByUser(user);
     
     if(!user) {
       // user dose not exist
@@ -110,10 +112,8 @@ exports.localLogin = async (ctx) => {
 
     const { _id, displayName, metaInfo } = user;
     ctx.body = {
-      displayName,
-      _id,
-      email,
-      metaInfo
+      loggedInfo: user,
+      adminInfo: admin || ''
     };
   } catch (error) {
     ctx.throw(error);

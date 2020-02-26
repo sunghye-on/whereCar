@@ -18,8 +18,9 @@ function HeaderContainer({ visible, user, UserActions }) {
     } catch (error) {
       console.log(error);
     };
-    // delete loggedInfo data in local storage
+    // delete loggedInfo&adminInfo data in local storage
     storage.remove('loggedInfo');
+    storage.remove('adminInfo');
     // reflash current page to Home
     window.location.href = '/';
   };

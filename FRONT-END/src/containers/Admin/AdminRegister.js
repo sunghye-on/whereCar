@@ -117,9 +117,9 @@ function AdminRegister({ form, error, exists, result, AuthActions, UserActions, 
         location
       }).then(
         result => {
-          const loggedInfo = result.data;
-          storage.set('loggedInfo', loggedInfo);
-          UserActions.setLoggedInfo(loggedInfo);
+          const adminInfo = result.data;
+          storage.set('adminInfo', adminInfo);
+          UserActions.setAdminInfo(adminInfo);
           UserActions.setValidated(true);
       });
 
