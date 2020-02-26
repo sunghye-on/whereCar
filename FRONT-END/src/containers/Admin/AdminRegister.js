@@ -16,7 +16,7 @@ function AdminRegister({ form, error, exists, result, AuthActions, UserActions, 
   useEffect(() => {
 
     return () => {
-      AuthActions.initializeForm('register');
+      AuthActions.initializeForm('admin');
     };
   }, [AuthActions]);
 
@@ -97,7 +97,7 @@ function AdminRegister({ form, error, exists, result, AuthActions, UserActions, 
     checkDisplayNameExists(value);
   };
 
-  const handleLocalRegister = async () => {
+  const handleAdminRegister = async () => {
     if(error) return; // 현재 에러가 있는 상태라면 진행하지 않음
 
     if(!validate['type'](type)||
@@ -108,7 +108,7 @@ function AdminRegister({ form, error, exists, result, AuthActions, UserActions, 
       !validate['location'](location)) return; // 하나라도 실패하면 진행하지 않음
     
     try {
-      await AuthActions.localRegister({
+      await AuthActions.adminRegister({
         type,
         name,
         tell,
@@ -137,11 +137,11 @@ function AdminRegister({ form, error, exists, result, AuthActions, UserActions, 
 
   return (
     <AuthContent title="관리자 신청서">
-        <AdminStepper handleChange={handleChange} form={form.toJS()}/>
+        <AdminStepper handleChange={handleChange} form={form.toJS()} handleAdminRegister={handleAdminRegister}/>
         {
           error && <AuthError>{error}</AuthError>
         }
-        <AuthButton onClick={handleLocalRegister}>관리자 신청하기</AuthButton>
+        <AuthButton onClick={handleAdminRegister}>관리자 신청하기</AuthButton>
     </AuthContent>
   );
 };

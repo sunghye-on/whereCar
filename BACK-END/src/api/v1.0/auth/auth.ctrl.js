@@ -1,5 +1,7 @@
 const Joi = require('joi');
 const User = require('db/models/User');
+const GroupInfo = require('db/models/GroupInfo');
+const Admin = require('db/models/Admin');
 
 // local register function
 exports.localRegister = async (ctx) => {
@@ -205,6 +207,65 @@ exports.updateUser = async (ctx) => {
       httpOnly: true,
       maxAge: 1000 * 60 * 60 * 24 * 7
     });
+  } catch (error) {
+    console.log(error);
+    ctx.throw(500);
+  }
+};
+
+// admin register function
+exports.adminRegister = async (ctx) => {
+  const { body } = ctx.request;
+
+  const schema = Joi.object({
+    type: Joi.string().regex(/^[a-zA-Z0-9ㄱ-힣]{3,12}$/).required(),
+    name: Joi.string().regex(/^[a-zA-Z0-9ㄱ-힣]{3,12}$/).required(),
+    location: Joi.string().regex(/^[a-zA-Z0-9ㄱ-힣]{3,30}$/).required(),
+    description: Joi.string().regex(/^[a-zA-Z0-9ㄱ-힣]{3,30}$/).required(),
+    certification: Joi.string().regex(/^[a-zA-Z0-9ㄱ-힣]{3,30}$/).required(),
+    tell: Joi.string().regex(/^[a-zA-Z0-9ㄱ-힣]{3,16}$/).required()
+  });
+
+  const result = Joi.validate(body, schema);
+  // Schema error 
+  if(result.error) {
+    ctx.status = 400;
+    ctx.body = 'Schema error';
+    return;
+  }
+
+  const { type, name, tell, location, description, certification } = body;
+  const role = 'super';
+
+  try {
+    // check name or location existancy
+    const exists = await GroupInfo.findExistancy({ name, location })
+      .catch(e => console.log(`❌  Error occured at GroupInfo.findExistancy: ${e}`));
+    if(exists) {
+      ctx.status = 409;
+      const key = exists.name === name ? 'name' : 'location';
+      ctx.body = {
+        message: `Already exists [${key}]` 
+      };
+      return;
+    }
+
+    // find user obj
+    const { user } = ctx.request;
+    console.log('user ::: ', user);
+
+    // creates group info
+    const group = await GroupInfo.groupRegister({
+      type, name, tell, location, description, certification
+    });
+    // create admin user
+    const admin = await Admin.adminRegister({
+      role, user, group
+    });
+
+    ctx.body = {
+      admin
+    };
   } catch (error) {
     console.log(error);
     ctx.throw(500);

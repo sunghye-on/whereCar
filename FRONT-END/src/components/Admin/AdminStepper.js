@@ -8,6 +8,7 @@ import Typography from '@material-ui/core/Typography';
 
 import Step1 from './Step1';
 import Step2 from './Step2';
+import { AuthButton } from 'components/Auth';
 
 const useStyles = makeStyles(theme => ({
   completed: {
@@ -37,7 +38,7 @@ function getStepContent(step, handleChange, form) {
   }
 }
 
-export default function AdminStepper({handleChange, form}) {
+export default function AdminStepper({handleChange, handleAdminRegister, form}) {
   const classes = useStyles();
   const [activeStep, setActiveStep] = React.useState(0);
   const [completed, setCompleted] = React.useState({});
@@ -106,7 +107,7 @@ export default function AdminStepper({handleChange, form}) {
             <Typography className={classes.instructions}>
               All steps completed - you&apos;re finished
             </Typography>
-            <Button onClick={handleReset}>Reset</Button>
+            <AuthButton onClick={handleAdminRegister}>관리자 신청하기</AuthButton>
           </div>
         ) : (
           <div>

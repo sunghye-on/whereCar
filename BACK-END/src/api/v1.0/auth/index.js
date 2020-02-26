@@ -12,7 +12,11 @@ auth.post('/login/local', authCtrl.localLogin);
 auth.get('/exists/:key(email|displayName)/:value', authCtrl.exists);
 auth.get('/check', authCtrl.check);
 auth.post('/logout', authCtrl.logout);
+// profile 관련
 auth.post('/profile', authCtrl.updateUser); // profile update
 auth.get('/profile'); // profile Read
+// admin 관련
+auth.post('/register/admin', authCtrl.adminRegister); // profile update
+auth.get('/profile/admin'); // profile Read
 
 module.exports = auth;

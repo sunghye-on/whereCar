@@ -37,7 +37,7 @@ export const localLogin = createAction(LOCAL_LOGIN, AuthAPI.localLogin); // { em
 // Todo socialLogin...
 
 // Admin Register
-export const adminRegister = createAction(ADMIN_REGISTER, AuthAPI.adminRegister) // { type, name, tell, location, description, certification}
+export const adminRegister = createAction(ADMIN_REGISTER, AuthAPI.adminRegister) // { type, name, tell, location, description, certification, role}
 
 /* Logout */
 export const logout = createAction(LOGOUT, AuthAPI.logout);

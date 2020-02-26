@@ -7,16 +7,14 @@ const token = require('lib/token');
 const hash = (password) => crypto.createHmac('sha256', secret).update(password).digest('hex');
 
 const Admin = new mongoose.Schema({
-  groupName: String,
-  groupAddress: String,
   Role: String,
   user: { // 해당 Admin을 사용하는 User
     type: mongoose.Schema.Types.ObjectId,
     ref: 'User'
   },
-  adminGroup: { // 해당 Admin이 속해있는 AdminGroup정보
+  group: { // 해당 Admin이 속해있는 AdminGroup정보
     type: mongoose.Schema.Types.ObjectId,
-    ref: 'AdminGroup'
+    ref: 'GroupInfo'
   },
   createdAt: {
     type: Date,
@@ -24,4 +22,14 @@ const Admin = new mongoose.Schema({
   }
 });
 
+// admin 회원가입
+Admin.statics.adminRegister = function({ role, user, group }) {
+  const admin = new this({
+    role,
+    user,
+    group
+  });
+  admin.save();
+  return admin;
+}; 
 module.exports = mongoose.model('Admin', Admin);
