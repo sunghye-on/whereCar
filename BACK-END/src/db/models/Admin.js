@@ -7,7 +7,7 @@ const token = require('lib/token');
 const hash = (password) => crypto.createHmac('sha256', secret).update(password).digest('hex');
 
 const Admin = new mongoose.Schema({
-  Role: String,
+  role: String,
   user: { // 해당 Admin을 사용하는 User
     type: mongoose.Schema.Types.ObjectId,
     ref: 'User'
