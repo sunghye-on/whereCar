@@ -11,22 +11,22 @@ import debounce from 'lodash/debounce';
 
 function UpdateProfile({ form, error, user, result, AuthActions, UserActions, history }) {
   const { email, displayName, password, passwordConfirm } = form.toJS();
-
+  const loggedInfo = storage.get('loggedInfo');
   useEffect(() => {
     // 초기에 input값 초기화가 필요
     return () => {
       AuthActions.changeInput({
         name: 'email',
-        value: user.getIn(['loggedInfo', 'email']),
+        value: loggedInfo.email,
         form: 'register'
       });
       AuthActions.changeInput({
         name: 'displayName',
-        value: user.getIn(['loggedInfo', 'displayName']),
+        value: loggedInfo.displayName,
         form: 'register'
       });
     };
-  }, [AuthActions, user]);
+  }, []);
 
   const setError = (message) => {
     AuthActions.setError({ form: 'register', message });

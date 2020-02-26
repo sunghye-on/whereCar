@@ -7,6 +7,9 @@ const {
 } = process.env;
 
 const Koa = require('koa');
+const serve = require('koa-static');
+const path = require('path');
+const send = require('koa-send'); 
 const Router = require('koa-router');
 const bodyParser = require('koa-bodyparser');
 const helmet = require('koa-helmet');
@@ -24,6 +27,7 @@ const jwtMiddleware = require('./lib/middlewares/jwtMiddleware');
 db.connect();
 
 const app = new Koa();
+app.use(serve(path.join(__dirname, '../../FRONT-END/build')));
 
 app.use(helmet());
 app.use(jwtMiddleware);
@@ -32,6 +36,10 @@ app.use(bodyParser());
 const router = new Router();
 /* /... */
 router.use('/api', api.routes());
+router.get('/', async (ctx, next) => {
+  const mainPath = path.join(__dirname, '../../FRONT-END/build');
+  await send(ctx, 'index.html', { root: mainPath });
+});
 
 // middleware
 app.use(router.routes());

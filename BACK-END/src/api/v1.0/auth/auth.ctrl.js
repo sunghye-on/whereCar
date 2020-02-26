@@ -112,7 +112,7 @@ exports.localLogin = async (ctx) => {
 
     const { _id, displayName, metaInfo } = user;
     ctx.body = {
-      loggedInfo: user,
+      loggedInfo: { _id, email, displayName, metaInfo },
       adminInfo: admin || ''
     };
   } catch (error) {
