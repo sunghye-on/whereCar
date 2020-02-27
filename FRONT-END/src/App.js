@@ -24,6 +24,7 @@ function App({ UserActions, SocketActions }) {
       await UserActions.checkStatus();
     } catch (error) {
       storage.remove('loggedInfo');
+      storage.remove('adminInfo');
       window.location.href = '/auth/login?expired';
     }
   };

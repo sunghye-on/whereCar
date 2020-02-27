@@ -29,7 +29,10 @@ function HeaderContainer({ visible, user, UserActions }) {
       <Header>
         { user.get('logged')
           ? <>
-              <AdminButton />
+              {!user.getIn(['loggedInfo', 'adminInfo']) ? 
+                  <AdminButton to="/auth/admin/register" content="관리자 가입"/>
+                : <AdminButton to="/auth/admin/management" content="관리자 페이지"/>
+              }
               <ProfileButton displayName={user.getIn(['loggedInfo', 'displayName'])} handleLogout={handleLogout}/>
             </>
           : <LoginButton/>

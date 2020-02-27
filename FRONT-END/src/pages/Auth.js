@@ -4,7 +4,7 @@ import { bindActionCreators } from 'redux';
 import * as baseActions from 'redux/modules/base';
 import { AuthWrapper } from '../components/Auth';
 import { Login, Register, UpdateProfile } from '../containers/Auth';
-import { AdminRegister } from '../containers/Admin';
+import { AdminRegister, Maintain } from '../containers/Admin';
 import { Route, Redirect } from 'react-router-dom';
 
 function Auth({ BaseActions, loggedIn }) {
@@ -26,7 +26,10 @@ function Auth({ BaseActions, loggedIn }) {
       <Route path="/auth/profile" component={ UpdateProfile } >
         {!loggedIn && <Redirect to="/" />}
       </Route>
-      <Route path="/auth/admin" component={ AdminRegister } >
+      <Route path="/auth/admin/register" component={ AdminRegister } >
+        {!loggedIn && <Redirect to="/" />}
+      </Route>
+      <Route path="/auth/admin/management" component={ Maintain } >
         {!loggedIn && <Redirect to="/" />}
       </Route>
     </AuthWrapper>

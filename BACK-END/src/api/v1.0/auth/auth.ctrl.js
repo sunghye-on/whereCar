@@ -120,8 +120,10 @@ exports.localLogin = async (ctx) => {
   }
 };
 
-exports.check = (ctx) => {
+exports.check = async (ctx) => {
   const { user } = ctx.request;
+  // find admin
+  const admin = await Admin.findByUser(user);
   // user session이 없다면
   if(!user) {
     ctx.status = 403;
@@ -131,7 +133,7 @@ exports.check = (ctx) => {
   
   ctx.body = {
     ...user,
-    metaInfo: {}
+    adminInfo: admin
   };
 };
 

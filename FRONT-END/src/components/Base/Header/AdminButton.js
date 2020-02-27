@@ -27,9 +27,9 @@ const BorderedButton = styled(Link)`
     }
 `;
 
-const AdminButton = () => (
-    <BorderedButton to="/auth/admin">
-        관리자 / 가입
+const AdminButton = ({to, content}) => (
+    <BorderedButton to={to}>
+        {content}
     </BorderedButton>
 );
 
