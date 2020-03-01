@@ -15,7 +15,7 @@ const Positioner = styled.div`
 
 // 너비, 그림자 설정
 const ShadowedBox = styled.div`
-    width: 1000px;
+    width: 500px;
     ${media.wide`
         width: 100%;
     `}

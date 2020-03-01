@@ -8,9 +8,6 @@ const Title = styled.div`
     font-size: 1.5rem;
     font-weight: 500;
     color: ${oc.gray[8]};
-    ${media.wide`
-        width: 100%;
-    `}
     ${media.phone`
         width: 20rem;
         font-size: 1rem;
