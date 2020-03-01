@@ -24,14 +24,13 @@ function HeaderContainer({ visible, user, UserActions }) {
     // reflash current page to Home
     window.location.href = '/';
   };
-
   return (
       <Header>
         { user.get('logged')
           ? <>
               {!user.getIn(['loggedInfo', 'adminInfo']) ? 
                   <AdminButton to="/auth/admin/register" content="관리자 가입"/>
-                : <AdminButton to="/auth/admin/management" content="관리자 페이지"/>
+                : <AdminButton to="/admin/management" content="관리자 페이지"/>
               }
               <ProfileButton displayName={user.getIn(['loggedInfo', 'displayName'])} handleLogout={handleLogout}/>
             </>

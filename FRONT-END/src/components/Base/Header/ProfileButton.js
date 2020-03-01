@@ -10,6 +10,7 @@ import AccountBoxIcon from '@material-ui/icons/AccountBox';
 import FaceIcon from '@material-ui/icons/Face';
 import ExitToAppIcon from '@material-ui/icons/ExitToApp';
 import { withRouter } from 'react-router-dom';
+import { green } from '@material-ui/core/colors';
 
 const StyledMenu = withStyles({
   paper: {
@@ -42,7 +43,7 @@ const StyledMenuItem = withStyles(theme => ({
   },
 }))(MenuItem);
 
-const ProfileButton = withRouter(({displayName, handleLogout, history}) => {
+const ProfileButton = withRouter(({style ,displayName, handleLogout, history}) => {
   const [anchorEl, setAnchorEl] = React.useState(null);
 
   const handleClick = event => {
@@ -56,14 +57,14 @@ const ProfileButton = withRouter(({displayName, handleLogout, history}) => {
   const handleProfile = () => {
     history.push('/auth/profile');
   };
-
+  const styled = style ? style : { color: green[500] };
   return (
     <div>
       <AccountCircleIcon
         aria-controls="customized-menu"
         aria-haspopup="true"
         variant="contained"
-        color="primary"
+        style= {styled}
         fontSize="large"
         onClick={handleClick}
       />

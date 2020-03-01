@@ -1,5 +1,6 @@
 import React, { useEffect } from 'react';
-import { AuthContent, InputWithLabel, AuthButton, AuthError } from 'components/Auth';
+import { InputWithLabel, AuthButton, AuthError } from 'components/Auth';
+import { AdminContent } from 'components/Admin';
 import { AdminStepper } from 'components/Admin';
 import { connect } from 'react-redux';
 import { bindActionCreators } from 'redux';
@@ -13,8 +14,8 @@ import debounce from 'lodash/debounce';
 function Maintain({ form, error, exists, result, AuthActions, UserActions, history }) {
   
   return (
-    <AuthContent title="관리자 창">
-    </AuthContent>
+    <AdminContent title="관리자 창">
+    </AdminContent>
   );
 };
 
