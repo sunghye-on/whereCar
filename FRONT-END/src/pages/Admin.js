@@ -8,7 +8,7 @@ import { Route, Redirect } from 'react-router-dom';
 import { Paper } from '@material-ui/core';
 import { makeStyles } from '@material-ui/core/styles';
 import styled from 'styled-components';
-// 로고
+
 const ContentWrapper = styled.div`
     display: flex;
     flex-wrap: wrap;

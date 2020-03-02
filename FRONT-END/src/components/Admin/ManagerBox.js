@@ -3,21 +3,26 @@ import styled from 'styled-components';
 import oc from 'open-color';
 import { media } from 'lib/styleUtils';
 import { Paper } from '@material-ui/core';
-// 로고
-const ManagerPaper = styled(Paper)`
-  width: 500px;
-  height: 600px;
-  ${media.wide`
-      width: 500px;
-      margin-right: 1rem;
-  `}
-  ${media.phone`
-      width: 20rem;
+
+const ManagerBox = ({children, style, display, width}) => {
+  const { wide, phone } = width||{ wide: '500px', phone: '20rem'};
+  const ManagerPaper = styled(Paper)`
+    width: ${wide};
+    height: 600px;
+    margin-right: 2rem;
+    ${media.wide`
+      width: ${wide};
+      margin-right: 2rem;
+    `}
+    ${media.phone`
+      width: ${phone};
       height: 500px;
       margin-top: 1rem;
-  `}
-`;
-const ManagerBox = ({title, children, style}) => {
+      margin-right: 0rem;
+      display: ${display?'none':'flex'}
+    `}
+  `;
+
   return (
     <ManagerPaper elevation={3} style={style}>
       { children }
