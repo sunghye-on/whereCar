@@ -9,7 +9,11 @@ const ContentWrapper = styled.div`
   align-items: center;
   justify-content: center;
 `;
-
+/*
+ManagerBox ::: 
+- display ==> true 설정시 phone 뷰에서 사라짐
+- width ===> phone wide 시의 보이는 사이즈를 설정 가능
+*/
 export default function HomeController() {
   return (
     <ContentWrapper>
