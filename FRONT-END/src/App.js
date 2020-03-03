@@ -1,6 +1,6 @@
 import React, { useEffect } from 'react';
 import { Route } from 'react-router-dom';
-import { Home, Auth, Admin } from 'pages';
+import { Home, Auth, Admin, Search } from 'pages';
 import HeaderContainer from 'containers/Base/HeaderContainer';
 
 import storage from 'lib/storage';
@@ -35,6 +35,7 @@ function App({ UserActions, SocketActions }) {
         <Route exact path="/" component={Home}/>
         <Route path="/auth" component={Auth}/>
         <Route path="/admin" component={Admin}/>
+        <Route path="/search" component={Search}/>
     </div>
   );
 }
