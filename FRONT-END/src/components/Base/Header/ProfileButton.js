@@ -9,6 +9,7 @@ import AccountCircleIcon from '@material-ui/icons/AccountCircle';
 import AccountBoxIcon from '@material-ui/icons/AccountBox';
 import FaceIcon from '@material-ui/icons/Face';
 import ExitToAppIcon from '@material-ui/icons/ExitToApp';
+import SupervisorAccountIcon from '@material-ui/icons/SupervisorAccount';
 import { withRouter } from 'react-router-dom';
 import { green } from '@material-ui/core/colors';
 
@@ -43,7 +44,7 @@ const StyledMenuItem = withStyles(theme => ({
   },
 }))(MenuItem);
 
-const ProfileButton = withRouter(({style ,displayName, handleLogout, history}) => {
+const ProfileButton = withRouter(({style ,displayName, handleLogout, adminPath, history}) => {
   const [anchorEl, setAnchorEl] = React.useState(null);
 
   const handleClick = event => {
@@ -57,6 +58,11 @@ const ProfileButton = withRouter(({style ,displayName, handleLogout, history}) =
   const handleProfile = () => {
     history.push('/auth/profile');
   };
+
+  const handleAdmin = () => {
+    history.push(adminPath);
+  }
+
   const styled = style ? style : { color: green[500] };
   return (
     <div>
@@ -86,6 +92,12 @@ const ProfileButton = withRouter(({style ,displayName, handleLogout, history}) =
             <AccountBoxIcon fontSize="small" />
           </ListItemIcon>
           <ListItemText primary="MyProfile" />
+        </StyledMenuItem>
+        <StyledMenuItem onClick={handleAdmin}>
+          <ListItemIcon>
+            <SupervisorAccountIcon fontSize="small" />
+          </ListItemIcon>
+          <ListItemText primary="Admin" />
         </StyledMenuItem>
         <StyledMenuItem onClick={handleLogout}>
           <ListItemIcon>

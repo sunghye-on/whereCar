@@ -1,5 +1,6 @@
 import React from 'react';
-import Header, { LoginButton, ProfileButton, AdminButton } from 'components/Base/Header';
+import Header, { LoginButton, ProfileButton } from 'components/Base/Header';
+import { SearchInput } from 'components/Search';
 import { connect } from 'react-redux';
 import * as userActions from 'redux/modules/user';
 import storage from 'lib/storage';
@@ -24,15 +25,21 @@ function HeaderContainer({ visible, user, UserActions }) {
     // reflash current page to Home
     window.location.href = '/';
   };
+
+  
+  const adminPath = !user.getIn(['loggedInfo', 'adminInfo']) ?
+    '/auth/admin/register' : '/admin/management';
+
   return (
       <Header>
         { user.get('logged')
           ? <>
-              {!user.getIn(['loggedInfo', 'adminInfo']) ? 
-                  <AdminButton to="/auth/admin/register" content="관리자 가입"/>
-                : <AdminButton to="/admin/management" content="관리자 페이지"/>
-              }
-              <ProfileButton displayName={user.getIn(['loggedInfo', 'displayName'])} handleLogout={handleLogout}/>
+              <SearchInput/>
+              <ProfileButton 
+                displayName={user.getIn(['loggedInfo', 'displayName'])} 
+                handleLogout={handleLogout} 
+                adminPath={adminPath}
+              />
             </>
           : <LoginButton/>
         }

@@ -46,6 +46,7 @@ const Logo = styled.div`
     letter-spacing: 2px;
     color: ${oc.teal[7]};
     font-family: 'Rajdhani';
+    text-align: center;
 `;
 
 // 중간 여백
@@ -64,7 +65,7 @@ const Header = ({children}) => {
         <Positioner>
             <WhiteBackground>
                 <HeaderContents>
-                    <Logo>WHERE-CAR</Logo>
+                    <Logo>WHERE CAR</Logo>
                     <Spacer/>
                     {children}
                 </HeaderContents>
