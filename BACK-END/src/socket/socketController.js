@@ -4,7 +4,6 @@ const events = require('./events');
 // socket: 연결된 소켓, io: 전역소켓(Server Socket)
 const socketController = (socket, io) => {
   console.log('❤  socket connecting success!!');
-  socket.emit('test', { data: 'hello socketIO!!' });
 
   // Driver가 활성화 되어있는지에 대하여 받는다.
   socket.on(events.driverActive, ({ driver, active }) => { // driver: 드라이버 유저정보 객체
