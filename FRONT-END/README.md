@@ -15,4 +15,4 @@ Server :::
 
 서버에서 특정 Driver가 활성화된것을 감지했을때 ===>
 `socket.emit("driverActive", {driver: driver1, active: true}); // test용 driver 활성화 [test]`
-특정 유저의 정보를 갱신시킨다.
+특정 유저의 정보를 갱신시킨다...
