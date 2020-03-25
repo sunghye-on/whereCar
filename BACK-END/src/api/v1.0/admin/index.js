@@ -11,6 +11,9 @@ admin.get('/', (ctx) => {
 // 그룹에 속한 유저들 확인하기
 admin.get('/users', adminCtrl.groupUsers);
 
+// 그룹에 속한 매니저들 확인하기
+admin.get('/managers', adminCtrl.groupManagers);
+
 // 매니저권한 새로부여
 admin.post('/manager', (ctx) => {
   ctx.body = '✅ Welcome to manager!!';

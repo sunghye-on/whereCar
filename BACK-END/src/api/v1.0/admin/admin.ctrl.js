@@ -18,11 +18,52 @@ exports.groupUsers = async (ctx) => {
   // GroupInfo DB에서 유저들정보 가져오기.
   try {
     const group = await GroupInfo.findOne({ _id: admin.group });
-    console.log(group.users);
     ctx.body = {
       groupUsers: group.users,
       admin: admin
     };
+  } catch (error) {
+    ctx.throw(error);
+  }
+};
+
+// 그룹에 속해있는 매니저들 찾아오기.
+exports.groupManagers = async (ctx) => {
+  const { user } = ctx.request;
+  // find admin
+  const admin = await Admin.findByUser(user);
+  // user session또는 관리자 권한이 없다면
+  if(!user || !admin) {
+    ctx.status = 403;
+    ctx.body = 'Any session not founded!';
+    // eslint-disable-next-line no-useless-return
+    return;
+  }
+  try {
+    // 그룹정보 추출하기
+    const admins = await Admin.find({ group: admin.group });
+    ctx.body = {
+      admins: admins
+    };
+  } catch (error) {
+    ctx.throw(error);
+  }
+};
+
+// 그룹에 속해있는 드라이버 찾아오기.
+exports.groupDrivers = async (ctx) => {
+  const { user } = ctx.request;
+  // find admin
+  const admin = await Admin.findByUser(user);
+  // user session또는 관리자 권한이 없다면
+  if(!user || !admin) {
+    ctx.status = 403;
+    ctx.body = 'Any session not founded!';
+    // eslint-disable-next-line no-useless-return
+    return;
+  }
+  try {
+    
   } catch (error) {
     ctx.throw(error);
   }
