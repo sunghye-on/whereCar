@@ -9,9 +9,7 @@ admin.get('/', (ctx) => {
 });
 
 // 그룹에 속한 유저들 확인하기
-admin.get('/users', (ctx) => {
-  ctx.body = '✅ Welcome to users!!';
-});
+admin.get('/users', adminCtrl.groupUsers);
 
 // 매니저권한 새로부여
 admin.post('/manager', (ctx) => {

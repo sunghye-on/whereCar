@@ -25,7 +25,7 @@ const GroupInfo = new mongoose.Schema({
   ] 
 });
 
-// 이메일과 닉네임 찾기
+// 이름과 위치로 그룹 검색하기.
 GroupInfo.statics.findExistancy = function({ name, location }) {
   return this.findOne({
     $or: [
