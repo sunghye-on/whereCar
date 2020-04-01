@@ -9,7 +9,6 @@ const ManagerBox = ({children, style, display, width}) => {
   const ManagerPaper = styled(Paper)`
     width: ${wide};
     height: 600px;
-    margin-right: 2rem;
     ${media.wide`
       width: ${wide};
       margin-right: 2rem;
@@ -19,7 +18,7 @@ const ManagerBox = ({children, style, display, width}) => {
       height: 500px;
       margin-top: 1rem;
       margin-right: 0rem;
-      display: ${display?'none':'flex'}
+      display: ${display?'none':'block'}
     `}
   `;
 

@@ -8,6 +8,14 @@ const hash = (password) => crypto.createHmac('sha256', secret).update(password).
 
 const User = new mongoose.Schema({
   displayName: String,
+  family: { // 해당 user의 가족에 해당하는 user정보
+    type: mongoose.Schema.Types.ObjectId,
+    ref: 'User'
+  },
+  option: { // 가족알림 옵션 설정
+    activated: Boolean,
+    default: false
+  },
   email: String,
   social: {
     facebook: {
@@ -51,12 +59,24 @@ User.statics.findExistancy = function({ email, displayName }) {
 };
 
 // local 회원가입
-User.statics.localRegister = function({ displayName, email, password }) {
-  const user = new this({
-    displayName,
-    email,
-    password: hash(password)
-  });
+User.statics.localRegister = function({ displayName, email, password, family }) {
+  let user = null;
+  // 가족정보를 기제했다면
+  if (family) { 
+    user = new this({
+      displayName,
+      email,
+      family,
+      password: hash(password)
+    });
+  } else{
+    user = new this({
+      displayName,
+      email,
+      password: hash(password)
+    });
+  }
+  
   user.save();
   return user;
 }; 

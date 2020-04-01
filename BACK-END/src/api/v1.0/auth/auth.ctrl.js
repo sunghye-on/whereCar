@@ -6,12 +6,22 @@ const Admin = require('db/models/Admin');
 // local register function
 exports.localRegister = async (ctx) => {
   const { body } = ctx.request;
-
-  const schema = Joi.object({
-    displayName: Joi.string().regex(/^[a-zA-Z0-9ㄱ-힣]{3,12}$/).required(),
-    email: Joi.string().email().required(),
-    password: Joi.string().min(6).max(30)
-  });
+  let schema = null;
+  if (body.familyEmail) {
+    schema = Joi.object({
+      displayName: Joi.string().regex(/^[a-zA-Z0-9ㄱ-힣]{3,12}$/).required(),
+      familyEmail: Joi.string().email(),
+      email: Joi.string().email().required(),
+      password: Joi.string().min(6).max(30)
+    });
+  } else {
+    schema = Joi.object({
+      displayName: Joi.string().regex(/^[a-zA-Z0-9ㄱ-힣]{3,12}$/).required(),
+      familyEmail: Joi.boolean(),
+      email: Joi.string().email().required(),
+      password: Joi.string().min(6).max(30)
+    });
+  }
 
   const result = Joi.validate(body, schema);
   // Schema error 
@@ -21,7 +31,7 @@ exports.localRegister = async (ctx) => {
     return;
   }
 
-  const { displayName, email, password } = body;
+  const { displayName, email, password, familyEmail } = body;
   try {
     // check email or displayName existancy
     const exists = await User.findExistancy({ email, displayName })
@@ -34,15 +44,21 @@ exports.localRegister = async (ctx) => {
       };
       return;
     }
+    let family = null;
+    // 가족정보가 있다면
+    if(familyEmail) {
+      family = await User.findByEmail(familyEmail);
+    }
     // creates user account
     const user = await User.localRegister({
-      displayName, email, password
+      displayName, email, password, family: family || false
     });
 
     ctx.body = {
       displayName,
       email,
       _id: user._id,
+      familyEmail: familyEmail || false,
       metaInfo: user.metaInfo
     };
 

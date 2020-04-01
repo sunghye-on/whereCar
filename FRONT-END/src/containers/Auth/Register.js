@@ -10,7 +10,7 @@ import debounce from 'lodash/debounce';
 
 
 function Register({ form, error, exists, result, AuthActions, UserActions, history }) {
-  const { email, displayName, password, passwordConfirm } = form.toJS();
+  const { email, familyEmail, displayName, password, passwordConfirm } = form.toJS();
 
   useEffect(() => {
 
@@ -28,6 +28,17 @@ function Register({ form, error, exists, result, AuthActions, UserActions, histo
       if(!isEmail(value)) {
         setError('잘못된 이메일 형식입니다.');
         return false;
+      }
+      return true;
+    },
+    familyEmail: value => {
+      // eslint-disable-next-line no-undef
+      if(value != "") {
+        if(!isEmail(value)) {
+          
+          setError('잘못된 이메일 형식입니다.');
+          return false;
+        }
       }
       return true;
     },
@@ -58,6 +69,20 @@ function Register({ form, error, exists, result, AuthActions, UserActions, histo
       return true;
     }
   };
+
+  const checkFamilyExists = debounce(async (email) => {
+    try {
+      const result = await AuthActions.checkEmailExists(email);
+      console.log(result.data.exists, exists.get('email'))
+      if(result.data.exists) {
+        setError(null);
+      } else {
+        setError('없는 계정입니다.');
+      }
+    } catch (error) {
+      console.log(error);
+    }
+  }, 300);
 
   const checkEmailExists = debounce(async (email) => {
     try {
@@ -99,12 +124,17 @@ function Register({ form, error, exists, result, AuthActions, UserActions, histo
 
     const check = name === 'email' ? checkEmailExists : checkDisplayNameExists;
     check(value);
+    // 가족 계정이 있는지 체크검사
+    if (name === "familyEmail") {
+      checkFamilyExists(value);
+    }
   };
 
   const handleLocalRegister = async () => {
     if(error) return; // 현재 에러가 있는 상태라면 진행하지 않음
 
     if(!validate['email'](email)||
+      !validate['familyEmail'](familyEmail)||
       !validate['displayName'](displayName)||
       !validate['password'](password)||
       !validate['passwordConfirm'](passwordConfirm)) return; // 하나라도 실패하면 진행하지 않음
@@ -112,6 +142,7 @@ function Register({ form, error, exists, result, AuthActions, UserActions, histo
     try {
       await AuthActions.localRegister({
         email,
+        familyEmail: familyEmail ? familyEmail : false,
         displayName,
         password
       }).then(
@@ -136,10 +167,11 @@ function Register({ form, error, exists, result, AuthActions, UserActions, histo
 
   return (
     <AuthContent title="회원가입">
-        <InputWithLabel value={email} label="이메일" name="email" placeholder="이메일" onChange={handleChange} />
-        <InputWithLabel value={displayName} label="닉네임" name="displayName" placeholder="닉네임" onChange={handleChange} />
-        <InputWithLabel value={password} label="비밀번호" name="password" placeholder="비밀번호" type="password" onChange={handleChange} />
-        <InputWithLabel value={passwordConfirm} label="비밀번호 확인" name="passwordConfirm" placeholder="비밀번호 확인" type="password" onChange={handleChange} />
+        <InputWithLabel value={familyEmail} label="보호자 이메일" name="familyEmail" placeholder="이메일" onChange={handleChange} />
+        <InputWithLabel value={email} label="이메일(*필수)" name="email" placeholder="이메일" onChange={handleChange} />
+        <InputWithLabel value={displayName} label="닉네임(*필수)" name="displayName" placeholder="닉네임" onChange={handleChange} />
+        <InputWithLabel value={password} label="비밀번호(*필수)" name="password" placeholder="비밀번호" type="password" onChange={handleChange} />
+        <InputWithLabel value={passwordConfirm} label="비밀번호 확인(*필수)" name="passwordConfirm" placeholder="비밀번호 확인" type="password" onChange={handleChange} />
         {
           error && <AuthError>{error}</AuthError>
         }

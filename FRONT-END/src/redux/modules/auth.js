@@ -32,7 +32,7 @@ export const initializeForm = createAction(INITIALIZE_FORM); // form
 export const checkEmailExists = createAction(CHECK_EMAIL_EXISTS, AuthAPI.checkEmailExists); // email
 export const checkDisplayNameExists = createAction(CHECK_DISPLAYNAME_EXISTS, AuthAPI.checkDisplayNameExists); // displayName
 /* Login & Register */
-export const localRegister = createAction(LOCAL_REGISTER, AuthAPI.localRegister); // { email, displayName, password }
+export const localRegister = createAction(LOCAL_REGISTER, AuthAPI.localRegister); // { email, displayName, password, familyEmail }
 export const localLogin = createAction(LOCAL_LOGIN, AuthAPI.localLogin); // { email, password }
 // Todo socialLogin...
 
@@ -52,7 +52,8 @@ const initialState = Map({
             email: '',
             displayName: '',
             password: '',
-            passwordConfirm: ''
+            passwordConfirm: '',
+            familyEmail: ''
         }),
         exists: Map({
             email: false,

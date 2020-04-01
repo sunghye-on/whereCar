@@ -9,17 +9,14 @@ import storage from 'lib/storage';
 import {isEmail, isLength, isAlphanumeric} from 'validator';
 import debounce from 'lodash/debounce';
 import Paper from '@material-ui/core/Paper';
+import UsersTransferList from './UsersTransferList';
 
 
 function Maintain() {
   
   return (
     <>
-    <ManagerBox >
-      <AdminContent title="관리자 창">
-      </AdminContent>
-    </ManagerBox>
-    <ManagerBox >asdasd</ManagerBox>
+    <UsersTransferList/>
     </>
   );
 };
