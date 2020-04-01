@@ -26,6 +26,7 @@ const useStyles = makeStyles(theme => ({
     overflow: "auto"
   },
   button: {
+    width: "10%",
     height: "2rem",
     margin: theme.spacing(0.5, 0)
   },
@@ -270,7 +271,7 @@ export default function UsersTransferList() {
             disabled={leftChecked.length === 0}
             aria-label="move selected right"
           >
-            &gt;
+            &gt;&gt;
           </Button>
           <Button
             variant="outlined"
@@ -280,7 +281,17 @@ export default function UsersTransferList() {
             disabled={rightChecked.length === 0}
             aria-label="move selected left"
           >
-            &lt;
+            &lt;&lt;
+          </Button>
+          <Button
+            variant="outlined"
+            size="small"
+            className={classes.button}
+            onClick={handleCheckedLeft}
+            disabled={dummyRole === roles.data}
+            aria-label="move selected left"
+          >
+            Update
           </Button>
         </Grid>
       </Grid>
