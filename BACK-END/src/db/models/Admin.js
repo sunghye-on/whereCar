@@ -37,4 +37,5 @@ Admin.statics.adminRegister = function({ role, user, group }) {
   admin.save();
   return admin;
 }; 
+
 module.exports = mongoose.model('Admin', Admin);

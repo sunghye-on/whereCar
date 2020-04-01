@@ -15,9 +15,7 @@ admin.get('/users', adminCtrl.groupUsers);
 admin.get('/managers', adminCtrl.groupManagers);
 
 // 매니저권한 새로부여
-admin.post('/manager', (ctx) => {
-  ctx.body = '✅ Welcome to manager!!';
-});
+admin.post('/manager', adminCtrl.updateManagers);
 
 // 매니저권한 수정
 admin.put('/manager', (ctx) => {
