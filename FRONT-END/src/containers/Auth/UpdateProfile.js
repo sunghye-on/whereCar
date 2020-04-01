@@ -10,7 +10,7 @@ import debounce from 'lodash/debounce';
 
 
 function UpdateProfile({ form, error, user, result, AuthActions, UserActions, history }) {
-  const { email, displayName, password, passwordConfirm } = form.toJS();
+  const { email, familyEmail, displayName, password, passwordConfirm } = form.toJS();
   const loggedInfo = storage.get('loggedInfo');
   useEffect(() => {
     // 초기에 input값 초기화가 필요
@@ -25,6 +25,11 @@ function UpdateProfile({ form, error, user, result, AuthActions, UserActions, hi
       value: loggedInfo.displayName,
       form: 'register'
     });
+    AuthActions.changeInput({
+      name: 'familyEmail',
+      value: loggedInfo.familyEmail,
+      form: 'register'
+    });
   }, []);
 
   const setError = (message) => {
@@ -36,6 +41,17 @@ function UpdateProfile({ form, error, user, result, AuthActions, UserActions, hi
       if(!isEmail(value)) {
         setError('잘못된 이메일 형식입니다.');
         return false;
+      }
+      return true;
+    },
+    familyEmail: value => {
+      // eslint-disable-next-line no-undef
+      if(value != "") {
+        if(!isEmail(value)) {
+          
+          setError('잘못된 이메일 형식입니다.');
+          return false;
+        }
       }
       return true;
     },
@@ -83,6 +99,22 @@ function UpdateProfile({ form, error, user, result, AuthActions, UserActions, hi
     }
   }, 300);
 
+  const checkFamilyExists = debounce(async (email) => {
+    try {
+      const result = await AuthActions.checkEmailExists(email);
+      console.log(loggedInfo.email, email)
+      if(loggedInfo.email===email) {
+        setError('자신을 보호자로 둘 수 없습니다.');
+      } else if(result.data.exists) {
+        setError(null);
+      } else {
+        setError('없는 계정입니다.');
+      }
+    } catch (error) {
+      console.log(error);
+    }
+  }, 300);
+
   const handleChange = e => {
     const { name, value } = e.target;
     AuthActions.changeInput({
@@ -93,14 +125,19 @@ function UpdateProfile({ form, error, user, result, AuthActions, UserActions, hi
     
     const validation = validate[name](value);
     if(name.indexOf('password') > -1 || !validation) return; // 비밀번호 검증이거나, 검증 실패하면 여기서 마침
-
-    checkDisplayNameExists(value);
+    // 가족 계정이 있는지 체크검사
+    if (name === "familyEmail") {
+      checkFamilyExists(value);
+    } else if(name === "display") {
+      checkDisplayNameExists(value);
+    }
   };
 
   const handleUpdateUser = async () => {
     if(error) return; // 현재 에러가 있는 상태라면 진행하지 않음
 
     if(!validate['email'](email)||
+      !validate['familyEmail'](familyEmail)||
       !validate['displayName'](displayName)||
       !validate['password'](password)||
       !validate['passwordConfirm'](passwordConfirm)) return; // 하나라도 실패하면 진행하지 않음
@@ -108,6 +145,7 @@ function UpdateProfile({ form, error, user, result, AuthActions, UserActions, hi
     try {
       await AuthActions.updateUser({
         email,
+        familyEmail: familyEmail ? familyEmail : false,
         displayName,
         password
       }).then(
@@ -132,6 +170,7 @@ function UpdateProfile({ form, error, user, result, AuthActions, UserActions, hi
 
   return (
     <AuthContent title="프로필 수정">
+        <InputWithLabel value={familyEmail} label="보호자 이메일" name="familyEmail" placeholder="이메일" onChange={handleChange} />
         <InputWithLabel meta={email} label="이메일"/>
         <InputWithLabel value={displayName} label="닉네임" name="displayName" placeholder="닉네임" onChange={handleChange} />
         <InputWithLabel value={password} label="비밀번호" name="password" placeholder="비밀번호" type="password" onChange={handleChange} />

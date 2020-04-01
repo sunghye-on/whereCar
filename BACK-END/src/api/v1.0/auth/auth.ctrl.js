@@ -126,10 +126,16 @@ exports.localLogin = async (ctx) => {
       maxAge: 1000 * 60 * 60 * 24 * 7
     });
 
-    const { _id, displayName, metaInfo } = user;
+    const { _id, displayName, metaInfo, family: familyId } = user;
+    // find family email
+    let family = null;
+    if(familyId) {
+      family = await User.findById(familyId);
+    }
+    // response message(data)
     ctx.body = {
-      loggedInfo: { _id, email, displayName, metaInfo },
-      adminInfo: admin || ''
+      loggedInfo: { _id, email, displayName, metaInfo, familyEmail: familyId ? family.email : false },
+      adminInfo: admin || {}
     };
   } catch (error) {
     ctx.throw(error);
@@ -184,11 +190,22 @@ exports.logout = (ctx) => {
 exports.updateUser = async (ctx) => {
   const { body } = ctx.request;
 
-  const schema = Joi.object({
-    displayName: Joi.string().regex(/^[a-zA-Z0-9ㄱ-힣]{3,12}$/).required(),
-    email: Joi.string().email().required(),
-    password: Joi.string().min(6).max(30)
-  });
+  let schema = null;
+  if (body.familyEmail) {
+    schema = Joi.object({
+      displayName: Joi.string().regex(/^[a-zA-Z0-9ㄱ-힣]{3,12}$/).required(),
+      familyEmail: Joi.string().email(),
+      email: Joi.string().email().required(),
+      password: Joi.string().min(6).max(30)
+    });
+  } else {
+    schema = Joi.object({
+      displayName: Joi.string().regex(/^[a-zA-Z0-9ㄱ-힣]{3,12}$/).required(),
+      familyEmail: Joi.boolean(),
+      email: Joi.string().email().required(),
+      password: Joi.string().min(6).max(30)
+    });
+  }
 
   const result = Joi.validate(body, schema);
   // Schema error 
@@ -198,7 +215,7 @@ exports.updateUser = async (ctx) => {
     return;
   }
   // recieved Client request data
-  const { displayName, email, password } = body;
+  const { displayName, email, password, familyEmail } = body;
   try {
     const user = await User.findByEmail(email);
     if(!user) {
@@ -207,13 +224,19 @@ exports.updateUser = async (ctx) => {
       ctx.body = `user[${email}] dose not exist`;
       return;
     }
+    let family = null;
+    // 가족정보가 있다면
+    if(familyEmail) {
+      family = await User.findByEmail(familyEmail);
+    }
     // update user data
-    await User.updateUser({ displayName, password, email });
+    await User.updateUser({ displayName, password, email, family: family || false });
     // send data to client
     ctx.body = {
       displayName,
       email,
       _id: user._id,
+      familyEmail: familyEmail || false,
       metaInfo: user.metaInfo
     };
 

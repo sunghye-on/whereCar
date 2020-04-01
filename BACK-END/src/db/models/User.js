@@ -37,6 +37,10 @@ const User = new mongoose.Schema({
     default: false
   }
 });
+// id 찾기
+User.statics.findById = function(_id) {
+  return this.findOne({ _id });
+};
 
 // 이메일 찾기
 User.statics.findByEmail = function(email) {
@@ -92,8 +96,9 @@ User.methods.generateToken = function() {
   }, 'user');
 };
 
-User.statics.updateUser = async function({ displayName, password, email }) {
-  return this.update({ email }, { displayName, password: hash(password) });
+User.statics.updateUser = async function({ displayName, password, email, family }) {
+  return family ? this.update({ email }, { displayName, family, password: hash(password) })
+    : this.update({ email }, { displayName, password: hash(password) });
 };
 
 // 해당 유저의 비밀번호 일치여부 체크
