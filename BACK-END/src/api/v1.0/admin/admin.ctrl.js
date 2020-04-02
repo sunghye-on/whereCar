@@ -44,6 +44,8 @@ exports.groupManagers = async (ctx) => {
       return;
     }
     // response message(=data)
+    console.log('============groupManagers');
+    console.log(groupInfo);
     ctx.body = {
       Users: groupInfo.users,
       Drivers: groupInfo.drivers
@@ -75,15 +77,15 @@ exports.updateManagers = async (ctx) => {
     const beforeMembers = Users.concat(Drivers);
     for (const i in body) {
       if(i === 'Users') {
-        const rest = users.filter(value => beforeMembers.indexOf(value) === -1);
+        const rest = users.filter(value => beforeMembers.indexOf(value) !== -1);
         users = [...rest, ...body[i]];
       } else {
-        const rest = drivers.filter(value => beforeMembers.indexOf(value) === -1);
+        const rest = drivers.filter(value => beforeMembers.indexOf(value) !== -1);
         drivers = [...rest, ...body[i]];
       }
     }
     // update query 날리기
-    await GroupInfo.groupManagers({ _id: groupInfo._id, users, drivers });
+    await GroupInfo.updateManagers({ _id: groupInfo._id, users, drivers });
     // response message(=data)
     ctx.body = {
       managers: {

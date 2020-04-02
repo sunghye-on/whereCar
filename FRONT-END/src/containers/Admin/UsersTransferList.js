@@ -1,4 +1,4 @@
-import React from "react";
+import React, { useEffect } from "react";
 import { makeStyles } from "@material-ui/core/styles";
 import Grid from "@material-ui/core/Grid";
 import List from "@material-ui/core/List";
@@ -111,22 +111,30 @@ const RoleSelector = ({ roles, setRoles, dir }) => {
   );
 };
 
-export default function UsersTransferList() {
+export default function UsersTransferList({ managers, result, AdminActions, history }) {
   const classes = useStyles();
   const [checked, setChecked] = React.useState([]);
-  // const [left, setLeft] = React.useState([0, 1, 2, 3]);
-  // const [right, setRight] = React.useState([4, 5, 6, 7]);
-  
+  // componentDidMount 
+  useEffect(() => {
+    AdminActions.getManagers();
+  }, [AdminActions])
+  useEffect(() => {
+    setRoles({
+      ...roles, 
+      left: {...roles.left, data: managers["Users"]},
+      right: {...roles.right, data: managers["Drivers"]}
+    })
+  }, [managers])
   // +++++++++++++++수정구역
   const [roles, setRoles] = React.useState({
-    data: dummyRole,
+    data: managers,
     left: {
       role: "Users",
-      data: dummyRole["Users"]
+      data: managers["Users"]
     },
     right: {
       role: "Drivers",
-      data: dummyRole["Drivers"]
+      data: managers["Drivers"]
     }
   });
   const left = roles.left.data;
@@ -197,6 +205,19 @@ export default function UsersTransferList() {
     });
     setChecked(not(checked, rightChecked));
   };
+  const handleUpdate = async () => {
+    try {      
+      await AdminActions.updateManagers(roles.data)
+        .then(
+          AdminActions.getManagers()
+        )
+        .then(
+          history.push('/admin/management')
+        );
+    } catch (error) {
+      alert("알수없는 error 발생");
+    }
+  }
   const customList = (title, items) => (
     <Card>
       <CardHeader
@@ -238,7 +259,7 @@ export default function UsersTransferList() {
                   inputProps={{ "aria-labelledby": labelId }}
                 />
               </ListItemIcon>
-              <ListItemText id={labelId} primary={`List item ${value}`} />
+              <ListItemText id={labelId} primary={`😀 ${value}`} />
             </ListItem>
           );
         })}
@@ -287,8 +308,8 @@ export default function UsersTransferList() {
             variant="outlined"
             size="small"
             className={classes.button}
-            onClick={handleCheckedLeft}
-            disabled={dummyRole === roles.data}
+            onClick={handleUpdate}
+            disabled={managers === roles.data}
             aria-label="move selected left"
           >
             Update

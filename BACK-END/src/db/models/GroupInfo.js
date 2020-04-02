@@ -57,7 +57,7 @@ GroupInfo.statics.groupRegister = function({ type, name, tell, location, descrip
 }; 
 
 GroupInfo.statics.updateManagers = async function({ _id, users, drivers }) {
-  return this.update({ _id }, { users, drivers });
+  return this.update({ _id }, { $set: { users, drivers } });
 };
 
 module.exports = mongoose.model('GroupInfo', GroupInfo);
