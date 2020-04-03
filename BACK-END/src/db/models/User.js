@@ -37,6 +37,24 @@ const User = new mongoose.Schema({
     default: false
   }
 });
+
+// id로 특정 유저들 찾기
+User.statics.findByIds = async function(list) {
+  let users = [];
+  for(const key in list) {
+    const _id = list[key];
+    const { displayName, email, family, createdAt } = await this.findOne({ _id });
+    users.push({
+      _id,
+      displayName,
+      email,
+      family,
+      createdAt
+    }); 
+  };
+  return users;
+};
+
 // id 찾기
 User.statics.findById = function(_id) {
   return this.findOne({ _id });

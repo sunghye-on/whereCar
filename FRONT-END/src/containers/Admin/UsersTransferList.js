@@ -23,7 +23,10 @@ const useStyles = makeStyles(theme => ({
     width: "100%",
     height: 420,
     backgroundColor: theme.palette.background.paper,
-    overflow: "auto"
+    overflow: "auto",
+    [theme.breakpoints.down('md')]: {
+      height: 300,
+    }
   },
   button: {
     width: "10%",
@@ -120,7 +123,8 @@ export default function UsersTransferList({ managers, result, AdminActions, hist
   }, [AdminActions])
   useEffect(() => {
     setRoles({
-      ...roles, 
+      ...roles,
+      data: managers,
       left: {...roles.left, data: managers["Users"]},
       right: {...roles.right, data: managers["Drivers"]}
     })
@@ -205,9 +209,22 @@ export default function UsersTransferList({ managers, result, AdminActions, hist
     });
     setChecked(not(checked, rightChecked));
   };
+
+  const exportId = data => {
+    let result = {};
+      for( const key in data ){
+        result[key] = data[key];
+        for( let idx=0; idx<result[key].length; idx++ ){
+          result[key][idx] = result[key][idx]._id;
+        }
+      }
+    return result; 
+  }
+
   const handleUpdate = async () => {
-    try {      
-      await AdminActions.updateManagers(roles.data)
+    try {
+      const result = exportId(roles.data);
+      await AdminActions.updateManagers(result)
         .then(
           AdminActions.getManagers()
         )
@@ -215,7 +232,7 @@ export default function UsersTransferList({ managers, result, AdminActions, hist
           history.push('/admin/management')
         );
     } catch (error) {
-      alert("알수없는 error 발생");
+      alert("Server Error:::알수없는 error 발생");
     }
   }
   const customList = (title, items) => (
@@ -242,11 +259,11 @@ export default function UsersTransferList({ managers, result, AdminActions, hist
       <Divider />
       <List className={classes.list} dense component="div" role="list">
         {items.map(value => {
-          const labelId = `transfer-list-all-item-${value}-label`;
+          const labelId = `transfer-list-all-item-${value.email}-label`;
 
           return (
             <ListItem
-              key={value}
+              key={value.email}
               role="listitem"
               button
               onClick={handleToggle(value)}
@@ -259,7 +276,7 @@ export default function UsersTransferList({ managers, result, AdminActions, hist
                   inputProps={{ "aria-labelledby": labelId }}
                 />
               </ListItemIcon>
-              <ListItemText id={labelId} primary={`😀 ${value}`} />
+              <ListItemText id={labelId} primary={`😀 ${value.email}`} />
             </ListItem>
           );
         })}
@@ -267,7 +284,6 @@ export default function UsersTransferList({ managers, result, AdminActions, hist
       </List>
     </Card>
   );
-
   return (
     <Grid
       container
@@ -292,7 +308,7 @@ export default function UsersTransferList({ managers, result, AdminActions, hist
             disabled={leftChecked.length === 0}
             aria-label="move selected right"
           >
-            &gt;&gt;
+            {window.innerWidth > 360 ? "▶" : "▼"}
           </Button>
           <Button
             variant="outlined"
@@ -302,7 +318,7 @@ export default function UsersTransferList({ managers, result, AdminActions, hist
             disabled={rightChecked.length === 0}
             aria-label="move selected left"
           >
-            &lt;&lt;
+            {window.innerWidth > 360 ? "◀" : "▲"}
           </Button>
           <Button
             variant="outlined"

@@ -44,11 +44,9 @@ exports.groupManagers = async (ctx) => {
       return;
     }
     // response message(=data)
-    console.log('============groupManagers');
-    console.log(groupInfo);
     ctx.body = {
-      Users: groupInfo.users,
-      Drivers: groupInfo.drivers
+      Users: await User.findByIds(groupInfo.users),
+      Drivers: await User.findByIds(groupInfo.drivers)
     };
   } catch (error) {
     ctx.throw(error);
