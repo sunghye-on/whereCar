@@ -10,11 +10,14 @@ export const getManagers = createAction(GET_MANAGERS, AdminAPI.getManagers); // 
 export const updateManagers = createAction(UPDATE_MANAGERS, AdminAPI.updateManagers); // api 요청 {Users:[], Drivers:[]}
 
 const initialState = Map({
-    managers: Map({
-      Users: [],
-      Drivers: []
-    }),
-    result: Map({})
+  // 그룹위 구성원들
+  managers: Map({
+    Users: [],
+    Drivers: []
+  }),
+  // 그룹에 등록된 차량정보들
+  cars: Map({}),
+  result: Map({})
 });
 
 export default handleActions({
