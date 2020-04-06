@@ -14,7 +14,7 @@ const upload = multer({
     filename: function (req, file, cb) {
       cb(null, new Date().valueOf() + path.extname(file.originalname));
     }
-  }),
+  })
 });
 
 /* /api/v1.0/admin */
