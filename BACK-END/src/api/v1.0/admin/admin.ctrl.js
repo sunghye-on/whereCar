@@ -1,6 +1,7 @@
 const Joi = require('joi');
 const User = require('db/models/User');
 const GroupInfo = require('db/models/GroupInfo');
+const CarInfo = require('db/models/CarInfo');
 const Admin = require('db/models/Admin');
 
 // 그룹에 속한 유저들 정보가져오기, 그룹에 대한 관리자권한만 접근
@@ -95,6 +96,7 @@ exports.updateManagers = async (ctx) => {
     ctx.throw(error);
   }
 };
+
 // 그룹에 속해있는 드라이버 찾아오기.
 exports.groupDrivers = async (ctx) => {
   const { user } = ctx.request;
@@ -109,6 +111,54 @@ exports.groupDrivers = async (ctx) => {
   }
   try {
     
+  } catch (error) {
+    ctx.throw(error);
+  }
+};
+
+// 특정그룹에서 자동차 등록하기
+exports.driverRegister = async (ctx) => {
+  const { user, body } = ctx.request;
+  // // find admin
+  // const admin = await Admin.findByUser(user);
+  // // user session또는 관리자 권한이 없다면
+  // if(!user || !admin) {
+  //   ctx.status = 403;
+  //   ctx.body = 'Any session not founded!';
+  //   // eslint-disable-next-line no-useless-return
+  //   return;
+  // };
+
+  // body에서 받은정보 validation하기
+  const schema = Joi.object({
+    carName: Joi.string().regex(/^[a-zA-Z0-9ㄱ-힣]{3,12}$/).required(),
+    carNumber: Joi.string().min(6).max(30),
+    seatNumber: Joi.number(),
+    inspectionDate: Joi.date()
+  });
+
+  const result = Joi.validate(body, schema);
+  // Schema error 
+  if(result.error) {
+    ctx.status = 400;
+    ctx.body = 'Schema error';
+    // eslint-disable-next-line no-useless-return
+    return;
+  }
+  // recieved Client request data
+  const { carName, carNumber, seatNumber, inspectionDate, files } = body;
+  try {
+    const carInfo = await CarInfo.carRegister({
+      carName,
+      carNumber,
+      seatNumber,
+      inspectionDate,
+      carImageUrl: files ? files.image.path : null
+    });
+    // response message(=data)
+    ctx.body = {
+      carInfo
+    };
   } catch (error) {
     ctx.throw(error);
   }

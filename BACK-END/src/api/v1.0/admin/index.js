@@ -31,9 +31,7 @@ admin.get('/managers', adminCtrl.groupManagers);
 // 매니저권한 새로부여 및 수정
 admin.post('/managers', adminCtrl.updateManagers);
 
-// 자동차 등록
-admin.post('/car/register', upload.single('carImage'), (ctx) => {
-  ctx.body = '✅ 자동차 등록하기위한 URI';
-});
+// 자동차 등록 
+admin.post('/car/register', adminCtrl.driverRegister);
 
 module.exports = admin;
