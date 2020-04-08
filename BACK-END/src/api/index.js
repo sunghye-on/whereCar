@@ -7,5 +7,7 @@ const versions = {
 const api = new Router();
 /* /api/... */
 api.use('/v1.0', versions['v1.0'].routes());
-
+// api.get('/uploads/:file', ctx => {
+//   ctx.type
+// });
 module.exports = api;

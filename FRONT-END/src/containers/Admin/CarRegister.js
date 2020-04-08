@@ -156,6 +156,7 @@ function CarRegister({ form, error, result, AuthActions, UserActions, history })
         {
           error && <AuthError>{error}</AuthError>
         }
+        <img src="http://localhost:4000/uploads/gorilla-logo1586349229007.png" />
         <AuthButton onClick={handleCarRegister}>등록하기</AuthButton>
     </AuthContent>
   );
