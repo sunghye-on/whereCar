@@ -118,21 +118,26 @@ exports.groupDrivers = async (ctx) => {
 
 // 특정그룹에서 자동차 등록하기
 exports.driverRegister = async (ctx) => {
-  const { user, body } = ctx.request;
-  // // find admin
-  // const admin = await Admin.findByUser(user);
-  // // user session또는 관리자 권한이 없다면
-  // if(!user || !admin) {
-  //   ctx.status = 403;
-  //   ctx.body = 'Any session not founded!';
-  //   // eslint-disable-next-line no-useless-return
-  //   return;
-  // };
+  // const { user, body } = ctx.request;
+  const { user, body, file } = ctx.request;
+  console.log("=========================test");
+  console.log(ctx.request.file);
+  console.log(body);
+  console.log(body.carName);
+  // find admin
+  const admin = await Admin.findByUser(user);
+  // user session또는 관리자 권한이 없다면
+  if(!user || !admin) {
+    ctx.status = 403;
+    ctx.body = 'Any session not founded!';
+    // eslint-disable-next-line no-useless-return
+    return;
+  };
 
   // body에서 받은정보 validation하기
   const schema = Joi.object({
-    carName: Joi.string().regex(/^[a-zA-Z0-9ㄱ-힣]{3,12}$/).required(),
-    carNumber: Joi.string().min(6).max(30),
+    carName: Joi.string().min(2).max(30).required(),
+    carNumber: Joi.string().min(4).max(30),
     seatNumber: Joi.number(),
     inspectionDate: Joi.date()
   });
@@ -140,20 +145,22 @@ exports.driverRegister = async (ctx) => {
   const result = Joi.validate(body, schema);
   // Schema error 
   if(result.error) {
+    console.log('🔥Schema error', result.error);
     ctx.status = 400;
     ctx.body = 'Schema error';
     // eslint-disable-next-line no-useless-return
     return;
   }
   // recieved Client request data
-  const { carName, carNumber, seatNumber, inspectionDate, files } = body;
+  const { carName, carNumber, seatNumber, inspectionDate } = body;
   try {
     const carInfo = await CarInfo.carRegister({
       carName,
       carNumber,
       seatNumber,
       inspectionDate,
-      carImageUrl: files ? files.image.path : null
+      carImageUrl: file ? file.path : null,
+      group: admin.group
     });
     // response message(=data)
     ctx.body = {

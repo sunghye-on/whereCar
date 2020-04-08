@@ -28,10 +28,15 @@ db.connect();
 
 const app = new Koa();
 app.use(serve(path.join(__dirname, '../../FRONT-END/build')));
+app.use(serve(path.join(__dirname, './uploads')));
 
 app.use(helmet());
 app.use(jwtMiddleware);
-app.use(bodyParser());
+app.use(bodyParser({
+  formidable: { uploadDir: './uploads' }, // This is where the files would come
+  multipart: true,
+  urlencoded: true
+}));
 
 const router = new Router();
 /* /... */

@@ -1,6 +1,7 @@
 import { createAction, handleActions } from 'redux-actions';
 import { pender } from 'redux-pender';
 import * as AuthAPI from 'lib/api/auth';
+import * as AdminAPI from 'lib/api/admin';
 
 import { Map } from 'immutable';
 
@@ -25,6 +26,8 @@ const UPDATE_USER = 'auth/UPDATE_USER'; // 로그아웃
 /* ****************   Error Setter **************** */
 const SET_ERROR = 'auth/SET_ERROR'; // 오류 설정
 
+const CAR_REGISTER = 'auth/CAR_REGISTER';
+
 /* about input */
 export const changeInput = createAction(CHANGE_INPUT); //  { form, name, value }
 export const initializeForm = createAction(INITIALIZE_FORM); // form 
@@ -38,6 +41,9 @@ export const localLogin = createAction(LOCAL_LOGIN, AuthAPI.localLogin); // { em
 
 // Admin Register
 export const adminRegister = createAction(ADMIN_REGISTER, AuthAPI.adminRegister) // { type, name, tell, location, description, certification, role}
+
+// Car Register
+export const carRegister = createAction(CAR_REGISTER, AdminAPI.carRegister) // { type, name, tell, location, description, certification, role}
 
 /* Logout */
 export const logout = createAction(LOGOUT, AuthAPI.logout);
@@ -82,6 +88,15 @@ const initialState = Map({
             email: false,
             displayName: false,
             password: false
+        }),
+        error: null
+    }),
+    car: Map({
+        form: Map({
+            carName: '',
+            carNumber: '',
+            seatNumber: 2,
+            inspectionDate: ''
         }),
         error: null
     }),

@@ -5,3 +5,6 @@ import axios from 'axios';
 export const getManagers = () => axios.get(`/api/v1.0/admin/managers`);
 
 export const updateManagers = ({ Users, Drivers }) => axios.post(`/api/v1.0/admin/managers`, {Users, Drivers});
+
+export const carRegister = ({ carName, carNumber, seatNumber, inspectionDate, carImage }) => 
+  axios.post(`/api/v1.0/admin/car/register`, {carName, carNumber, seatNumber, inspectionDate, carImage});
