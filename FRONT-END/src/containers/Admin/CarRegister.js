@@ -5,7 +5,7 @@ import { bindActionCreators } from 'redux';
 import * as authActions from 'redux/modules/auth';
 import * as userActions from 'redux/modules/user';
 import storage from 'lib/storage';
-import {isInt, isLength, isBefore, isAfter} from 'validator';
+import {isInt, isLength} from 'validator';
 import Axios from 'axios';
 
 

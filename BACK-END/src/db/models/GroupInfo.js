@@ -29,7 +29,7 @@ const GroupInfo = new mongoose.Schema({
       ref: 'User'
     }
   ],
-  rooms: [] // 자동차 개수별 socket을 통신을 위한 방 ID 집합(코스 등록시 룸1개 생성)
+  course: [] // 자동차 개수별 socket을 통신을 위한 방 ID 집합(코스 등록시 룸1개 생성)
 });
 
 // 이름과 위치로 그룹 검색하기.

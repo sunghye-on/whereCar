@@ -1,27 +1,8 @@
 const Router = require('koa-router'); 
-const multer = require('@koa/multer');
-const path = require('path');
-const fs = require('fs');
+const uploader = require('lib/multerUploader');
 
 const admin = new Router();
 const adminCtrl = require('./admin.ctrl');
-
-fs.readdir('uploads', (error) => {
-  // uploads 폴더 없으면 생성
-  if (error) {
-    fs.mkdirSync('uploads');
-  }
-});
-
-const storage = multer.diskStorage({
-  destination(req, file, cb) {
-    cb(null, 'uploads/');
-  },
-  filename(req, file, cb) {
-    const ext = path.extname(file.originalname);
-    cb(null, path.basename(file.originalname, ext) + Date.now() + ext);
-  }
-});
 
 const fileFilter = (req, file, cb) => {
   if(file.mimetype === 'image/jpeg' || file.mimetype === 'image/png') {
@@ -31,20 +12,8 @@ const fileFilter = (req, file, cb) => {
     cb(null, false);
   }
 };
-
 // file 업로드를 위함 ( 저장위치 : uploads/ 폴더 )
-const upload = multer({
-  storage,
-  limits: { fileSize: 5 * 1024 * 1024 },
-  fileFilter
-});
-
-
-
-
-
-
-
+const upload = uploader.multerUploader({ dir: 'uploads', limits: { fileSize: 5 * 1024 * 1024 }, fileFilter });
 
 /* /api/v1.0/admin */
 admin.get('/', (ctx) => {
@@ -62,5 +31,22 @@ admin.post('/managers', adminCtrl.updateManagers);
 
 // 자동차 등록 
 admin.post('/car/register', upload.single('carImage'), adminCtrl.driverRegister);
+
+// 자동차 수정 [내가 작성할것]
+admin.put('/car', (ctx) => {
+  ctx.body = '✅ Welcome to admin!!';
+});
+
+// 자동차 삭제 [내가 작성할것]
+admin.del('/car', (ctx) => {
+  ctx.body = '✅ Welcome to admin!!';
+});
+
+// 자동차리스트 가져오기 [김성현군 작성바람]
+admin.get('/cars', (ctx) => {
+  ctx.body = '✅ Welcome to admin!!';
+});
+
+
 
 module.exports = admin;

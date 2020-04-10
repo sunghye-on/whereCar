@@ -16,7 +16,7 @@ const initialState = Map({
     Drivers: []
   }),
   // 그룹에 등록된 차량정보들
-  cars: Map({}),
+  cars: [],
   result: Map({})
 });
 
@@ -24,7 +24,6 @@ export default handleActions({
   ...pender({
       type: GET_MANAGERS,
       onSuccess: (state, action) => {
-        console.log("@@@@@@@@@@@@@@@@@@@@@@@@@@@@", action.payload.data)
         return state.set('managers', Map(action.payload.data)
       )}
   }),
