@@ -30,4 +30,12 @@ CarInfo.statics.carRegister = function({ carName, carNumber, seatNumber, inspect
   return carInfo;
 }; 
 
+CarInfo.statics.carUpdate = async function({ _id, carName, carNumber, seatNumber, inspectionDate, carImageUrl }) {
+  return this.update({ _id }, { carName, carNumber, seatNumber, inspectionDate, carImageUrl });
+};
+
+CarInfo.statics.removeById = function({ _id }) {
+  return this.remove({ _id });
+};
+
 module.exports = mongoose.model('CarInfo', CarInfo);

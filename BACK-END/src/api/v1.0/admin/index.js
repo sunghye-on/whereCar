@@ -13,7 +13,7 @@ const fileFilter = (req, file, cb) => {
   }
 };
 // file 업로드를 위함 ( 저장위치 : uploads/ 폴더 )
-const upload = uploader.multerUploader({ dir: 'uploads', limits: { fileSize: 5 * 1024 * 1024 }, fileFilter });
+const upload = uploader.createUploader({ dir: 'uploads/car', limits: { fileSize: 5 * 1024 * 1024 }, fileFilter });
 
 /* /api/v1.0/admin */
 admin.get('/', (ctx) => {
@@ -30,17 +30,13 @@ admin.get('/managers', adminCtrl.groupManagers);
 admin.post('/managers', adminCtrl.updateManagers);
 
 // 자동차 등록 
-admin.post('/car/register', upload.single('carImage'), adminCtrl.driverRegister);
+admin.post('/car/register', upload.single('carImage'), adminCtrl.carRegister);
 
-// 자동차 수정 [내가 작성할것]
-admin.put('/car', (ctx) => {
-  ctx.body = '✅ Welcome to admin!!';
-});
+// 자동차 수정
+admin.put('/car', upload.single('carImage'), adminCtrl.carUpdate);
 
-// 자동차 삭제 [내가 작성할것]
-admin.del('/car', (ctx) => {
-  ctx.body = '✅ Welcome to admin!!';
-});
+// 자동차 삭제 
+admin.delete('/car/:id', adminCtrl.carDelete);
 
 // 자동차리스트 가져오기 [김성현군 작성바람]
 admin.get('/cars', (ctx) => {

@@ -117,13 +117,9 @@ exports.groupDrivers = async (ctx) => {
 };
 
 // 특정그룹에서 자동차 등록하기
-exports.driverRegister = async (ctx) => {
+exports.carRegister = async (ctx) => {
   // const { user, body } = ctx.request;
   const { user, body, file } = ctx.request;
-  console.log("=========================test");
-  console.log(ctx.request.file);
-  console.log(body);
-  console.log(body.carName);
   // find admin
   const admin = await Admin.findByUser(user);
   // user session또는 관리자 권한이 없다면
@@ -165,6 +161,82 @@ exports.driverRegister = async (ctx) => {
     // response message(=data)
     ctx.body = {
       carInfo
+    };
+  } catch (error) {
+    ctx.throw(error);
+  }
+};
+
+// 특정그룹의 특정자동차 업데이트하기
+exports.carUpdate = async (ctx) => {
+  const { user, body, file } = ctx.request;
+  // find admin
+  const admin = await Admin.findByUser(user);
+  // user session또는 관리자 권한이 없다면
+  if(!user || !admin) {
+    ctx.status = 403;
+    ctx.body = 'Any session not founded!';
+    // eslint-disable-next-line no-useless-return
+    return;
+  };
+
+  // body에서 받은정보 validation하기
+  const schema = Joi.object({
+    carId: Joi.string(),
+    carName: Joi.string().min(2).max(30).required(),
+    carNumber: Joi.string().min(4).max(30),
+    seatNumber: Joi.number(),
+    inspectionDate: Joi.date()
+  });
+
+  const result = Joi.validate(body, schema);
+  // Schema error 
+  if(result.error) {
+    console.log('🔥Schema error', result.error);
+    ctx.status = 400;
+    ctx.body = 'Schema error';
+    // eslint-disable-next-line no-useless-return
+    return;
+  }
+  // recieved Client request data
+  const { carId, carName, carNumber, seatNumber, inspectionDate, carImageUrl } = body;
+  try {
+    const carInfo = await CarInfo.carUpdate({
+      _id: carId,
+      carName,
+      carNumber,
+      seatNumber,
+      inspectionDate,
+      carImageUrl: file ? file.path : carImageUrl
+    });
+    // response message(=data)
+    ctx.body = {
+      carInfo
+    };
+  } catch (error) {
+    ctx.throw(error);
+  }
+};
+
+
+// 그룹에 속해있는 드라이버 찾아오기.
+exports.carDelete = async (ctx) => {
+  const { user } = ctx.request;
+  const { id } = ctx.params;
+  // find admin
+  const admin = await Admin.findByUser(user);
+  // user session또는 관리자 권한이 없다면
+  if(!user || !admin) {
+    ctx.status = 403;
+    ctx.body = 'Any session not founded!';
+    // eslint-disable-next-line no-useless-return
+    return;
+  }
+  try {
+    const result = await CarInfo.removeById({ _id: id });
+    // response message(=data)
+    ctx.body = {
+      result
     };
   } catch (error) {
     ctx.throw(error);

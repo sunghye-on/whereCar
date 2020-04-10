@@ -3,7 +3,7 @@ const path = require('path');
 const fs = require('fs');
 
 // dir: 업로드된 파일을 저장할 경로, limits: 파일을 용량, fileFilter: 파일필터
-function multerUploader({ dir, limits, fileFilter }) {
+function createUploader({ dir, limits, fileFilter }) {
   dir = dir || 'uploads';
 
   fs.readdir(dir, (error) => {
@@ -32,4 +32,4 @@ function multerUploader({ dir, limits, fileFilter }) {
   return upload;
 }
 
-exports.multerUploader = multerUploader;
+exports.createUploader = createUploader;
