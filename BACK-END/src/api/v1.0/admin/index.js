@@ -19,7 +19,7 @@ const upload = uploader.createUploader({ dir: 'uploads/car', limits: { fileSize:
 admin.get('/', (ctx) => {
   ctx.body = '✅ Welcome to admin!!';
 });
-
+/* =======assoicate member of group======= */
 // 그룹에 속한 유저들 확인하기
 admin.get('/users', adminCtrl.groupUsers);
 
@@ -29,6 +29,7 @@ admin.get('/managers', adminCtrl.groupManagers);
 // 매니저권한 새로부여 및 수정
 admin.post('/managers', adminCtrl.updateManagers);
 
+/* =======assoicate car of group======= */
 // 자동차 등록 
 admin.post('/car/register', upload.single('carImage'), adminCtrl.carRegister);
 
@@ -43,6 +44,25 @@ admin.get('/cars', (ctx) => {
   ctx.body = '✅ Welcome to admin!!';
 });
 
+/* =======assoicate course of group======= */
+// 경로 생성 
+admin.post('/course', adminCtrl.courseRegister);
+
+// 경로 업데이트 
+admin.put('/course', adminCtrl.courseUpdate);
+
+// 경로 삭제 
+admin.delete('/course/:id', adminCtrl.courseDelete);
+
+// 경로리스트 받아오기
+admin.get('/courses', (ctx) => {
+  ctx.body = '✅ Welcome to admin!!';
+});
+
+// 경로 받아오기
+admin.get('/course/:id', (ctx) => {
+  ctx.body = '✅ Welcome to admin!!';
+});
 
 
 module.exports = admin;

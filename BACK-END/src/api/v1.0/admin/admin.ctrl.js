@@ -2,6 +2,7 @@ const Joi = require('joi');
 const User = require('db/models/User');
 const GroupInfo = require('db/models/GroupInfo');
 const CarInfo = require('db/models/CarInfo');
+const Course = require('db/models/Course');
 const Admin = require('db/models/Admin');
 
 // 그룹에 속한 유저들 정보가져오기, 그룹에 대한 관리자권한만 접근
@@ -218,7 +219,6 @@ exports.carUpdate = async (ctx) => {
   }
 };
 
-
 // 그룹에 속해있는 드라이버 찾아오기.
 exports.carDelete = async (ctx) => {
   const { user } = ctx.request;
@@ -234,6 +234,133 @@ exports.carDelete = async (ctx) => {
   }
   try {
     const result = await CarInfo.removeById({ _id: id });
+    // response message(=data)
+    ctx.body = {
+      result
+    };
+  } catch (error) {
+    ctx.throw(error);
+  }
+};
+
+// 특정그룹에서 운전코스 등록하기
+exports.courseRegister = async (ctx) => {
+  const { user, body } = ctx.request;
+  // find admin
+  const admin = await Admin.findByUser(user);
+  // user session또는 관리자 권한이 없다면
+  if(!user || !admin) {
+    ctx.status = 403;
+    ctx.body = 'Any session not founded!';
+    // eslint-disable-next-line no-useless-return
+    return;
+  };
+
+  // body에서 받은정보 validation하기
+  const schema = Joi.object({
+    courseName: Joi.string().min(2).max(30).required(),
+    stations: Joi.array().items(
+      Joi.object({
+        stationName: Joi.string(),
+        Longitude: Joi.number(),
+        Latitude: Joi.number()
+      })
+    )
+  });
+
+  const result = Joi.validate(body, schema);
+  // Schema error 
+  if(result.error) {
+    console.log('🔥Schema error', result.error);
+    ctx.status = 400;
+    ctx.body = 'Schema error';
+    // eslint-disable-next-line no-useless-return
+    return;
+  }
+  // recieved Client request data
+  const { courseName, stations } = body;
+  try {
+    const courseInfo = await Course.courseRegister({
+      courseName,
+      stations,
+      group: admin.group
+    });
+    // response message(=data)
+    ctx.body = {
+      courseInfo
+    };
+  } catch (error) {
+    ctx.throw(error);
+  }
+};
+
+// 특정그룹에서 운전코스 수정하기
+exports.courseUpdate = async (ctx) => {
+  const { user, body } = ctx.request;
+  // find admin
+  const admin = await Admin.findByUser(user);
+  // user session또는 관리자 권한이 없다면
+  if(!user || !admin) {
+    ctx.status = 403;
+    ctx.body = 'Any session not founded!';
+    // eslint-disable-next-line no-useless-return
+    return;
+  };
+
+  // body에서 받은정보 validation하기
+  const schema = Joi.object({
+    courseId: Joi.string(),
+    courseName: Joi.string().min(2).max(30).required(),
+    stations: Joi.array().items(
+      Joi.object({
+        stationName: Joi.string(),
+        Longitude: Joi.number(),
+        Latitude: Joi.number()
+      })
+    )
+  });
+
+  const result = Joi.validate(body, schema);
+  // Schema error 
+  if(result.error) {
+    console.log('🔥Schema error', result.error);
+    ctx.status = 400;
+    ctx.body = 'Schema error';
+    // eslint-disable-next-line no-useless-return
+    return;
+  }
+  // recieved Client request data
+  const { courseName, stations, courseId } = body;
+  try {
+    const courseInfo = await Course.carUpdateById({
+      _id: courseId,
+      courseName,
+      stations
+    });
+    // response message(=data)
+    ctx.body = {
+      courseInfo
+    };
+  } catch (error) {
+    ctx.throw(error);
+  }
+};
+
+// 그룹에 속해있는 드라이버 찾아오기.
+exports.courseDelete = async (ctx) => {
+  const { user } = ctx.request;
+  const { id } = ctx.params;
+  // find admin
+  const admin = await Admin.findByUser(user);
+  // user session또는 관리자 권한이 없다면
+  if(!user || !admin) {
+    ctx.status = 403;
+    ctx.body = 'Any session not founded!';
+    // eslint-disable-next-line no-useless-return
+    return;
+  }
+  try {
+    const result = await Course.removeById({ _id: id });
     // response message(=data)
     ctx.body = {
       result
