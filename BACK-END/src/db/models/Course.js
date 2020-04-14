@@ -30,11 +30,17 @@ Course.statics.courseRegister = function({ courseName, stations, group }) {
 }; 
 
 Course.statics.carUpdateById = async function({ _id, courseName, stations }) {
-  return this.update({ _id }, { courseName, stations });
+  return this.updateOne({ _id }, { courseName, stations });
 };
 
 Course.statics.removeById = function({ _id }) {
   return this.remove({ _id });
+};
+Course.statics.findById = function({ _id }) {
+  return this.findOne({ _id });
+};
+Course.statics.findsByGroup = function({ group }) {
+  return this.find({ group });
 };
 
 module.exports = mongoose.model('Course', Course);
