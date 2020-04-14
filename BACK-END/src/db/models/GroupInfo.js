@@ -59,4 +59,30 @@ GroupInfo.statics.updateManagers = async function({ _id, users, drivers }) {
   return this.update({ _id }, { $set: { users, drivers } });
 };
 
+// methods
+GroupInfo.methods.memeberValidation = function({ _id }) {
+  let result = {
+    role: '',
+    userId: '',
+    groupInfoId: this._id
+  };
+  const userCheck = this.users.filter(userId => userId === _id);
+  const driverCheck = this.drivers.filter(userId => userId === _id);
+
+  if(userCheck) {
+    return {
+      ...result,
+      role: 'user',
+      userId: _id
+    };
+  }else if(driverCheck) {
+    return {
+      ...result,
+      role: 'driver',
+      userId: _id
+    };
+  } else {
+    return null;
+  }
+};
 module.exports = mongoose.model('GroupInfo', GroupInfo);
