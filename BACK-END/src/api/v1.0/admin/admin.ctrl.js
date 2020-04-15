@@ -346,7 +346,7 @@ exports.courseUpdate = async (ctx) => {
   }
 };
 
-// 그룹에 속해있는 드라이버 찾아오기.
+// 특정그룹에서 운전코스 삭제하기.
 exports.courseDelete = async (ctx) => {
   const { user } = ctx.request;
   const { id } = ctx.params;
@@ -369,3 +369,53 @@ exports.courseDelete = async (ctx) => {
     ctx.throw(error);
   }
 };
+
+// 코스id를 이용하여 코스 찾아오기.
+exports.getCourseById = async (ctx) => {
+  const { user } = ctx.request;
+  const { id } = ctx.params;
+  // user session이 없다면
+  if(!user) {
+    ctx.status = 403;
+    ctx.body = 'Any session not founded!';
+    // eslint-disable-next-line no-useless-return
+    return;
+  }
+  try {
+    const course = await Course.findById({ _id: id });
+    // response message(=data)
+    ctx.body = {
+      ...course._doc
+    };
+  } catch (error) {
+    ctx.throw(error);
+  }
+};
+
+// 그룹id를 이용하여 코스들 찾아오기.
+exports.getCoursesByGroup = async (ctx) => {
+  const { user } = ctx.request;
+  const { id } = ctx.params;
+  // find GroupInfo
+  const groupInfo = await GroupInfo.findOne({ _id: id });
+  // 특정그룹에 특정유저가 속해있는지 확인
+  const memberInfo = groupInfo.memeberValidation({ _id: user._id });
+  // user session또는 관리자 권한이 없다면
+  if(!user || !memberInfo) {
+    ctx.status = 403;
+    ctx.body = 'Any session not founded!';
+    // eslint-disable-next-line no-useless-return
+    return;
+  }
+  try {
+    const result = await Course.findsByGroup({ group: groupInfo });
+    // response message(=data)
+    ctx.body = {
+      memberInfo,
+      courses: result
+    };
+  } catch (error) {
+    ctx.throw(error);
+  }
+};
+

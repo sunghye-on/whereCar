@@ -22,9 +22,14 @@ const Admin = new mongoose.Schema({
   }
 });
 
-// 이메일 찾기
+// 유저정보로 어드민 찾기
 Admin.statics.findByUser = function(user) {
   return this.findOne({ user });
+};
+
+// gorup id로 어드민 찾기
+Admin.statics.findById = function({ _id }) {
+  return this.findOne({ _id });
 };
 
 // admin 회원가입

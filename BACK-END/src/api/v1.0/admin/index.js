@@ -54,15 +54,11 @@ admin.put('/course', adminCtrl.courseUpdate);
 // 경로 삭제 
 admin.delete('/course/:id', adminCtrl.courseDelete);
 
-// 경로리스트 받아오기
-admin.get('/courses', (ctx) => {
-  ctx.body = '✅ Welcome to admin!!';
-});
+// 경로들 받아오기 
+admin.get('/courses/:id', adminCtrl.getCoursesByGroup);
 
-// 경로 받아오기
-admin.get('/course/:id', (ctx) => {
-  ctx.body = '✅ Welcome to admin!!';
-});
+// 경로 받아오기 
+admin.get('/course/:id', adminCtrl.getCourseById);
 
 
 module.exports = admin;
