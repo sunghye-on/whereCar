@@ -219,7 +219,7 @@ exports.carUpdate = async (ctx) => {
   }
 };
 
-// 그룹에 속해있는 드라이버 찾아오기.
+// 특정그룹의 특정자동차 삭제하기
 exports.carDelete = async (ctx) => {
   const { user } = ctx.request;
   const { id } = ctx.params;
@@ -237,6 +237,33 @@ exports.carDelete = async (ctx) => {
     // response message(=data)
     ctx.body = {
       result
+    };
+  } catch (error) {
+    ctx.throw(error);
+  }
+};
+
+// 그룹에 속해있는 자동차들 가져오기
+exports.getCars = async (ctx) => {
+  const { user } = ctx.request;
+  const { id } = ctx.params;
+  // find GroupInfo
+  const groupInfo = await GroupInfo.findOne({ _id: id });
+  // 특정그룹에 특정유저가 속해있는지 확인
+  const memberInfo = groupInfo.memeberValidation({ _id: user._id });
+  // user session또는 관리자 권한이 없다면
+  if(!user || !admin) {
+    ctx.status = 403;
+    ctx.body = 'Any session not founded!';
+    // eslint-disable-next-line no-useless-return
+    return;
+  }
+  // GroupInfo DB에서 유저들정보 가져오기.
+  try {
+    const group = await GroupInfo.findOne({ _id: admin.group });
+    ctx.body = {
+      groupUsers: group.users,
+      admin: admin
     };
   } catch (error) {
     ctx.throw(error);
@@ -396,6 +423,8 @@ exports.getCourseById = async (ctx) => {
 exports.getCoursesByGroup = async (ctx) => {
   const { user } = ctx.request;
   const { id } = ctx.params;
+  // find admin
+  const admin = await Admin.findByUser(user);
   // find GroupInfo
   const groupInfo = await GroupInfo.findOne({ _id: id });
   // 특정그룹에 특정유저가 속해있는지 확인
@@ -411,7 +440,13 @@ exports.getCoursesByGroup = async (ctx) => {
     const result = await Course.findsByGroup({ group: groupInfo });
     // response message(=data)
     ctx.body = {
-      memberInfo,
+      memberInfo: admin 
+        ? {
+          ...result,
+          role: 'super',
+          userId: user._id
+        }
+        : memberInfo,
       courses: result
     };
   } catch (error) {
