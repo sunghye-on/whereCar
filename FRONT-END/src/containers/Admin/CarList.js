@@ -5,15 +5,21 @@ import ListItem from '@material-ui/core/ListItem';
 import ListItemIcon from '@material-ui/core/ListItemIcon';
 import ListItemSecondaryAction from '@material-ui/core/ListItemSecondaryAction';
 import ListItemText from '@material-ui/core/ListItemText';
-import Checkbox from '@material-ui/core/Checkbox';
+import DeleteIcon from '@material-ui/icons/Delete';
 import IconButton from '@material-ui/core/IconButton';
-import CommentIcon from '@material-ui/icons/Comment';
+import AddIcon from '@material-ui/icons/Add';
 import DriveEtaIcon from '@material-ui/icons/DriveEta';
 import {AdminWrapper} from 'components/Admin';
+import { Tooltip, Fab, Grid } from '@material-ui/core';
 const useStyles = makeStyles((theme) => ({
+  fab: {
+    margin: theme.spacing(2),
+  },
   root: {
     width: '100%',
     maxWidth: 500,
+    maxHeight: 300,
+    overflow: 'auto',
     backgroundColor: theme.palette.background.paper,
   },
   icon: {
@@ -75,9 +81,13 @@ const initialState = {
   ]
 }
 
-export default function CarList() {
+export default function CarList({history}) {
   const classes = useStyles();
   const [carList, setCarList] = useState(initialState.carList)
+
+  const handleOnClick = (route) => {
+    history.push(route)
+  };
 
   return (
     <AdminWrapper>
@@ -89,13 +99,24 @@ export default function CarList() {
               <ListItemText id={1} primary={car.carName} />
               <ListItemSecondaryAction>
                 <IconButton edge="end" aria-label="comments">
-                  <CommentIcon />
+                  <DeleteIcon />
                 </IconButton>
               </ListItemSecondaryAction>
             </ListItem>
           ))
         }
       </List>
+      <Grid container spacing={2}>
+        <Grid item xs={12}>
+          <Grid container justify="center" spacing={2}>
+            <Tooltip title="Add" aria-label="add" className={classes.insertButton} onClick={() => handleOnClick("/admin/car/register")}>
+                <Fab color="primary" className={classes.fab}>
+                  <AddIcon />
+                </Fab>
+            </Tooltip>
+          </Grid>
+        </Grid>
+      </Grid>
     </AdminWrapper>
   );
 }
