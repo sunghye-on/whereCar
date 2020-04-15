@@ -427,9 +427,18 @@ exports.getCoursesByGroup = async (ctx) => {
   const admin = await Admin.findByUser(user);
   // find GroupInfo
   const groupInfo = await GroupInfo.findOne({ _id: id });
-  // 특정그룹에 특정유저가 속해있는지 확인
-  const memberInfo = groupInfo.memeberValidation({ _id: user._id });
-  // user session또는 관리자 권한이 없다면
+  // 디폴트로 관리자로 식별
+  let memberInfo = {
+    role: 'super',
+    userId: user._id,
+    groupInfoId: id
+  };
+  // 관리자가 아니라면
+  if(!admin) {
+    // 특정그룹에 특정유저가 속해있는지 확인
+    memberInfo = groupInfo.memeberValidation({ _id: user._id });
+  }
+  // user session또는 그룹에 소속이 안되어 있다면
   if(!user || !memberInfo) {
     ctx.status = 403;
     ctx.body = 'Any session not founded!';
@@ -440,13 +449,7 @@ exports.getCoursesByGroup = async (ctx) => {
     const result = await Course.findsByGroup({ group: groupInfo });
     // response message(=data)
     ctx.body = {
-      memberInfo: admin 
-        ? {
-          ...result,
-          role: 'super',
-          userId: user._id
-        }
-        : memberInfo,
+      memberInfo,
       courses: result
     };
   } catch (error) {
