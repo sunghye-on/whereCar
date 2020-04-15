@@ -24,6 +24,7 @@ import * as userActions from 'redux/modules/user';
 import storage from 'lib/storage';
 import { bindActionCreators } from 'redux';
 import styled from 'styled-components';
+import { NavBarList } from '../../components/Admin';
 
 const drawerWidth = 240;
 
@@ -87,7 +88,7 @@ const Spacer = styled.div`
     flex-grow: 1;
 `;
 
-function AdminHeaderContainer({ children, visible, user, UserActions }) {
+function AdminHeaderContainer({ children, visible, user, UserActions, history }) {
   const classes = useStyles();
   const theme = useTheme();
   const [open, setOpen] = React.useState(false);
@@ -157,14 +158,7 @@ function AdminHeaderContainer({ children, visible, user, UserActions }) {
           </IconButton>
         </div>
         <Divider />
-        <List>
-          {['Inbox', 'Starred', 'Send email', 'Drafts'].map((text, index) => (
-            <ListItem button key={text}>
-              <ListItemIcon>{index % 2 === 0 ? <InboxIcon /> : <MailIcon />}</ListItemIcon>
-              <ListItemText primary={text} />
-            </ListItem>
-          ))}
-        </List>
+        <NavBarList history={history} />
         <Divider />
         <List>
           {['All mail', 'Trash', 'Spam'].map((text, index) => (

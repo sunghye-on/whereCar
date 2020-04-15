@@ -39,10 +39,8 @@ admin.put('/car', upload.single('carImage'), adminCtrl.carUpdate);
 // 자동차 삭제 
 admin.delete('/car/:id', adminCtrl.carDelete);
 
-// 자동차리스트 가져오기 [김성현군 작성바람]
-admin.get('/cars', (ctx) => {
-  ctx.body = '✅ Welcome to admin!!';
-});
+// 그룹 아이디로 자동차리스트 가져오기
+admin.get('/cars/:id', adminCtrl.getCars);
 
 /* =======assoicate course of group======= */
 // 경로 생성 

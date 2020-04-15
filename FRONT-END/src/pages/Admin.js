@@ -3,7 +3,7 @@ import { connect } from 'react-redux';
 import { bindActionCreators } from 'redux';
 import * as baseActions from 'redux/modules/base';
 import { AdminWrapper } from '../components/Admin';
-import { Maintain, HeaderContainer, CarRegister } from '../containers/Admin';
+import { Maintain, HeaderContainer, CarRegister, CarList } from '../containers/Admin';
 import { Route, Redirect } from 'react-router-dom';
 import { Paper } from '@material-ui/core';
 import { makeStyles } from '@material-ui/core/styles';
@@ -16,7 +16,7 @@ const ContentWrapper = styled.div`
     justify-content: center;
 `;
 
-function Admin({ BaseActions, loggedIn }) {
+function Admin({ BaseActions, loggedIn, history }) {
   useEffect(() => {
     BaseActions.setHeaderVisibility(false);
     return () => {
@@ -25,13 +25,16 @@ function Admin({ BaseActions, loggedIn }) {
   }, [BaseActions]);
 
   return (
-    <HeaderContainer>
+    <HeaderContainer history={history} >
       <ContentWrapper>
         <Route path="/admin/management" component={ Maintain } >
-          {!loggedIn && <Redirect to="/" />}
+          {/* {!loggedIn && <Redirect to="/" />} */}
+        </Route>
+        <Route path="/admin/cars" component={ CarList } >
+          {/* {!loggedIn && <Redirect to="/" />} */}
         </Route>
         <Route path="/admin/car/register" component={ CarRegister } >
-          {/* {!loggedIn && <Redirect to="/" />} */}
+            {/* {!loggedIn && <Redirect to="/" />} */}
         </Route>
       </ContentWrapper>
     </HeaderContainer>

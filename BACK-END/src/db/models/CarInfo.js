@@ -38,4 +38,8 @@ CarInfo.statics.removeById = function({ _id }) {
   return this.remove({ _id });
 };
 
+CarInfo.statics.findsByGroup = function({ group }) {
+  return this.find({ group });
+};
+
 module.exports = mongoose.model('CarInfo', CarInfo);

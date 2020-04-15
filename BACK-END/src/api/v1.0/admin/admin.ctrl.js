@@ -247,12 +247,9 @@ exports.carDelete = async (ctx) => {
 exports.getCars = async (ctx) => {
   const { user } = ctx.request;
   const { id } = ctx.params;
-  // find GroupInfo
-  const groupInfo = await GroupInfo.findOne({ _id: id });
-  // 특정그룹에 특정유저가 속해있는지 확인
-  const memberInfo = groupInfo.memeberValidation({ _id: user._id });
-  // user session또는 관리자 권한이 없다면
-  if(!user || !admin) {
+
+  // user session이 없다면
+  if(!user) {
     ctx.status = 403;
     ctx.body = 'Any session not founded!';
     // eslint-disable-next-line no-useless-return
@@ -260,10 +257,13 @@ exports.getCars = async (ctx) => {
   }
   // GroupInfo DB에서 유저들정보 가져오기.
   try {
-    const group = await GroupInfo.findOne({ _id: admin.group });
+    // find GroupInfo
+    const groupInfo = await GroupInfo.findOne({ _id: id });
+    // find Car List
+    const carList = await CarInfo.findsByGroup({ group: id });
     ctx.body = {
-      groupUsers: group.users,
-      admin: admin
+      groupInfo,
+      carList
     };
   } catch (error) {
     ctx.throw(error);
