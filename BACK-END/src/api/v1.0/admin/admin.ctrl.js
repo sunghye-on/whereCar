@@ -449,6 +449,7 @@ exports.getCoursesByGroup = async (ctx) => {
     const result = await Course.findsByGroup({ group: groupInfo });
     // response message(=data)
     ctx.body = {
+      groupInfo,
       memberInfo,
       courses: result
     };

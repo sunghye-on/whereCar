@@ -3,6 +3,7 @@ import base from './base';
 import auth from './auth';
 import user from './user';
 import admin from './admin';
+import list from './list';
 import socket from './socket';
 import { penderReducer } from 'redux-pender';
 
@@ -13,5 +14,6 @@ export default combineReducers({
     user,
     socket,
     admin,
+    list,
     pender: penderReducer 
 });

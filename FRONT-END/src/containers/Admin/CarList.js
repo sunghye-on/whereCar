@@ -1,4 +1,4 @@
-import React, { useState } from 'react';
+import React, { useState, useEffect } from 'react';
 import { makeStyles } from '@material-ui/core/styles';
 import List from '@material-ui/core/List';
 import ListItem from '@material-ui/core/ListItem';
@@ -11,6 +11,12 @@ import AddIcon from '@material-ui/icons/Add';
 import DriveEtaIcon from '@material-ui/icons/DriveEta';
 import {AdminWrapper} from 'components/Admin';
 import { Tooltip, Fab, Grid } from '@material-ui/core';
+
+import * as listActions from 'redux/modules/list';
+import { connect } from 'react-redux';
+import { bindActionCreators } from 'redux';
+import storage from 'lib/storage.js';
+
 const useStyles = makeStyles((theme) => ({
   fab: {
     margin: theme.spacing(2),
@@ -81,9 +87,14 @@ const initialState = {
   ]
 }
 
-export default function CarList({history}) {
+function CarList({history, carList, ListActions}) {
   const classes = useStyles();
-  const [carList, setCarList] = useState(initialState.carList)
+  const adminInfo = storage.get("adminInfo");
+
+  useEffect(() => {
+    const id = adminInfo.group;
+    ListActions.getCars({id});
+  }, [ListActions, adminInfo]);
 
   const handleOnClick = (route) => {
     history.push(route)
@@ -120,3 +131,12 @@ export default function CarList({history}) {
     </AdminWrapper>
   );
 }
+
+export default connect(
+  (state) => ({
+    carList: state.list.getIn(['carInfo', 'carList'])
+  }),
+  (dispatch) => ({
+      ListActions: bindActionCreators(listActions, dispatch)
+  })
+)(CarList);
