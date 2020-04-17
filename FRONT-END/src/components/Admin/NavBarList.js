@@ -20,7 +20,7 @@ const NavBarList = ({history}) => {
           <ListItemIcon><LocalTaxiIcon /></ListItemIcon>
           <ListItemText primary={"Cars"} />
         </ListItem>
-        <ListItem button key="Courses" onClick={ () => handleOnClick("/admin/management") }>
+        <ListItem button key="Courses" onClick={ () => handleOnClick("/admin/courses") }>
           <ListItemIcon><NavigationIcon /></ListItemIcon>
           <ListItemText primary={"Courses"} />
         </ListItem>

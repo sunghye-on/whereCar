@@ -3,7 +3,7 @@ const myListCtrl = require('./myList.ctrl');
 
 const myList = new Router();
 
-/* /api/v1.0/auth */
+/* /api/v1.0/mylist */
 myList.get('/', (ctx) => {
   ctx.body = '✅ Welcome to myLists!!';
 });

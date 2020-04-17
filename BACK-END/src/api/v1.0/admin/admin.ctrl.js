@@ -440,6 +440,7 @@ exports.getCoursesByGroup = async (ctx) => {
   }
   // user session또는 그룹에 소속이 안되어 있다면
   if(!user || !memberInfo) {
+    console.log("에러발생")
     ctx.status = 403;
     ctx.body = 'Any session not founded!';
     // eslint-disable-next-line no-useless-return
@@ -451,7 +452,7 @@ exports.getCoursesByGroup = async (ctx) => {
     ctx.body = {
       groupInfo,
       memberInfo,
-      courses: result
+      courseList: result
     };
   } catch (error) {
     ctx.throw(error);

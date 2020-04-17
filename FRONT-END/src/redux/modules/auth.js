@@ -110,7 +110,7 @@ export default handleActions({
     },
     [INITIALIZE_FORM]: (state, action) => {
         const initialForm = initialState.get(action.payload);
-        return state.set(action.payload, initialForm);
+        return state.set(initialForm, action.payload);
     },
     ...pender({
         type: CHECK_EMAIL_EXISTS,

@@ -15,8 +15,6 @@ const initialState = Map({
     Users: [],
     Drivers: []
   }),
-  // 그룹에 등록된 차량정보들
-  cars: [],
   result: Map({})
 });
 

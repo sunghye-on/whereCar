@@ -16,7 +16,7 @@ import * as listActions from 'redux/modules/list';
 import { connect } from 'react-redux';
 import { bindActionCreators } from 'redux';
 import storage from 'lib/storage.js';
-import { CustomListItem } from 'components/Base/List';
+import { CustomListItem, ExtendListItem } from 'components/Base/List';
 
 const useStyles = makeStyles((theme) => ({
   fab: {
@@ -37,13 +37,13 @@ const useStyles = makeStyles((theme) => ({
   }
 }));
 
-function CarList({history, carList, ListActions}) {
+function CourseList({history, courseList, ListActions}) {
   const classes = useStyles();
   const adminInfo = storage.get("adminInfo");
 
   useEffect(() => {
     const id = adminInfo.group;
-    ListActions.getCars({id});
+    ListActions.getCourses({id});
   }, []);
 
   const handleOnClick = (route) => {
@@ -54,10 +54,10 @@ function CarList({history, carList, ListActions}) {
     <AdminWrapper>
       <List className={classes.root}>
         {
-          carList.map(car => (
+          courseList.map(course => (
             <ListItem key="1" role={undefined} dense button onClick={function(){}}>
               <DriveEtaIcon className={classes.icon}/>
-              <ListItemText id={1} primary={<CustomListItem title={car.carName} subTitle={car.carNumber}/> }/>
+              <ListItemText id={1} primary={<ExtendListItem title={course.courseName} subContent={course.stations}/> }/>
               <ListItemSecondaryAction>
                 <IconButton edge="end" aria-label="comments">
                   <DeleteIcon />
@@ -70,7 +70,7 @@ function CarList({history, carList, ListActions}) {
       <Grid container spacing={2} className={classes.bottomBtn}>
         <Grid item xs={12}>
           <Grid container justify="center" spacing={2}>
-            <Tooltip title="Add" aria-label="add" className={classes.insertButton} onClick={() => handleOnClick("/admin/car/register")}>
+            <Tooltip title="Add" aria-label="add" className={classes.insertButton} onClick={() => handleOnClick("/admin/course/register")}>
                 <Fab color="primary" className={classes.fab}>
                   <AddIcon />
                 </Fab>
@@ -84,9 +84,9 @@ function CarList({history, carList, ListActions}) {
 
 export default connect(
   (state) => ({
-    carList: state.list.getIn(['carInfo', 'carList'])
+    courseList: state.list.getIn(['courseInfo', 'courseList'])
   }),
   (dispatch) => ({
       ListActions: bindActionCreators(listActions, dispatch)
   })
-)(CarList);
+)(CourseList);
