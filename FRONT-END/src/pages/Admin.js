@@ -3,7 +3,7 @@ import { connect } from 'react-redux';
 import { bindActionCreators } from 'redux';
 import * as baseActions from 'redux/modules/base';
 import { AdminWrapper } from '../components/Admin';
-import { Maintain, HeaderContainer, CarRegister, CarList, CourseList } from '../containers/Admin';
+import { Maintain, HeaderContainer, CarRegister, CarList, CourseList, CourseRegister } from '../containers/Admin';
 import { Route, Redirect } from 'react-router-dom';
 import { Paper } from '@material-ui/core';
 import { makeStyles } from '@material-ui/core/styles';
@@ -37,6 +37,9 @@ function Admin({ BaseActions, loggedIn, history }) {
           {/* {!loggedIn && <Redirect to="/" />} */}
         </Route>
         <Route path="/admin/car/register" component={ CarRegister } >
+            {/* {!loggedIn && <Redirect to="/" />} */}
+        </Route>
+        <Route path="/admin/course/register" component={ CourseRegister } >
             {/* {!loggedIn && <Redirect to="/" />} */}
         </Route>
       </ContentWrapper>

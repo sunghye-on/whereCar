@@ -49,7 +49,6 @@ function CourseList({history, courseList, ListActions}) {
   const handleOnClick = (route) => {
     history.push(route)
   };
-
   return (
     <AdminWrapper>
       <List className={classes.root}>

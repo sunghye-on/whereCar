@@ -8,3 +8,5 @@ export const updateManagers = ({ Users, Drivers }) => axios.post(`/api/v1.0/admi
 
 export const carRegister = ({ carName, carNumber, seatNumber, inspectionDate, carImage }) => 
   axios.post(`/api/v1.0/admin/car/register`, {carName, carNumber, seatNumber, inspectionDate, carImage});
+
+export const courseRegister = ({ courseName, stations }) => axios.post(`/api/v1.0/admin/course/register`, {courseName, stations});

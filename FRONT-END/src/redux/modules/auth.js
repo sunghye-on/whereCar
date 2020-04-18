@@ -3,7 +3,7 @@ import { pender } from 'redux-pender';
 import * as AuthAPI from 'lib/api/auth';
 import * as AdminAPI from 'lib/api/admin';
 
-import { Map } from 'immutable';
+import { Map, List } from 'immutable';
 
 /* ****************   input status checker **************** */
 const CHANGE_INPUT = 'auth/CHANGE_INPUT'; // input 값 변경
@@ -27,6 +27,7 @@ const UPDATE_USER = 'auth/UPDATE_USER'; // 로그아웃
 const SET_ERROR = 'auth/SET_ERROR'; // 오류 설정
 
 const CAR_REGISTER = 'auth/CAR_REGISTER';
+const COURSE_REGISTER = 'auth/COURSE_REGISTER';
 
 /* about input */
 export const changeInput = createAction(CHANGE_INPUT); //  { form, name, value }
@@ -44,6 +45,8 @@ export const adminRegister = createAction(ADMIN_REGISTER, AuthAPI.adminRegister)
 
 // Car Register
 export const carRegister = createAction(CAR_REGISTER, AdminAPI.carRegister) // { type, name, tell, location, description, certification, role}
+// Course Register
+export const courseRegister = createAction(COURSE_REGISTER, AdminAPI.courseRegister) // { type, name, tell, location, description, certification, role}
 
 /* Logout */
 export const logout = createAction(LOGOUT, AuthAPI.logout);
@@ -97,6 +100,13 @@ const initialState = Map({
             carNumber: '',
             seatNumber: 2,
             inspectionDate: ''
+        }),
+        error: null
+    }),
+    course: Map({
+        form: Map({
+            courseName: '',
+            stations: List([])
         }),
         error: null
     }),

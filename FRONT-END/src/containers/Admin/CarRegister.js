@@ -17,7 +17,7 @@ function CarRegister({ form, error, result, AuthActions, UserActions, history })
   useEffect(() => {
 
     return () => {
-      AuthActions.initializeForm('register');
+      AuthActions.initializeForm('car');
     };
   }, [AuthActions]);
 

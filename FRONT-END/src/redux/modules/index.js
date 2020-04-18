@@ -4,6 +4,7 @@ import auth from './auth';
 import user from './user';
 import admin from './admin';
 import list from './list';
+import map from './map';
 import socket from './socket';
 import { penderReducer } from 'redux-pender';
 
@@ -15,5 +16,6 @@ export default combineReducers({
     socket,
     admin,
     list,
+    map,
     pender: penderReducer 
 });

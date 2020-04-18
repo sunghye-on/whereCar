@@ -5,3 +5,4 @@ export { default as HeaderContainer } from './AdminHeaderContainer';
 export { default as UsersTransferList } from './UsersTransferList';
 export { default as CarList } from './CarList';
 export { default as CourseList } from './CourseList';
+export { default as CourseRegister } from './CourseRegister';
