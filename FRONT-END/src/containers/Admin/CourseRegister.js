@@ -6,11 +6,28 @@ import * as authActions from 'redux/modules/auth';
 import storage from 'lib/storage';
 import { isLength, isNumeric } from 'validator';
 import Axios from 'axios';
+import * as mapActions from 'redux/modules/map';
 import MapSelector from './MapSelector';
 
-
-function CourseRegister({ form, error, result, AuthActions, history }) {
+function CourseRegister({ form, error, result, AuthActions, MapActions, kakaoMap, kakao, mapResult, history }) {
   const { courseName, stations } = form.toJS();	
+  
+  // 카카오맵 초기화
+  useEffect(() => {
+    const container = document.getElementById('kakao-map');
+    const options = {
+      center: new kakao.maps.LatLng(33.450701, 126.570667),
+      level: 3
+    };
+    const map = new kakao.maps.Map(container, options);
+
+    const pickMarker = new kakao.maps.Marker({ 
+      // 지도 중심좌표에 마커를 생성합니다 
+      position: map.getCenter() 
+    }); 
+    MapActions.setPickMarker(pickMarker);
+    MapActions.setMap(map);
+  }, [])
 
   useEffect(() => {
 
@@ -80,7 +97,9 @@ function CourseRegister({ form, error, result, AuthActions, history }) {
     <AuthContent title="코스등록">
         <InputWithLabel value={courseName} label="코스이름" name="courseName" placeholder="서울 ○△동 코스" onChange={handleChange} />
         <InputWithLabel value={stations} label="정류장" name="stations" placeholder="홍대" onChange={handleChange} />
+        
         <MapSelector/>
+        
         {
           error && <AuthError>{error}</AuthError>
         }
@@ -93,9 +112,13 @@ export default connect(
   (state) => ({
     form: state.auth.getIn(['course', 'form']),
     error: state.auth.getIn(['course', 'error']),
-    result: state.auth.get('result')
+    result: state.auth.get('result'),
+    kakaoMap: state.map.get('map'),
+    mapResult: state.map.get('result').toJS(),
+    kakao: state.map.get('kakao')
   }),
   (dispatch) => ({
-    AuthActions: bindActionCreators(authActions, dispatch)
+    AuthActions: bindActionCreators(authActions, dispatch),
+    MapActions: bindActionCreators(mapActions, dispatch)
   })
 )(CourseRegister);

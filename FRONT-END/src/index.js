@@ -4,6 +4,8 @@ import Root from './Root';
 import * as serviceWorker from './serviceWorker';
 import configureStore from './redux/configureStore';
 import './index.css';
+import dotenv from "dotenv";
+dotenv.config();
 
 const store = configureStore();
 

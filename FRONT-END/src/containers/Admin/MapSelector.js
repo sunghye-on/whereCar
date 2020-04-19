@@ -1,29 +1,16 @@
 import React, { useEffect, useState } from 'react';
-import { KaKaoMap, KaKaoMapController } from 'components/Map';
-import { AdminContent, ManagerBox, AdminStepper } from 'components/Admin';
+import { KaKaoMap, KaKaoSearch } from 'components/Map';
 import { connect } from 'react-redux';
 import { bindActionCreators } from 'redux';
-import * as authActions from 'redux/modules/auth';
-import * as userActions from 'redux/modules/user';
-import * as adminActions from 'redux/modules/admin';
-import storage from 'lib/storage';
-import {isEmail, isLength, isAlphanumeric} from 'validator';
-import debounce from 'lodash/debounce';
-import Paper from '@material-ui/core/Paper';
-import UsersTransferList from './UsersTransferList';
-import { makeStyles } from '@material-ui/core';
 import * as mapActions from 'redux/modules/map';
-const { kakao } = window;
+import 'css/kakaoMap.css';
 
-function MapSelector({kakaoMap, example}) {
-  console.log("1111========", kakaoMap.map.m?kakaoMap.map:false)
-  const map = kakaoMap.map.m?kakaoMap.map:false;
-  let marker = null;
-  if(map){
-    marker = new kakao.maps.Marker({ 
-      // 지도 중심좌표에 마커를 생성합니다 
-      position: map.getCenter() 
-    }); 
+function MapSelector({kakaoMap, pickMarker, kakao, mapResult}) {
+  
+  const map = kakaoMap;
+  const marker = pickMarker;
+
+  if(mapResult){
     // 지도에 마커를 표시합니다
     marker.setMap(map);
     // 지도에 클릭 이벤트를 등록합니다
@@ -47,7 +34,11 @@ function MapSelector({kakaoMap, example}) {
 
   return (
     <>
-    <KaKaoMap/>
+    <div className="map_wrap">
+      <KaKaoMap/>
+    
+      <KaKaoSearch/>
+    </div>
     <p><em>지도를 클릭해주세요!</em></p> 
     <div id="clickLatlng"></div>
     </>
@@ -55,7 +46,10 @@ function MapSelector({kakaoMap, example}) {
 };
 export default connect(
   (state) => ({
-    kakaoMap: state.map.toJS(),
+    kakaoMap: state.map.get('map'),
+    pickMarker: state.map.get('pickMarker'),
+    kakao: state.map.get('kakao'),
+    mapResult: state.map.get('result').toJS().map,
   }),
   (dispatch) => ({
     MapActions: bindActionCreators(mapActions, dispatch)

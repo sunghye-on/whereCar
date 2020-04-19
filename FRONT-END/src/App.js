@@ -8,6 +8,8 @@ import { connect } from 'react-redux';
 import * as userActions from 'redux/modules/user';
 import * as socketActions from 'redux/modules/socket';
 import { bindActionCreators } from 'redux';
+import dotenv from "dotenv";
+dotenv.config();
 
 function App({ UserActions, SocketActions }) {
   useEffect(() => {
