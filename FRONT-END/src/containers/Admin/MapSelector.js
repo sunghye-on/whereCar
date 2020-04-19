@@ -7,6 +7,10 @@ import 'css/kakaoMap.css';
 
 function MapSelector({kakaoMap, pickMarker, kakao, mapResult}) {
   
+  const [btn, setBtn] = useState({
+      search: true
+  });
+  const {search} = btn;
   const map = kakaoMap;
   const marker = pickMarker;
 
@@ -31,13 +35,26 @@ function MapSelector({kakaoMap, pickMarker, kakao, mapResult}) {
       
     });
   }
+  const searchBtn = () => {
+    console.log(search)
+    var searchBox = document.getElementById('menu_wrap'); 
+    if(search){
+        console.log(search)
+        searchBox.style.display = "none"
+    }else{
+        searchBox.style.display = "block"
+    }
+    setBtn({...btn, search: !btn.search})
+}
 
   return (
     <>
+    <button onClick={searchBtn}>위치검색</button>
+    <button>승차장에 추가</button>
     <div className="map_wrap">
       <KaKaoMap/>
-    
-      <KaKaoSearch/>
+
+      <KaKaoSearch id="kakaoSearchBtn"/>
     </div>
     <p><em>지도를 클릭해주세요!</em></p> 
     <div id="clickLatlng"></div>
