@@ -289,8 +289,8 @@ exports.courseRegister = async (ctx) => {
     stations: Joi.array().items(
       Joi.object({
         stationName: Joi.string(),
-        Longitude: Joi.number(),
-        Latitude: Joi.number()
+        longitude: Joi.number(),
+        latitude: Joi.number()
       })
     )
   });

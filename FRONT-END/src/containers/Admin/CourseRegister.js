@@ -2,16 +2,21 @@ import React, { useEffect, useState } from 'react';
 import { AuthContent, InputWithLabel, AuthButton, AuthError } from 'components/Auth';
 import { connect } from 'react-redux';
 import { bindActionCreators } from 'redux';
-import * as authActions from 'redux/modules/auth';
 import storage from 'lib/storage';
 import { isLength, isNumeric } from 'validator';
 import Axios from 'axios';
+import * as authActions from 'redux/modules/auth';
 import * as mapActions from 'redux/modules/map';
 import MapSelector from './MapSelector';
 
 function CourseRegister({ form, error, result, AuthActions, MapActions, kakaoMap, kakao, mapResult, history }) {
-  const { courseName, stations } = form.toJS();	
-  
+  const { courseName } = form.toJS();	
+  const [position, setPosition] = useState({
+    longitude: 0,
+    latitude: 0,
+    stations: []
+  });
+  const {stations} = position;
   // 카카오맵 초기화
   useEffect(() => {
     const container = document.getElementById('kakao-map');
@@ -48,19 +53,6 @@ function CourseRegister({ form, error, result, AuthActions, MapActions, kakaoMap
       }
       setError(null);
       return true;
-    },
-    stations: value => {
-      for( const station in value ){
-        if(!isLength(station.stationName, { min: 2, max: 15 })) {
-          setError('코스이름은 4~15 글자의 문자 혹은 숫자로 이뤄져야 합니다.');
-        }else if(!isNumeric(station.longitude)||!isNumeric(station.latitude)){
-          setError(!isNumeric(station.longitude)?
-            'Longitude 값은 숫자값을 기입해주세요.':'Latitude 값은 숫자값을 기입해주세요.'
-          );
-        }
-      };
-      setError(null);
-      return true;
     }
   };
 
@@ -78,9 +70,7 @@ function CourseRegister({ form, error, result, AuthActions, MapActions, kakaoMap
 
   const handleCourseRegister = async () => {
     if(error) return; // 현재 에러가 있는 상태라면 진행하지 않음
-    if(!validate['courseName'](courseName)||
-      !validate['stations'](stations)) return; // 하나라도 실패하면 진행하지 않음
-    
+    if(!validate['courseName'](courseName)) return; // 하나라도 실패하면 진행하지 않음
     try {
       await AuthActions.courseRegister({courseName, stations});
 
@@ -93,13 +83,12 @@ function CourseRegister({ form, error, result, AuthActions, MapActions, kakaoMap
       setError('알 수 없는 에러가 발생했습니다.')
     }
   }
+
   return (
     <AuthContent title="코스등록">
         <InputWithLabel value={courseName} label="코스이름" name="courseName" placeholder="서울 ○△동 코스" onChange={handleChange} />
-        <InputWithLabel value={stations} label="정류장" name="stations" placeholder="홍대" onChange={handleChange} />
-        
-        <MapSelector/>
-        
+        <br/>        
+        <MapSelector position={position} setPosition={setPosition}/>
         {
           error && <AuthError>{error}</AuthError>
         }

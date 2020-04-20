@@ -46,7 +46,7 @@ export const adminRegister = createAction(ADMIN_REGISTER, AuthAPI.adminRegister)
 // Car Register
 export const carRegister = createAction(CAR_REGISTER, AdminAPI.carRegister) // { type, name, tell, location, description, certification, role}
 // Course Register
-export const courseRegister = createAction(COURSE_REGISTER, AdminAPI.courseRegister) // { type, name, tell, location, description, certification, role}
+export const courseRegister = createAction(COURSE_REGISTER, AdminAPI.courseRegister) // { courseName, stations}
 
 /* Logout */
 export const logout = createAction(LOGOUT, AuthAPI.logout);
@@ -106,7 +106,6 @@ const initialState = Map({
     course: Map({
         form: Map({
             courseName: '',
-            stations: List([])
         }),
         error: null
     }),
@@ -144,6 +143,14 @@ export default handleActions({
     }),
     ...pender({
         type: UPDATE_USER,
+        onSuccess: (state, action) => state.set('result', Map(action.payload.data))
+    }),
+    ...pender({
+        type: COURSE_REGISTER,
+        onSuccess: (state, action) => state.set('result', Map(action.payload.data))
+    }),
+    ...pender({
+        type: CAR_REGISTER,
         onSuccess: (state, action) => state.set('result', Map(action.payload.data))
     }),
     [SET_ERROR]: (state, action) => {

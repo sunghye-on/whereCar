@@ -1,15 +1,26 @@
 import React, { useEffect, useState } from 'react';
-import { KaKaoMap, KaKaoSearch } from 'components/Map';
+import { KaKaoMap, KaKaoSearch, MapController } from 'components/Map';
+import Button from '@material-ui/core/Button';
 import { connect } from 'react-redux';
 import { bindActionCreators } from 'redux';
 import * as mapActions from 'redux/modules/map';
+import * as authActions from 'redux/modules/auth';
 import 'css/kakaoMap.css';
+import { makeStyles } from '@material-ui/core';
 
-function MapSelector({kakaoMap, pickMarker, kakao, mapResult}) {
-  
+const useStyles = makeStyles((theme) => ({
+  button: {
+    margin: theme.spacing(1),
+  },
+}));
+
+function MapSelector({kakaoMap, pickMarker, kakao, mapResult, position, setPosition}) {
+  const classes = useStyles();
   const [btn, setBtn] = useState({
       search: true
   });
+
+  console.log(position.stations)
   const {search} = btn;
   const map = kakaoMap;
   const marker = pickMarker;
@@ -32,7 +43,12 @@ function MapSelector({kakaoMap, pickMarker, kakao, mapResult}) {
       
       var resultDiv = document.getElementById('clickLatlng'); 
       resultDiv.innerHTML = message;
-      
+
+      setPosition({
+        ...position,
+        longitude: latlng.getLat(),
+        latitude: latlng.getLng()
+      })
     });
   }
   const searchBtn = () => {
@@ -45,12 +61,25 @@ function MapSelector({kakaoMap, pickMarker, kakao, mapResult}) {
         searchBox.style.display = "block"
     }
     setBtn({...btn, search: !btn.search})
-}
+  }
+  const addCourseBtn = ({idx, stationName, position}) => {
+    const station = {
+      stationName,
+      longitude: position.longitude,
+      latitude: position.latitude
+    }
+    const update = position.stations.map(value => value);
+    update[idx]=station
+
+    setPosition({
+      ...position,
+      stations: update
+    })
+  }
 
   return (
     <>
-    <button onClick={searchBtn}>위치검색</button>
-    <button>승차장에 추가</button>
+    <MapController searchBtn={searchBtn} addCourseBtn={addCourseBtn} position={position}/>
     <div className="map_wrap">
       <KaKaoMap/>
 
@@ -69,6 +98,7 @@ export default connect(
     mapResult: state.map.get('result').toJS().map,
   }),
   (dispatch) => ({
+    AuthActions: bindActionCreators(authActions, dispatch),
     MapActions: bindActionCreators(mapActions, dispatch)
   })
 )(MapSelector);
