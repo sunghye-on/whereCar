@@ -49,6 +49,12 @@ function CourseList({history, courseList, ListActions}) {
   const handleOnClick = (route) => {
     history.push(route)
   };
+
+  const courseDelete = id => {
+    ListActions.deleteCourse({id})
+    ListActions.getCourses({id: adminInfo.group});
+  };
+
   return (
     <AdminWrapper>
       <List className={classes.root}>
@@ -58,7 +64,7 @@ function CourseList({history, courseList, ListActions}) {
               <DriveEtaIcon className={classes.icon}/>
               <ListItemText id={1} primary={<ExtendListItem title={course.courseName} subContent={course.stations}/> }/>
               <ListItemSecondaryAction>
-                <IconButton edge="end" aria-label="comments">
+                <IconButton edge="end" aria-label="comments" onClick={()=>courseDelete(course._id)}>
                   <DeleteIcon />
                 </IconButton>
               </ListItemSecondaryAction>

@@ -50,6 +50,11 @@ function CarList({history, carList, ListActions}) {
     history.push(route)
   };
 
+  const carDelete = id => {
+    ListActions.deleteCar({id})
+    ListActions.getCars({id: adminInfo.group});
+  };
+
   return (
     <AdminWrapper>
       <List className={classes.root}>
@@ -59,7 +64,7 @@ function CarList({history, carList, ListActions}) {
               <DriveEtaIcon className={classes.icon}/>
               <ListItemText id={1} primary={<CustomListItem title={car.carName} subTitle={car.carNumber}/> }/>
               <ListItemSecondaryAction>
-                <IconButton edge="end" aria-label="comments">
+                <IconButton edge="end" aria-label="comments" onClick={()=>carDelete(car._id)}>
                   <DeleteIcon />
                 </IconButton>
               </ListItemSecondaryAction>

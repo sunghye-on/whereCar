@@ -34,7 +34,7 @@ Course.statics.carUpdateById = async function({ _id, courseName, stations }) {
 };
 
 Course.statics.removeById = function({ _id }) {
-  return this.remove({ _id });
+  return this.deleteOne({ _id });
 };
 Course.statics.findById = function({ _id }) {
   return this.findOne({ _id });
