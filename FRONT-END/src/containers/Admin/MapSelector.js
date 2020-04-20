@@ -20,7 +20,6 @@ function MapSelector({kakaoMap, pickMarker, kakao, mapResult, position, setPosit
       search: true
   });
 
-  console.log(position.stations)
   const {search} = btn;
   const map = kakaoMap;
   const marker = pickMarker;
@@ -46,8 +45,8 @@ function MapSelector({kakaoMap, pickMarker, kakao, mapResult, position, setPosit
 
       setPosition({
         ...position,
-        longitude: latlng.getLat(),
-        latitude: latlng.getLng()
+        longitude: latlng.getLng(),
+        latitude: latlng.getLat()
       })
     });
   }

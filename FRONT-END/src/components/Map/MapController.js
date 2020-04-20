@@ -39,36 +39,6 @@ const Contents = styled(StepButton)`
     `}
 `;
 
-
-const stationsD = [
-  {
-    stationName: "장안동",
-    Longitude: 311.2,
-    Latitude: 311.5
-  },
-  {
-    stationName: "연무동",
-    Longitude: 311.2,
-    Latitude: 311.5
-  },
-  {
-    stationName: "수원역",
-    Longitude: 311.2,
-    Latitude: 311.5
-  },
-  {
-    stationName: "아주대",
-    Longitude: 311.2,
-    Latitude: 311.5
-  },
-  {
-    stationName: "경기대",
-    Longitude: 311.2,
-    Latitude: 311.5
-  }
-]
-
-
 const MapController = ({searchBtn, addCourseBtn, position}) => {
   const classes = useStyles();
   const [inputs, setInputs] = useState({
