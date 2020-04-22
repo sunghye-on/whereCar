@@ -1,3 +1,4 @@
+/* eslint-disable prefer-const */
 const mongoose = require('mongoose');
 const { PASSWORD_HASH_KEY: secret } = process.env;
 const crypto = require('crypto');
@@ -70,12 +71,37 @@ GroupInfo.statics.groupRegister = function({ type, name, tell, location, descrip
 GroupInfo.statics.updateManagers = async function({ _id, users, drivers }) {
   return this.update({ _id }, { $set: { users, drivers } });
 };
-
-GroupInfo.statics.searchGroupByKeyword = async function({ keywords }) {
+// 여러개의 키워드로 검색합니다.(유사문장검색) /?keywords=01040247797+asdasdasd
+GroupInfo.statics.searchGroupByPattern = async function({ keywords }) {
+  const keywordsList = keywords.split(' ');
+  let results = await this.find(
+    {
+      $or: () => {
+        let list = [];
+        for(const i in keywordsList) {
+          list.push(
+            { name: { $regex: keywordsList[i] } }
+          );
+          list.push(
+            { tell: { $regex: keywordsList[i] } }
+          );
+          list.push(
+            { location: { $regex: keywordsList[i] } }
+          );
+        }
+        return list;
+      }
+    }
+  ).select('_id name tell location descriptions');
+  
+  return results;
+};
+// 하나의 키워드로 검색합니다.(문장일치검색) /?keyword=asdasdasd
+GroupInfo.statics.searchGroupByKeyword = async function({ keyword }) {
   const result = await this.find(
     {
       $text: {
-        $search: keywords
+        $search: keyword
       }
     },
     {
@@ -84,6 +110,7 @@ GroupInfo.statics.searchGroupByKeyword = async function({ keywords }) {
       }
     }
   ).sort({ score: { $meta: 'textScore' } });
+
   return result;
 };
 
