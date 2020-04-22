@@ -8,10 +8,22 @@ const hash = (password) => crypto.createHmac('sha256', secret).update(password).
 
 const GroupInfo = new mongoose.Schema({
   type: String,
-  name: String,
-  tell: String,
-  location: String,
-  description: String,
+  name: {
+    type: String,
+    index: true
+  },
+  tell: {
+    type: String,
+    index: true
+  },
+  location: {
+    type: String,
+    index: true
+  },
+  description: {
+    type: String,
+    index: true
+  },
   certification: String,
   createdAt: {
     type: Date,
@@ -59,9 +71,25 @@ GroupInfo.statics.updateManagers = async function({ _id, users, drivers }) {
   return this.update({ _id }, { $set: { users, drivers } });
 };
 
+GroupInfo.statics.searchGroupByKeyword = async function({ keywords }) {
+  const result = await this.find(
+    {
+      $text: {
+        $search: keywords
+      }
+    },
+    {
+      score: {
+        $meta: 'textScore'
+      }
+    }
+  ).sort({ score: { $meta: 'textScore' } });
+  return result;
+};
+
 // methods
 GroupInfo.methods.memeberValidation = function({ _id }) {
-  let result = {
+  const result = {
     role: '',
     userId: '',
     groupInfoId: this._id
@@ -85,4 +113,5 @@ GroupInfo.methods.memeberValidation = function({ _id }) {
     return null;
   }
 };
+
 module.exports = mongoose.model('GroupInfo', GroupInfo);

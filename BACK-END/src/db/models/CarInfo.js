@@ -35,7 +35,7 @@ CarInfo.statics.carUpdate = async function({ _id, carName, carNumber, seatNumber
 };
 
 CarInfo.statics.removeById = function({ _id }) {
-  return this.remove({ _id });
+  return this.deleteOne({ _id });
 };
 
 CarInfo.statics.findsByGroup = function({ group }) {

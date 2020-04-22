@@ -53,7 +53,7 @@ const MapController = ({searchBtn, addCourseBtn, position}) => {
 
     setInputs({
       ...inputs,
-      [name]: value
+      [name]: name==='index'? parseInt(value): value
     });
   }
 
