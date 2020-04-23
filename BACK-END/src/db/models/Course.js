@@ -29,7 +29,7 @@ Course.statics.courseRegister = function({ courseName, stations, group }) {
   return course;
 }; 
 
-Course.statics.carUpdateById = async function({ _id, courseName, stations }) {
+Course.statics.courseUpdateById = async function({ _id, courseName, stations }) {
   return this.updateOne({ _id }, { courseName, stations });
 };
 

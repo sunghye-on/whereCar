@@ -37,7 +37,7 @@ const useStyles = makeStyles((theme) => ({
   }
 }));
 
-function CarList({history, carList, ListActions}) {
+function CarList({history, carList, ListActions, carInfo}) {
   const classes = useStyles();
   const adminInfo = storage.get("adminInfo");
 
@@ -46,25 +46,25 @@ function CarList({history, carList, ListActions}) {
     ListActions.getCars({id});
   }, []);
 
-  const handleOnClick = (route) => {
-    history.push(route)
+  const handleOnClick = async (route) => {
+    history.push(route) 
   };
 
-  const carDelete = id => {
-    ListActions.deleteCar({id})
-    ListActions.getCars({id: adminInfo.group});
+  const handleOnUpdate = async (route,id) => {
+    await ListActions.getCar({id});
+    history.push(route) 
   };
-
+ 
   return (
     <AdminWrapper>
       <List className={classes.root}>
         {
           carList.map(car => (
-            <ListItem key="1" role={undefined} dense button onClick={function(){}}>
+            <ListItem key="1" role={undefined} dense button onClick = {() => handleOnUpdate(`/admin/car/update/${car._id}`, car._id)}>
               <DriveEtaIcon className={classes.icon}/>
-              <ListItemText id={1} primary={<CustomListItem title={car.carName} subTitle={car.carNumber}/> }/>
+              <ListItemText id={1} primary={<CustomListItem title={car.carName} subTitle={car.carNumber} /> }/>
               <ListItemSecondaryAction>
-                <IconButton edge="end" aria-label="comments" onClick={()=>carDelete(car._id)}>
+                <IconButton edge="end" aria-label="comments">
                   <DeleteIcon />
                 </IconButton>
               </ListItemSecondaryAction>
@@ -89,7 +89,8 @@ function CarList({history, carList, ListActions}) {
 
 export default connect(
   (state) => ({
-    carList: state.list.getIn(['carInfo', 'carList'])
+    carList: state.list.getIn(['carInfo', 'carList']),
+    carInfo: state.list.get('result')
   }),
   (dispatch) => ({
       ListActions: bindActionCreators(listActions, dispatch)

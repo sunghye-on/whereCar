@@ -43,12 +43,6 @@ const router = new Router();
 /* /... */
 router.use('/api', api.routes());
 
-// 업로드된 이미지 제공하기
-router.get('/uploads/:fileurl', async (ctx, next) => {
-  const { fileurl } = ctx.params;
-  await send(ctx, './uploads/' + fileurl);
-});
-
 router.get('/', async (ctx, next) => {
   const mainPath = path.join(__dirname, '../../FRONT-END/build');
   await send(ctx, 'index.html', { root: mainPath });

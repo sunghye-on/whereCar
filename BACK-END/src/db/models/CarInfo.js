@@ -42,4 +42,8 @@ CarInfo.statics.findsByGroup = function({ group }) {
   return this.find({ group });
 };
 
+CarInfo.statics.findsById = function({ _id }) {
+  return this.findOne({ _id });
+};
+
 module.exports = mongoose.model('CarInfo', CarInfo);

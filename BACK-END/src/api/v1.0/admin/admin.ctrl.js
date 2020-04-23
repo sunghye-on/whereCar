@@ -4,6 +4,7 @@ const GroupInfo = require('db/models/GroupInfo');
 const CarInfo = require('db/models/CarInfo');
 const Course = require('db/models/Course');
 const Admin = require('db/models/Admin');
+const fs = require('fs');
 
 // 그룹에 속한 유저들 정보가져오기, 그룹에 대한 관리자권한만 접근
 exports.groupUsers = async (ctx) => {
@@ -200,18 +201,34 @@ exports.carUpdate = async (ctx) => {
     return;
   }
   // recieved Client request data
-  const { carId, carName, carNumber, seatNumber, inspectionDate, carImageUrl } = body;
+  const { carId, carName, carNumber, seatNumber, inspectionDate } = body;
   try {
-    const carInfo = await CarInfo.carUpdate({
-      _id: carId,
+    const car = await CarInfo.findsById({ _id: carId });
+
+    if(file) { // if user send a new imageFile
+      await fs.stat(car.carImageUrl, function(err) { 
+        if (!err) { // if file or directory exists
+          console.log('file or directory exists');
+          
+          fs.unlink('./' + car.carImageUrl, function(err) { // delete file
+            if (err) throw ctx.throw(err);
+            console.log('file deleted');
+          });
+        } else if (err.code === 'ENOENT') {
+          console.log('file or directory does not exist');
+        }
+      });
+    };
+    
+    const carInfo = await car.updateOne({
       carName,
       carNumber,
       seatNumber,
       inspectionDate,
-      carImageUrl: file ? file.path : carImageUrl
+      carImageUrl: file ? file.path : car.carImageUrl
     });
-    // response message(=data)
-    ctx.body = {
+
+    ctx.body = { // response message(=data)
       carInfo
     };
   } catch (error) {
@@ -285,8 +302,10 @@ exports.getCar = async (ctx) => {
   // GroupInfo DB에서 유저들정보 가져오기.
   try {
     // find Car List
-    const carInfo = await CarInfo.findOne({ _id: id });
-    ctx.body = carInfo;
+    const car = await CarInfo.findOne({ _id: id });
+    ctx.body = {
+      car
+    };
   } catch (error) {
     ctx.throw(error);
   }
@@ -381,7 +400,7 @@ exports.courseUpdate = async (ctx) => {
   // recieved Client request data
   const { courseName, stations, courseId } = body;
   try {
-    const courseInfo = await Course.carUpdateById({
+    const courseInfo = await Course.courseUpdateById({
       _id: courseId,
       courseName,
       stations
@@ -433,7 +452,9 @@ exports.getCourseById = async (ctx) => {
   try {
     const course = await Course.findById({ _id: id });
     // response message(=data)
-    ctx.body = course;
+    ctx.body = {
+      course
+    };
   } catch (error) {
     ctx.throw(error);
   }
@@ -460,7 +481,7 @@ exports.getCoursesByGroup = async (ctx) => {
   }
   // user session또는 그룹에 소속이 안되어 있다면
   if(!user || !memberInfo) {
-    console.log("에러발생")
+    console.log('에러발생');
     ctx.status = 403;
     ctx.body = 'Any session not founded!';
     // eslint-disable-next-line no-useless-return

@@ -29,6 +29,8 @@ const SET_ERROR = 'auth/SET_ERROR'; // 오류 설정
 const CAR_REGISTER = 'auth/CAR_REGISTER';
 const COURSE_REGISTER = 'auth/COURSE_REGISTER';
 
+const SET_CAR = 'auth/SET_CAR';
+
 /* about input */
 export const changeInput = createAction(CHANGE_INPUT); //  { form, name, value }
 export const initializeForm = createAction(INITIALIZE_FORM); // form 
@@ -45,6 +47,8 @@ export const adminRegister = createAction(ADMIN_REGISTER, AuthAPI.adminRegister)
 
 // Car Register
 export const carRegister = createAction(CAR_REGISTER, AdminAPI.carRegister) // { type, name, tell, location, description, certification, role}
+export const setCar = createAction(SET_CAR);
+
 // Course Register
 export const courseRegister = createAction(COURSE_REGISTER, AdminAPI.courseRegister) // { courseName, stations}
 
@@ -118,8 +122,16 @@ export default handleActions({
         return state.setIn([form, 'form', name], value);
     },
     [INITIALIZE_FORM]: (state, action) => {
-        const initialForm = initialState.get(action.payload);
-        return state.set(initialForm, action.payload);
+        const initialForm = initialState.get(action.paylad);
+        return state.set(action.payload, initialForm);
+    },
+    [SET_CAR]: (state, action) => {
+        const { carName, carNumber, seatNumber, inspectionDate }  = action.payload.car;
+        console.log("333",carName)
+        return state.setIn(['car','form','carName'], carName)
+                    .setIn(['car','form','carNumber'],carNumber)
+                    .setIn(['car','form','seatNumber'],seatNumber)
+                    .setIn(['car','form','inspectionDate'],inspectionDate);
     },
     ...pender({
         type: CHECK_EMAIL_EXISTS,
