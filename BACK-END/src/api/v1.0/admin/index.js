@@ -42,6 +42,9 @@ admin.delete('/car/:id', adminCtrl.carDelete);
 // 그룹 아이디로 자동차리스트 가져오기
 admin.get('/cars/:id', adminCtrl.getCars);
 
+// 그룹 아이디로 자동차리스트 가져오기
+admin.get('/car/:id', adminCtrl.getCar);
+
 /* =======assoicate course of group======= */
 // 경로 생성 
 admin.post('/course', adminCtrl.courseRegister);

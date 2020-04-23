@@ -270,6 +270,28 @@ exports.getCars = async (ctx) => {
   }
 };
 
+// 자동차 id로 자동차정보 가져오기
+exports.getCar = async (ctx) => {
+  const { user } = ctx.request;
+  const { id } = ctx.params;
+
+  // user session이 없다면
+  if(!user) {
+    ctx.status = 403;
+    ctx.body = 'Any session not founded!';
+    // eslint-disable-next-line no-useless-return
+    return;
+  }
+  // GroupInfo DB에서 유저들정보 가져오기.
+  try {
+    // find Car List
+    const carInfo = await CarInfo.findOne({ _id: id });
+    ctx.body = carInfo;
+  } catch (error) {
+    ctx.throw(error);
+  }
+};
+
 // 특정그룹에서 운전코스 등록하기
 exports.courseRegister = async (ctx) => {
   const { user, body } = ctx.request;
@@ -411,9 +433,7 @@ exports.getCourseById = async (ctx) => {
   try {
     const course = await Course.findById({ _id: id });
     // response message(=data)
-    ctx.body = {
-      ...course._doc
-    };
+    ctx.body = course;
   } catch (error) {
     ctx.throw(error);
   }
@@ -458,4 +478,3 @@ exports.getCoursesByGroup = async (ctx) => {
     ctx.throw(error);
   }
 };
-
