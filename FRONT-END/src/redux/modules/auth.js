@@ -123,9 +123,6 @@ export default handleActions({
     },
     [INITIALIZE_FORM]: (state, action) => {
         const initialForm = initialState.get(action.payload);
-        console.log("-----")
-        console.log(action)
-        console.log(initialForm)
         return state.set(action.payload, initialForm);
     },
     [SET_CAR]: (state, action) => {

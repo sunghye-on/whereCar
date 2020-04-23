@@ -30,7 +30,7 @@ function CarUpdate({ form, error, result, AuthActions, UserActions, match, histo
     const car = storage.get('car')
     setImageUrl(car.car.carImageUrl);
     AuthActions.setCar(car);
-    
+
     return () => {
       AuthActions.initializeForm('car');
     };
@@ -162,7 +162,7 @@ function CarUpdate({ form, error, result, AuthActions, UserActions, match, histo
         <InputWithLabel value={seatNumber} label="좌석수" name="seatNumber" placeholder="좌석수" type="number" onChange={handleChange} />
         <InputWithLabel value={inspectionDate} label="최종점검날짜" name="inspectionDate" placeholder="점검날짜" type="date" onChange={handleChange} />
         <InputWithLabel 
-          label={<p>이전 사진<img style= {{width: '100px'}} src= {'http://localhost:4000/api/'+ imageUrl}/></p>} 
+          label={<p>이전 사진: <img style= {{width: '100px'}} src= {'http://localhost:4000/api/'+ imageUrl}/></p>} 
           name="carImage" 
           placeholder="image파일만 업로드가 가능합니다." 
           type="file" 

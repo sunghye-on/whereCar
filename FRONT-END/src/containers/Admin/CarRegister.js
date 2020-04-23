@@ -13,7 +13,7 @@ function CarRegister({ form, error, result, AuthActions, UserActions, history })
   const { carName, carNumber, seatNumber, inspectionDate } = form.toJS();
   const [imgBase64, setImgBase64] = useState(""); // 파일 base64
   const [imgFile, setImgFile] = useState(null);	//파일	
-
+  console.log(imgFile)
   useEffect(() => {
     return () => {
       AuthActions.initializeForm('car');
@@ -53,6 +53,11 @@ function CarRegister({ form, error, result, AuthActions, UserActions, history })
       const today = new Date().toLocaleDateString().split('.');
       const input = value.split('-');
 
+      if(value==='') {
+        setError('최종점검일을 기입해주셔야 합니다.');
+        return false;
+      }
+
       if(parseInt(today[0])<parseInt(input[0])){
         setError('오늘 날짜 이전을 선택해주세요.');
         return false;
@@ -71,7 +76,14 @@ function CarRegister({ form, error, result, AuthActions, UserActions, history })
       return true;
     },
     carImage: value => {
-      // 검증조건 기입해야 함.
+      if(!value) {
+        setError('파일을 업로드 해주셔야 합니다.');
+        return false;
+      } 
+      if(value.type !== "image/jpeg" && value.type !== "image/png") {
+        setError('파일은 jpeg 혹은 png 포멧만 업로드 가능합니다.');
+        return false;
+      }
       setError(null);
       return true;
     }
@@ -89,7 +101,7 @@ function CarRegister({ form, error, result, AuthActions, UserActions, history })
     if(name.indexOf('inspectionDate') > -1 || !validation) return; // 비밀번호 검증이거나, 검증 실패하면 여기서 마침
   };
 
-  const handleChangeFile = (e) => {
+  const handleChangeFile = async (e) => {
     const { name, files } = e.target;
     let reader = new FileReader();
     reader.onloadend = () => {
@@ -103,14 +115,14 @@ function CarRegister({ form, error, result, AuthActions, UserActions, history })
       reader.readAsDataURL(e.target.files[0]); // 1. 파일을 읽어 버퍼에 저장합니다.
       setImgFile(files[0]);
     }
+    const validation = validate['carImage'](files[0]);
   }
 
   const handleCarRegister = async () => {
     if(error) return; // 현재 에러가 있는 상태라면 진행하지 않음
-    console.log(imgFile)
     if(!validate['carName'](carName)||
       !validate['carNumber'](carNumber)||
-      !validate['seatNumber'](seatNumber)||
+      !validate['carImage'](imgFile)||
       !validate['inspectionDate'](inspectionDate)) return; // 하나라도 실패하면 진행하지 않음
     
     let formdata = new FormData();
