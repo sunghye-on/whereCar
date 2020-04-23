@@ -15,7 +15,6 @@ function CarRegister({ form, error, result, AuthActions, UserActions, history })
   const [imgFile, setImgFile] = useState(null);	//파일	
 
   useEffect(() => {
-
     return () => {
       AuthActions.initializeForm('car');
     };

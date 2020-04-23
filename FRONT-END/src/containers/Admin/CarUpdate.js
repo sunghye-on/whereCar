@@ -30,6 +30,10 @@ function CarUpdate({ form, error, result, AuthActions, UserActions, match, histo
     const car = storage.get('car')
     setImageUrl(car.car.carImageUrl);
     AuthActions.setCar(car);
+    
+    return () => {
+      AuthActions.initializeForm('car');
+    };
   }, []);
  
   const setError = (message) => {
