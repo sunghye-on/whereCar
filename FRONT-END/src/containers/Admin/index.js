@@ -7,3 +7,4 @@ export { default as CarList } from './CarList';
 export { default as CourseList } from './CourseList';
 export { default as CourseRegister } from './CourseRegister';
 export { default as CarUpdate } from './CarUpdate';
+export { default as CourseUpdate } from './CourseUpdate';

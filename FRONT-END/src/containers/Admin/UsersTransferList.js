@@ -10,6 +10,7 @@ import ListItemIcon from "@material-ui/core/ListItemIcon";
 import Checkbox from "@material-ui/core/Checkbox";
 import Button from "@material-ui/core/Button";
 import Divider from "@material-ui/core/Divider";
+import Skeleton from '@material-ui/lab/Skeleton';
 import { FormControl, InputLabel, NativeSelect } from "@material-ui/core";
 
 const useStyles = makeStyles(theme => ({
@@ -120,6 +121,9 @@ export default function UsersTransferList({ managers, result, AdminActions, hist
   // componentDidMount 
   useEffect(() => {
     AdminActions.getManagers();
+    return ()=> {
+      AdminActions.getManagers();
+    }
   }, [AdminActions])
   useEffect(() => {
     setRoles({
@@ -227,9 +231,6 @@ export default function UsersTransferList({ managers, result, AdminActions, hist
       await AdminActions.updateManagers(result)
         .then(
           AdminActions.getManagers()
-        )
-        .then(
-          history.push('/admin/management')
         );
     } catch (error) {
       alert("Server Error:::알수없는 error 발생");
@@ -294,8 +295,8 @@ export default function UsersTransferList({ managers, result, AdminActions, hist
     >
       <Grid item xs={10} sm={4}>
         {customList(
-          <RoleSelector roles={roles} setRoles={setRoles} dir="left" />,
-          left
+            <RoleSelector roles={roles} setRoles={setRoles} dir="left" />,
+            left
         )}
       </Grid>
       <Grid item xs={10} sm={1}>
