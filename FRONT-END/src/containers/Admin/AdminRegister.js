@@ -1,4 +1,4 @@
-import React, { useEffect } from 'react';
+import React, { useEffect, useState } from 'react';
 import { AuthContent, InputWithLabel, AuthButton, AuthError } from 'components/Auth';
 import { AdminStepper } from 'components/Admin';
 import { connect } from 'react-redux';
@@ -8,10 +8,14 @@ import * as userActions from 'redux/modules/user';
 import storage from 'lib/storage';
 import {isEmail, isLength, isAlphanumeric} from 'validator';
 import debounce from 'lodash/debounce';
+import Axios from 'axios';
 
 
 function AdminRegister({ form, error, exists, result, AuthActions, UserActions, history }) {
   const { type, name, tell, location, description, certification } = form.toJS();
+  const [imgBase64, setImgBase64] = useState(""); // 파일 base64
+  const [imgFile, setImgFile] = useState(null);	//파일	
+  console.log(imgFile)
 
   useEffect(() => {
 
@@ -33,31 +37,37 @@ function AdminRegister({ form, error, exists, result, AuthActions, UserActions, 
       return true;
     },
     name: value => {
-      if(!isAlphanumeric(value) || !isLength(value, { min: 4, max: 15 })) {
-        setError('그룹명은 4~15 글자의 알파벳 혹은 숫자로 이뤄져야 합니다.');
+      if(!isLength(value, { min: 4, max: 15 })) {
+        setError('그룹명은 4~15 글자의 문자 혹은 숫자로 이뤄져야 합니다.');
         return false;
       }
+      setError(null);
       return true;
     },
     location: value => {
-      if(!isAlphanumeric(value) || !isLength(value, { min: 4, max: 30 })) {
+      if(!isLength(value, { min: 4, max: 15 })) {
         setError('location위치는 30자 이내어야 합니다.');
         return false;
       }
       return true;
     },
     description: value => {
-      if(!isAlphanumeric(value) || !isLength(value, { min: 4, max: 50 })) {
-        setError('description은 30자 이내어야 합니다.');
+      if(!isLength(value, { min: 1, max: 100 })) {
+        setError('description은 100자 이내어야 합니다.');
         return false;
       }
       return true;
     },
     certification: value => {
-      if(!isAlphanumeric(value) || !isLength(value, { min: 4, max: 30 })) {
-        setError('certification은 30자 이내어야 합니다.');
+      if(!value) {
+        setError('파일을 업로드 해주셔야 합니다.');
+        return false;
+      } 
+      if(value.type !== "image/jpeg" && value.type !== "image/png") {
+        setError('파일은 jpeg 혹은 png 포멧만 업로드 가능합니다.');
         return false;
       }
+      setError(null);
       return true;
     },
     tell: value => {
@@ -97,6 +107,23 @@ function AdminRegister({ form, error, exists, result, AuthActions, UserActions, 
     checkDisplayNameExists(value);
   };
 
+  const handleChangeFile = async (e) => {
+    const { name, files } = e.target;
+    let reader = new FileReader();
+    reader.onloadend = () => {
+      // 2. 읽기가 완료되면 아래코드가 실행됩니다.
+      const base64 = reader.result;
+      if (base64) {
+        setImgBase64(base64.toString()); // 파일 base64 상태 업데이트
+      }
+    }
+    if (e.target.files[0]) {
+      reader.readAsDataURL(e.target.files[0]); // 1. 파일을 읽어 버퍼에 저장합니다.
+      setImgFile(files[0]);
+    }
+    const validation = validate['certification'](files[0]);
+  }
+
   const handleAdminRegister = async () => {
     if(error) return; // 현재 에러가 있는 상태라면 진행하지 않음
 
@@ -104,17 +131,20 @@ function AdminRegister({ form, error, exists, result, AuthActions, UserActions, 
       !validate['name'](name)||
       !validate['tell'](tell)||
       !validate['description'](description)||
-      !validate['certification'](certification)||
+      !validate['certification'](imgFile)||
       !validate['location'](location)) return; // 하나라도 실패하면 진행하지 않음
     
+      let formdata = new FormData();
+      formdata.append('certification', imgFile);
+      formdata.append('type', type);
+      formdata.append('name', name);
+      formdata.append('tell', tell);
+      formdata.append('description', description);
+      formdata.append('location', location);
+
     try {
       await AuthActions.adminRegister({
-        type,
-        name,
-        tell,
-        description,
-        certification,
-        location
+        data: formdata
       }).then(
         result => {
           const adminInfo = result.data;
@@ -122,6 +152,12 @@ function AdminRegister({ form, error, exists, result, AuthActions, UserActions, 
           UserActions.setAdminInfo(adminInfo);
           UserActions.setValidated(true);
       });
+      
+      // await Axios({
+      //   url: "/api/v1.0/auth/register/admin",
+      //   method: "POST",
+      //   data: formdata
+      // });
 
       history.push('/'); // 회원가입 성공시 홈페이지로 이동
     } catch (error) {
@@ -137,7 +173,7 @@ function AdminRegister({ form, error, exists, result, AuthActions, UserActions, 
 
   return (
     <AuthContent title="관리자 신청서">
-        <AdminStepper handleChange={handleChange} form={form.toJS()} handleAdminRegister={handleAdminRegister}/>
+        <AdminStepper handleChange={handleChange} form={form.toJS()} handleAdminRegister={handleAdminRegister} handleChangeFile={handleChangeFile} />
         {
           error && <AuthError>{error}</AuthError>
         }

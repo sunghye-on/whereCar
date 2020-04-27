@@ -24,3 +24,9 @@ api.get('/uploads/car/:fileurl', async (ctx, next) => {
   console.log(fileurl);
   await send(ctx, './uploads/car/' + fileurl);
 });
+// 업로드된 이미지 제공하기
+api.get('/uploads/certification/:fileurl', async (ctx, next) => {
+  const { fileurl } = ctx.params;
+  console.log(fileurl);
+  await send(ctx, './uploads/certification/' + fileurl);
+});

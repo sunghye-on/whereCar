@@ -1,4 +1,5 @@
-import React from 'react';
+/* eslint-disable react-hooks/rules-of-hooks */
+import React, { useEffect, useState } from 'react';
 import Header, { LoginButton, ProfileButton } from 'components/Base/Header';
 import { SearchInput } from 'components/Search';
 import { connect } from 'react-redux';
@@ -12,6 +13,14 @@ function HeaderContainer({ visible, user, UserActions }) {
     [ Logout handler ]
     로그아웃을 할 때에는, 로그아웃 요청을 하고, 로컬스토리지도 비워주어야 합니다.
   */
+  const [adminPath, setAdminPath] = useState('/auth/admin/register')
+  useEffect(() => {
+    const adminInfo = user.get('adminInfo').toJS();
+    const path = !adminInfo._id ?
+      '/auth/admin/register' : '/admin/management';
+    setAdminPath(path)
+  }, [user])
+
   const handleLogout = async () => {
     try {
       // Logout API 요청하는 Action
@@ -27,8 +36,6 @@ function HeaderContainer({ visible, user, UserActions }) {
   };
 
   
-  const adminPath = !user.getIn(['loggedInfo', 'adminInfo']) ?
-    '/auth/admin/register' : '/admin/management';
 
   return (
       <Header>

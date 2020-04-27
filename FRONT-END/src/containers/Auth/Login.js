@@ -50,7 +50,8 @@ function Login({ form, result, error, location, AuthActions, UserActions, histor
           UserActions.setAdminInfo(adminInfo);
           history.push('/');
           storage.set('loggedInfo', loggedInfo);
-          storage.set('adminInfo', adminInfo);
+          // eslint-disable-next-line no-unused-expressions
+          adminInfo._id ? storage.set('adminInfo', adminInfo) : null;
         });
     } catch (error) {
       setError('잘못된 계정정보입니다.')

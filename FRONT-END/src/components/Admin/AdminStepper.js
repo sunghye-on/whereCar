@@ -27,18 +27,18 @@ function getSteps() {
   return ['기본정보 기입하기', '상세정보 기입하기'];
 }
 
-function getStepContent(step, handleChange, form) {
+function getStepContent(step, handleChange, handleChangeFile, form) {
   switch (step) {
     case 0:
       return <Step1 handleChange={handleChange} form={form}/>;
     case 1:
-      return <Step2 handleChange={handleChange} form={form}/>;
+      return <Step2 handleChange={handleChange} form={form} handleChangeFile={handleChangeFile} />;
     default:
       return 'Unknown step';
   }
 }
 
-export default function AdminStepper({handleChange, handleAdminRegister, form}) {
+export default function AdminStepper({handleChange, handleAdminRegister, handleChangeFile, form}) {
   const classes = useStyles();
   const [activeStep, setActiveStep] = React.useState(0);
   const [completed, setCompleted] = React.useState({});
@@ -111,7 +111,7 @@ export default function AdminStepper({handleChange, handleAdminRegister, form}) 
           </div>
         ) : (
           <div>
-            <Typography className={classes.instructions}>{getStepContent(activeStep, handleChange, form)}</Typography>
+            <Typography className={classes.instructions}>{getStepContent(activeStep, handleChange, handleChangeFile, form)}</Typography>
             <div>
               <Button disabled={activeStep === 0} onClick={handleBack} className={classes.buttonStyle}>
                 Back

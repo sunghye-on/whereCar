@@ -12,4 +12,4 @@ export const logout = () => axios.post(`/api/v1.0/auth/logout`);
 
 export const updateUser = ({email, familyEmail, displayName, password}) => axios.post('/api/v1.0/auth/profile', { email, familyEmail, displayName, password });
 
-export const adminRegister = (data) => axios.post(`/api/v1.0/auth/register/admin`, data)
+export const adminRegister = ({data}) => axios.post(`/api/v1.0/auth/register/admin`, data)

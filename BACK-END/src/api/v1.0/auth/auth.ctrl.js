@@ -256,14 +256,13 @@ exports.updateUser = async (ctx) => {
 
 // admin register function
 exports.adminRegister = async (ctx) => {
-  const { body } = ctx.request;
+  const { user, body, file } = ctx.request;
 
   const schema = Joi.object({
     type: Joi.string().regex(/^[a-zA-Z0-9ㄱ-힣]{3,12}$/).required(),
     name: Joi.string().regex(/^[a-zA-Z0-9ㄱ-힣]{3,12}$/).required(),
     location: Joi.string().regex(/^[a-zA-Z0-9ㄱ-힣]{3,30}$/).required(),
     description: Joi.string().regex(/^[a-zA-Z0-9ㄱ-힣]{3,30}$/).required(),
-    certification: Joi.string().regex(/^[a-zA-Z0-9ㄱ-힣]{3,30}$/).required(),
     tell: Joi.string().regex(/^[a-zA-Z0-9ㄱ-힣]{3,16}$/).required()
   });
 
@@ -275,7 +274,7 @@ exports.adminRegister = async (ctx) => {
     return;
   }
 
-  const { type, name, tell, location, description, certification } = body;
+  const { type, name, tell, location, description } = body;
   const role = 'super';
 
   try {
@@ -292,12 +291,16 @@ exports.adminRegister = async (ctx) => {
     }
 
     // find user obj
-    const { user } = ctx.request;
     console.log('user ::: ', user);
 
     // creates group info
     const group = await GroupInfo.groupRegister({
-      type, name, tell, location, description, certification
+      type, 
+      name, 
+      tell, 
+      location, 
+      description, 
+      certification: file ? file.path : null
     });
     // create admin user
     const admin = await Admin.adminRegister({

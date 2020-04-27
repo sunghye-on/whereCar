@@ -89,7 +89,6 @@ const initialState = Map({
             tell: '',
             location: '',
             description: '',
-            certification: ''
         }),
         exists: Map({
             email: false,
