@@ -38,7 +38,7 @@ function getStepContent(step, handleChange, handleChangeFile, form) {
   }
 }
 
-export default function AdminStepper({handleChange, handleAdminRegister, handleChangeFile, form}) {
+export default function AdminStepper({handleChange, handleAdminRegister, handleChangeFile, form, error}) {
   const classes = useStyles();
   const [activeStep, setActiveStep] = React.useState(0);
   const [completed, setCompleted] = React.useState({});
@@ -124,16 +124,20 @@ export default function AdminStepper({handleChange, handleAdminRegister, handleC
               >
                 Next
               </Button>
-              {activeStep !== steps.length &&
-                (completed[activeStep] ? (
-                  <Typography variant="caption" className={classes.completed}>
-                    Step {activeStep + 1} already completed
-                  </Typography>
-                ) : (
-                  <Button variant="contained" color="primary" onClick={handleComplete} className={classes.buttonStyle}>
-                    {completedSteps() === totalSteps() - 1 ? 'Finish' : 'Complete'}
-                  </Button>
-                ))}
+              {
+                !error
+                ? activeStep !== steps.length &&
+                  (completed[activeStep] ? (
+                    <Typography variant="caption" className={classes.completed}>
+                      Step {activeStep + 1} already completed
+                    </Typography>
+                  ) : (
+                    <Button variant="contained" color="primary" onClick={handleComplete} className={classes.buttonStyle}>
+                      {completedSteps() === totalSteps() - 1 ? 'Finish' : 'Complete'}
+                    </Button>
+                ))
+                :''
+              }
             </div>
           </div>
         )}

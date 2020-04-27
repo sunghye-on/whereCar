@@ -143,7 +143,9 @@ function AdminRegister({ form, error, exists, result, AuthActions, UserActions, 
       formdata.append('location', location);
 
     try {
-      await AuthActions.adminRegister({
+      await Axios({
+        url: "/api/v1.0/auth/register/admin",
+        method: "POST",
         data: formdata
       }).then(
         result => {
@@ -151,13 +153,7 @@ function AdminRegister({ form, error, exists, result, AuthActions, UserActions, 
           storage.set('adminInfo', adminInfo);
           UserActions.setAdminInfo(adminInfo);
           UserActions.setValidated(true);
-      });
-      
-      // await Axios({
-      //   url: "/api/v1.0/auth/register/admin",
-      //   method: "POST",
-      //   data: formdata
-      // });
+      });;
 
       history.push('/'); // 회원가입 성공시 홈페이지로 이동
     } catch (error) {
@@ -173,11 +169,11 @@ function AdminRegister({ form, error, exists, result, AuthActions, UserActions, 
 
   return (
     <AuthContent title="관리자 신청서">
-        <AdminStepper handleChange={handleChange} form={form.toJS()} handleAdminRegister={handleAdminRegister} handleChangeFile={handleChangeFile} />
+        <AdminStepper error={error} handleChange={handleChange} form={form.toJS()} handleAdminRegister={handleAdminRegister} handleChangeFile={handleChangeFile} />
         {
           error && <AuthError>{error}</AuthError>
         }
-        <AuthButton onClick={handleAdminRegister}>관리자 신청하기</AuthButton>
+        {/* <AuthButton onClick={handleAdminRegister}>관리자 신청하기</AuthButton> */}
     </AuthContent>
   );
 };

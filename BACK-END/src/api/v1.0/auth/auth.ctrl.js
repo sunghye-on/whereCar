@@ -259,11 +259,11 @@ exports.adminRegister = async (ctx) => {
   const { user, body, file } = ctx.request;
 
   const schema = Joi.object({
-    type: Joi.string().regex(/^[a-zA-Z0-9ㄱ-힣]{3,12}$/).required(),
-    name: Joi.string().regex(/^[a-zA-Z0-9ㄱ-힣]{3,12}$/).required(),
-    location: Joi.string().regex(/^[a-zA-Z0-9ㄱ-힣]{3,30}$/).required(),
-    description: Joi.string().regex(/^[a-zA-Z0-9ㄱ-힣]{3,30}$/).required(),
-    tell: Joi.string().regex(/^[a-zA-Z0-9ㄱ-힣]{3,16}$/).required()
+    type: Joi.string().min(2).max(20).required(),
+    name: Joi.string().min(2).max(30).required(),
+    location: Joi.string().min(2).max(30).required(),
+    description: Joi.string().min(2).max(30).required(),
+    tell: Joi.string().min(2).max(30).required()
   });
 
   const result = Joi.validate(body, schema);
@@ -271,6 +271,7 @@ exports.adminRegister = async (ctx) => {
   if(result.error) {
     ctx.status = 400;
     ctx.body = 'Schema error';
+    console.log(result.error)
     return;
   }
 
