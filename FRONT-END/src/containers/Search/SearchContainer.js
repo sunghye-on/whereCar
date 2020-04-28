@@ -89,7 +89,7 @@ const Groups = {
 ]
 }
 
-function SearchContainer({history, result, location, SearchActions}) {
+function SearchContainer({history, result, location, SearchActions, keywords}) {
   const classes = useStyles();
   const GD = Groups.Group;
 
@@ -101,14 +101,30 @@ function SearchContainer({history, result, location, SearchActions}) {
       SearchActions.setResult([])
     }
   }, [SearchActions])
-  console.log("result==============",typeof(result))
   
+  const onSubmit = event => {
+    event.preventDefault(); // submit event 초기화
+    const keywordsList = keywords.split(' ').filter(str => str !== '');
+    let keys = ''
+    for(const i in keywordsList){
+      keys += i == 0
+        ? keywordsList[i]
+        : `+${keywordsList[i]}`;
+    }
+    history.push("/search/?keywords="+keys);  // enter시 searchContainer로 연결 
+    SearchActions.searchGroup({keywords})
+  }
+  const searchOnChange = event => {
+    const {name, value} = event.target;
+    SearchActions.changeInput({name, value})
+  }
+
   return (
     <>
       <LogoWrapper title="Search List" >
       </LogoWrapper>
       <Contents>
-      <SearchInput />
+      <SearchInput onSubmit={onSubmit} onChange={searchOnChange} value={keywords} />
         <List dense className={classes.root}>
         {
           typeof(result) === 'object'
