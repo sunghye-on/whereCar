@@ -5,6 +5,7 @@ import user from './user';
 import admin from './admin';
 import list from './list';
 import map from './map';
+import search from './search';
 import socket from './socket';
 import { penderReducer } from 'redux-pender';
 
@@ -17,5 +18,6 @@ export default combineReducers({
     admin,
     list,
     map,
+    search,
     pender: penderReducer 
 });

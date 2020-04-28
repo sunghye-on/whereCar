@@ -4,10 +4,11 @@ import Header, { LoginButton, ProfileButton } from 'components/Base/Header';
 import { SearchInput } from 'components/Search';
 import { connect } from 'react-redux';
 import * as userActions from 'redux/modules/user';
+import * as searchActions from 'redux/modules/search';
 import storage from 'lib/storage';
 import { bindActionCreators } from 'redux';
 
-function HeaderContainer({ visible, user, UserActions }) {
+function HeaderContainer({ visible, user, UserActions, SearchActions, history, keywords }) {
   if(!visible) return null;
   /* 
     [ Logout handler ]
@@ -22,6 +23,7 @@ function HeaderContainer({ visible, user, UserActions }) {
   }, [user])
 
   const handleLogout = async () => {
+
     try {
       // Logout API 요청하는 Action
       await UserActions.logout();
@@ -35,13 +37,28 @@ function HeaderContainer({ visible, user, UserActions }) {
     window.location.href = '/';
   };
 
-  
-
+  const onSubmit = event => {
+    event.preventDefault(); // submit event 초기화
+    // const keywordsList = keywords.split(' ').filter(str => str !== '');
+    // let keys = ''
+    // for(const i in keywordsList){
+    //   keys += i == 0
+    //     ? keywordsList[i]
+    //     : `+${keywordsList[i]}`;
+    // }
+    // history.push("/search/?keywords="+keys);  // enter시 searchContainer로 연결 
+    SearchActions.searchGroup({keywords})
+    history.push("/search");  // enter시 searchContainer로 연결 
+  }
+  const searchOnChange = event => {
+    const {name, value} = event.target;
+    SearchActions.changeInput({name, value})
+  }
   return (
       <Header>
         { user.get('logged')
           ? <>
-              <SearchInput/>
+              <SearchInput onSubmit={onSubmit} onChange={searchOnChange} value={keywords} />
               <ProfileButton 
                 displayName={user.getIn(['loggedInfo', 'displayName'])} 
                 handleLogout={handleLogout} 
@@ -57,9 +74,11 @@ function HeaderContainer({ visible, user, UserActions }) {
 export default connect(
   (state) => ({
     visible: state.base.getIn(['header', 'visible']),
-    user: state.user
+    user: state.user,
+    keywords: state.search.get('keywords')
   }),
   (dispatch) => ({
-    UserActions: bindActionCreators(userActions, dispatch)
+    UserActions: bindActionCreators(userActions, dispatch),
+    SearchActions: bindActionCreators(searchActions, dispatch) 
   })
 )(HeaderContainer);

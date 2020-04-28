@@ -11,7 +11,7 @@ import { bindActionCreators } from 'redux';
 import dotenv from "dotenv";
 dotenv.config();
 
-function App({ UserActions, SocketActions }) {
+function App({ UserActions, SocketActions, history }) {
   useEffect(() => {
     initializeUserInfo();
   },[]);
@@ -33,7 +33,7 @@ function App({ UserActions, SocketActions }) {
 
   return (
     <div>
-        <HeaderContainer/>
+        <HeaderContainer history={history}/>
         <Route exact path="/" component={Home}/>
         <Route path="/auth" component={Auth}/>
         <Route path="/admin" component={Admin}/>

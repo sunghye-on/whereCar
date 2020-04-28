@@ -56,22 +56,27 @@ const useStyles = makeStyles(theme => ({
   },
 }));
 
-export default function SearchInput() {
+export default function SearchInput({onSubmit, onChange, value}) {
   const classes = useStyles();
 
   return (
-    <div className={classes.search}>
-      <div className={classes.searchIcon}>
-        <SearchIcon />
+    <form onSubmit={onSubmit}>
+      <div className={classes.search}>
+        <div className={classes.searchIcon}>
+          <SearchIcon />
+        </div>
+        <InputBase
+          placeholder="그룹찾기..."
+          classes={{
+            root: classes.inputRoot,
+            input: classes.inputInput,
+          }}
+          name="keywords"
+          onChange={onChange}
+          value={value}
+          inputProps={{ 'aria-label': 'search' }}
+        />
       </div>
-      <InputBase
-        placeholder="그룹찾기..."
-        classes={{
-          root: classes.inputRoot,
-          input: classes.inputInput,
-        }}
-        inputProps={{ 'aria-label': 'search' }}
-      />
-    </div>
+    </form>
   )
 }

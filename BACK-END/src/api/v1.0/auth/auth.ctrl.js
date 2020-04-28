@@ -271,7 +271,6 @@ exports.adminRegister = async (ctx) => {
   if(result.error) {
     ctx.status = 400;
     ctx.body = 'Schema error';
-    console.log(result.error)
     return;
   }
 
