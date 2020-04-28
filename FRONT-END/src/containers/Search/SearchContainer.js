@@ -98,7 +98,8 @@ function SearchContainer({history, result, location, SearchActions}) {
     SearchActions.searchGroup({keywords: query.keywords})
     console.log("==========",query)
     return () => {
-      SearchActions.changeInput('keywords', '')
+      SearchActions.changeInput({name: 'keywords', value: ''});
+      SearchActions.setResult([])
     }
   }, [SearchActions])
 
