@@ -10,10 +10,11 @@ const SEARCH_GROUP = 'SEARCH/SEARCH_GROUP'; // getting searcing of result
 export const changeInput = createAction(CHANGE_INPUT); //  { name, value }
 export const searchGroup = createAction(SEARCH_GROUP, SearchAPI.groupByKeywords); //  { keywords }
 
+
 const initialState = Map({
   keywords: '',
   keyword: '',
-  result: List([])
+  result: []
 })
 
 export default handleActions({

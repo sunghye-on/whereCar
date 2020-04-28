@@ -3,7 +3,7 @@ const searchCtrl = require('./search.ctrl');
 
 const search = new Router();
 
-/* /api/v1.0/mylist */
+/* /api/v1.0/search */
 search.get('/', (ctx) => {
   ctx.body = '✅ Welcome to myLists!!';
 });

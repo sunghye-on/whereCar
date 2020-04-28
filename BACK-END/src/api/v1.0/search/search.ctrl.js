@@ -4,7 +4,6 @@ const GroupInfo = require('db/models/GroupInfo');
 exports.searchGroupByKeywords = async (ctx) => {
   const { user } = ctx.request;
   const { keywords, keyword } = ctx.query;
-  
   if(!user) { // user session이 없다면
     ctx.status = 403;
     ctx.body = 'Any session not founded!';
@@ -21,8 +20,9 @@ exports.searchGroupByKeywords = async (ctx) => {
       ? await GroupInfo.searchGroupByPattern({ keywords }) 
       : await GroupInfo.searchGroupByKeyword({ keyword });
     // response message(=data)
+    console.log(keywords, groupList)
     ctx.body = {
-      groupList
+      groupList: groupList.length === 0 ? null : groupList 
     };
   } catch (error) {
     ctx.throw(error);

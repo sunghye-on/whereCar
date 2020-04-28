@@ -74,25 +74,23 @@ GroupInfo.statics.updateManagers = async function({ _id, users, drivers }) {
 // 여러개의 키워드로 검색합니다.(유사문장검색) /?keywords=01040247797+asdasdasd
 GroupInfo.statics.searchGroupByPattern = async function({ keywords }) {
   const keywordsList = keywords.split(' ');
+  let list = [];
+  for(const i in keywordsList) {
+    list.push(
+      { name: { $regex: keywordsList[i] } }
+    );
+    list.push(
+      { tell: { $regex: keywordsList[i] } }
+    );
+    list.push(
+      { location: { $regex: keywordsList[i] } }
+    );
+  }
   let results = await this.find(
     {
-      $or: () => {
-        let list = [];
-        for(const i in keywordsList) {
-          list.push(
-            { name: { $regex: keywordsList[i] } }
-          );
-          list.push(
-            { tell: { $regex: keywordsList[i] } }
-          );
-          list.push(
-            { location: { $regex: keywordsList[i] } }
-          );
-        }
-        return list;
-      }
+      $or: list
     }
-  ).select('_id name tell location descriptions');
+  ).select('_id name tell location description');
   
   return results;
 };

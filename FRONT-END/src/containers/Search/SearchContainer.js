@@ -89,40 +89,48 @@ const Groups = {
 ]
 }
 
-function SearchContainer({history, results, location}) {
+function SearchContainer({history, result, location, SearchActions}) {
   const classes = useStyles();
   const GD = Groups.Group;
 
   useEffect(() => {
     const query = queryString.parse(location.search);
-    console.log(query);
-  })
-  
-  console.log("========test",results)
+    SearchActions.searchGroup({keywords: query.keywords})
+    console.log("==========",query)
+    return () => {
+      SearchActions.changeInput('keywords', '')
+    }
+  }, [SearchActions])
 
+  console.log("============",result)
+  
   return (
     <>
       <LogoWrapper title="Search List" >
       </LogoWrapper>
       <Contents>
       <SearchInput />
-      <List dense className={classes.root}>
-      {GD.map(value => {
-        const labelId = `transfer-list-all-item-${value}-label`;
-        return (
-          <ListItem key={value}>
-            <FormControlLabel
-            control={<Checkbox icon={<StarBorderIcon />} checkedIcon={<StarIcon style={{ color: yellow[500] }} />} name="checkedH" />}
-            />
-            <ListItemText id={labelId} primary={`${value.name}`} />
-            <ListItemSecondaryAction>
-              <Button className={classes.Button} variant="outlined">상세보기</Button>
-              {/* onClick={ (검색 인풋값) =>  {history.push('/Search/listinfo')} */}
-              {/* 위에 온클릭 이벤트를 추가해야함 */}
-            </ListItemSecondaryAction>
-          </ListItem>
-        );
-      })}
+        <List dense className={classes.root}>
+        {
+          result
+          ? result.map(value => {
+              const labelId = `transfer-list-all-item-${value._id}-label`;
+              return (
+                <ListItem key={value._id}>
+                  <FormControlLabel
+                  control={<Checkbox icon={<StarBorderIcon />} checkedIcon={<StarIcon style={{ color: yellow[500] }} />} name="checkedH" />}
+                  />
+                  <ListItemText id={labelId} primary={`${value.name}`} />
+                  <ListItemSecondaryAction>
+                    <Button className={classes.Button} variant="outlined">상세보기</Button>
+                    {/* onClick={ (검색 인풋값) =>  {history.push('/Search/listinfo')} */}
+                    {/* 위에 온클릭 이벤트를 추가해야함 */}
+                  </ListItemSecondaryAction>
+                </ListItem>
+              );
+            })
+          : '검색결과 없음'
+        }
         </List>
       </Contents>
     </>
@@ -132,7 +140,7 @@ function SearchContainer({history, results, location}) {
 export default connect(
   (state) => ({
     keywords: state.search.get('keywords'),
-    results: state.search.get('results')
+    result: state.search.get('result')
   }),
   (dispatch) => ({
     SearchActions: bindActionCreators(searchActions, dispatch) 
