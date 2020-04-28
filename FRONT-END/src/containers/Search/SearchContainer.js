@@ -96,14 +96,12 @@ function SearchContainer({history, result, location, SearchActions}) {
   useEffect(() => {
     const query = queryString.parse(location.search);
     SearchActions.searchGroup({keywords: query.keywords})
-    console.log("==========",query)
     return () => {
       SearchActions.changeInput({name: 'keywords', value: ''});
       SearchActions.setResult([])
     }
   }, [SearchActions])
-
-  console.log("============",result)
+  console.log("result==============",typeof(result))
   
   return (
     <>
@@ -113,7 +111,7 @@ function SearchContainer({history, result, location, SearchActions}) {
       <SearchInput />
         <List dense className={classes.root}>
         {
-          result
+          typeof(result) === 'object'
           ? result.map(value => {
               const labelId = `transfer-list-all-item-${value._id}-label`;
               return (
@@ -130,7 +128,7 @@ function SearchContainer({history, result, location, SearchActions}) {
                 </ListItem>
               );
             })
-          : '검색결과 없음'
+          : <ListItem key={0}>검색결과 없음</ListItem>
         }
         </List>
       </Contents>

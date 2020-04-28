@@ -21,7 +21,7 @@ exports.searchGroupByKeywords = async (ctx) => {
       : await GroupInfo.searchGroupByKeyword({ keyword });
     // response message(=data)
     ctx.body = {
-      groupList: groupList.length === 0 ? null : groupList 
+      groupList: groupList.length === 0 ? 'not found any data' : groupList 
     };
   } catch (error) {
     ctx.throw(error);
