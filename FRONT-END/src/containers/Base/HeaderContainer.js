@@ -39,16 +39,16 @@ function HeaderContainer({ visible, user, UserActions, SearchActions, history, k
 
   const onSubmit = event => {
     event.preventDefault(); // submit event 초기화
-    // const keywordsList = keywords.split(' ').filter(str => str !== '');
-    // let keys = ''
-    // for(const i in keywordsList){
-    //   keys += i == 0
-    //     ? keywordsList[i]
-    //     : `+${keywordsList[i]}`;
-    // }
-    // history.push("/search/?keywords="+keys);  // enter시 searchContainer로 연결 
-    SearchActions.searchGroup({keywords})
-    history.push("/search");  // enter시 searchContainer로 연결 
+    const keywordsList = keywords.split(' ').filter(str => str !== '');
+    let keys = ''
+    for(const i in keywordsList){
+      keys += i == 0
+        ? keywordsList[i]
+        : `+${keywordsList[i]}`;
+    }
+    history.push("/search/?keywords="+keys);  // enter시 searchContainer로 연결 
+    // SearchActions.searchGroup({keywords})
+    // history.push("/search");  // enter시 searchContainer로 연결 
   }
   const searchOnChange = event => {
     const {name, value} = event.target;

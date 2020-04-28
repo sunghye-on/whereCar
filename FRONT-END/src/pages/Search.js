@@ -3,6 +3,7 @@ import { connect } from 'react-redux';
 import { bindActionCreators } from 'redux';
 import * as baseActions from 'redux/modules/base';
 import { AuthWrapper } from '../components/Auth';
+import { ListWrapper } from 'components/List';
 import { SearchContainer } from '../containers/Search';
 import { Route, Redirect } from 'react-router-dom';
 
@@ -16,10 +17,10 @@ function Search({ BaseActions, loggedIn }) {
 
   // 검색페이지 접근은 인증된 유저만 가능한지, 아닌지 논의가 필요
   return (
-    <AuthWrapper>
+    <ListWrapper>
       <Route path="/search" component={ SearchContainer } >
       </Route>
-    </AuthWrapper>
+    </ListWrapper>
   );
 };
 
