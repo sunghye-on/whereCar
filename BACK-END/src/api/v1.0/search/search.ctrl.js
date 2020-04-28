@@ -20,7 +20,6 @@ exports.searchGroupByKeywords = async (ctx) => {
       ? await GroupInfo.searchGroupByPattern({ keywords }) 
       : await GroupInfo.searchGroupByKeyword({ keyword });
     // response message(=data)
-    console.log(keywords, groupList)
     ctx.body = {
       groupList: groupList.length === 0 ? null : groupList 
     };
