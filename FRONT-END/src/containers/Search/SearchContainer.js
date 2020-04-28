@@ -128,7 +128,7 @@ function SearchContainer({history, result, location, SearchActions}) {
                 </ListItem>
               );
             })
-          : <ListItem key={0}>검색결과 없음</ListItem>
+          : <ListItem key={0}>{result}</ListItem>
         }
         </List>
       </Contents>

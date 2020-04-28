@@ -21,7 +21,7 @@ exports.searchGroupByKeywords = async (ctx) => {
       : await GroupInfo.searchGroupByKeyword({ keyword });
     // response message(=data)
     ctx.body = {
-      groupList: groupList.length === 0 ? 'not found any data' : groupList 
+      groupList: groupList.length === 0 ? '검색결과 없음' : groupList 
     };
   } catch (error) {
     ctx.throw(error);
