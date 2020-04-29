@@ -84,7 +84,7 @@ function SearchContainer({history, result, location, SearchActions, keywords}) {
 
   return (
     <>
-      <LogoWrapper title="Search List" >
+      <LogoWrapper title="Home" >
       </LogoWrapper>
       <Contents>
       <SearchInput onSubmit={onSubmit} onChange={searchOnChange} value={keywords} />

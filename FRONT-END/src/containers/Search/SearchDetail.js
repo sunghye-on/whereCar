@@ -1,3 +1,4 @@
+/* eslint-disable jsx-a11y/img-redundant-alt */
 import React, { useEffect } from 'react';
 import { makeStyles } from '@material-ui/core/styles';
 import { LogoWrapper } from 'components/List/Car';
@@ -105,7 +106,7 @@ function SearchDetail({history, ListActions, courseInfo, match}) {
         <Paper className={classes.modalGridPaper}>
           <h2 id="simple-modal-title">Certification</h2>
           <p id="simple-modal-description">
-            ooo 학원 인증서입니다.
+            {groupInfo.name} 학원 인증서입니다.
           </p>
           <div className={classes.modalImgContainer}>
               <img 
@@ -120,7 +121,7 @@ function SearchDetail({history, ListActions, courseInfo, match}) {
 
   return (
     <>
-      <LogoWrapper title="Search details" >
+      <LogoWrapper title={groupInfo.name} >
       </LogoWrapper>
       
       <Contents>
