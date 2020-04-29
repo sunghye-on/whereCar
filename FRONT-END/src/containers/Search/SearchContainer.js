@@ -2,6 +2,7 @@ import React, { useEffect } from 'react';
 import { makeStyles } from '@material-ui/core/styles';
 import List from '@material-ui/core/List';
 import { LogoWrapper } from 'components/List/Car';
+import { ListWrapper } from 'components/List';
 import styled from 'styled-components';
 import ListItem from "@material-ui/core/ListItem";
 import ListItemSecondaryAction from "@material-ui/core/ListItemSecondaryAction";
@@ -47,59 +48,19 @@ const Contents = styled.div`
     height: auto;
 `;
 
-const Groups = {
- Group : [
-   {
-   name: "학원1",
-   id : 1
- },
-{
-  name: "학원2",
-  id : 2
-},
-{
-  name: "학원3",
-  id : 3
-},
-{
-  name: "학원4",
-  id : 4
-},
-{
- name: "학원5",
- id : 5
-},
-{
- name: "학원6",
- id : 6
-},
-{
-  name: "학원7",
-  id : 7
-},
-{
- name: "학원8",
- id : 8
-},
-{
- name: "학원9",
- id : 9
-}
-]
-}
-
 function SearchContainer({history, result, location, SearchActions, keywords}) {
   const classes = useStyles();
-  const GD = Groups.Group;
 
   useEffect(() => {
     const query = queryString.parse(location.search);
     SearchActions.searchGroup({keywords: query.keywords})
+    console.log(result,'결과1')
     return () => {
       SearchActions.changeInput({name: 'keywords', value: ''});
       SearchActions.setResult([])
     }
   }, [SearchActions])
+  console.log(result,'결과2')
   
   const onSubmit = event => {
     event.preventDefault(); // submit event 초기화
@@ -110,12 +71,15 @@ function SearchContainer({history, result, location, SearchActions, keywords}) {
         ? keywordsList[i]
         : `+${keywordsList[i]}`;
     }
-    history.push("/search/?keywords="+keys);  // enter시 searchContainer로 연결 
+    history.push("/search/list/?keywords="+keys);  // enter시 searchContainer로 연결 
     SearchActions.searchGroup({keywords})
   }
   const searchOnChange = event => {
     const {name, value} = event.target;
     SearchActions.changeInput({name, value})
+  }
+  const handleDetail = id => {
+    history.push(`/search/result/${id}`);
   }
 
   return (
@@ -136,7 +100,7 @@ function SearchContainer({history, result, location, SearchActions, keywords}) {
                   />
                   <ListItemText id={labelId} primary={`${value.name}`} />
                   <ListItemSecondaryAction>
-                    <Button className={classes.Button} variant="outlined">상세보기</Button>
+                    <Button className={classes.Button} variant="outlined" onClick={()=>handleDetail(value._id)}>상세보기</Button>
                     {/* onClick={ (검색 인풋값) =>  {history.push('/Search/listinfo')} */}
                     {/* 위에 온클릭 이벤트를 추가해야함 */}
                   </ListItemSecondaryAction>

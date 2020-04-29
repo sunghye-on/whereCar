@@ -50,7 +50,7 @@ function HeaderContainer({ visible, user, UserActions, SearchActions, history, k
         ? keywordsList[i]
         : `+${keywordsList[i]}`;
     }
-    history.push("/search/?keywords="+keys);  // enter시 searchContainer로 연결 
+    history.push("/search/list?keywords="+keys);  // enter시 searchContainer로 연결 
     // SearchActions.searchGroup({keywords})
     // history.push("/search");  // enter시 searchContainer로 연결 
   }

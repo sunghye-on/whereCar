@@ -28,7 +28,9 @@ const initialState = Map({
     carList: List([])
   }),
   courseInfo: Map({
-    groupInfo: Map({}),
+    groupInfo: Map({
+      _id: null
+    }),
     memberInfo: Map({}),
     courseList: List([])
   }),
@@ -53,7 +55,7 @@ export default handleActions({
   
   ...pender({
     type: GET_COURSES,
-    onSuccess: (state, action) => state.set('courseInfo', action.payload.data),
+    onSuccess: (state, action) => state.set('courseInfo', Map(action.payload.data)),
     onFailure: (state, action) => initialState
   }),
   ...pender({
