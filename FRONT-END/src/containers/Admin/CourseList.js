@@ -71,12 +71,12 @@ function CourseList({history, courseList, ListActions}) {
             <ListItem key="1" role={undefined} dense button onClick={function(){}}>
               <DriveEtaIcon className={classes.icon}/>
                 <ListItemText id={1} primary={<ExtendListItem title={course.courseName} subContent={course.stations}/> }/>      
-                    <IconButton edge="end" aria-label="comments" onClick={()=>handleOnUpdate(`/admin/course/update/${course._id}`)}>
-                      <CreateIcon />
-                    </IconButton>
-                    <IconButton edge="end" aria-label="comments" onClick={()=>courseDelete(course._id)}>
-                        <DeleteIcon />
-                    </IconButton>
+                <IconButton edge="end" aria-label="comments" onClick={()=>handleOnUpdate(`/admin/course/update/${course._id}`)}>
+                  <CreateIcon />
+                </IconButton>
+                <IconButton edge="end" aria-label="comments" onClick={()=>courseDelete(course._id)}>
+                    <DeleteIcon />
+                </IconButton>
             </ListItem>
           ))
         }

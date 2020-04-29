@@ -16,11 +16,15 @@ function HeaderContainer({ visible, user, UserActions, SearchActions, history, k
   */
   const [adminPath, setAdminPath] = useState('/auth/admin/register')
   useEffect(() => {
-    const adminInfo = user.get('adminInfo').toJS();
-    const path = !adminInfo._id ?
-      '/auth/admin/register' : '/admin/management';
-    setAdminPath(path)
-  }, [user])
+    const adminInfo = storage.get('adminInfo');
+    if(adminInfo){
+      const path = !adminInfo._id ?
+        '/auth/admin/register' : '/admin/management';
+      setAdminPath(path)
+    } else {
+      setAdminPath('/auth/admin/register')
+    }
+  }, [])
 
   const handleLogout = async () => {
 
