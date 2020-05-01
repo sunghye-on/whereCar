@@ -10,7 +10,12 @@ const MyList = new mongoose.Schema({
       type: mongoose.Schema.Types.ObjectId,
       ref: 'GroupInfo'
     },
-    courses: []
+    courses: [
+      { 
+        type: mongoose.Schema.Types.ObjectId,
+        ref: 'Course'
+      }
+    ]
   }], 
   createdAt: {
     type: Date,
