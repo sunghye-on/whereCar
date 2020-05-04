@@ -442,6 +442,21 @@ exports.courseDelete = async (ctx) => {
 exports.getCourseById = async (ctx) => {
   const { user } = ctx.request;
   const { id } = ctx.params;
+  // find admin
+  const admin = await Admin.findByUser(user);
+  // find GroupInfo
+  const groupInfo = await GroupInfo.findOne({ _id: id });
+  // 디폴트로 관리자로 식별
+  let memberInfo = {
+    role: 'super',
+    userId: user._id,
+    groupInfoId: id
+  };
+  // 관리자가 아니라면
+  if(!admin) {
+    // 특정그룹에 특정유저가 속해있는지 확인
+    memberInfo = groupInfo.memeberValidation({ _id: user._id });
+  }
   // user session이 없다면
   if(!user) {
     ctx.status = 403;
@@ -453,7 +468,8 @@ exports.getCourseById = async (ctx) => {
     const course = await Course.findById({ _id: id });
     // response message(=data)
     ctx.body = {
-      course
+      course,
+      memberInfo
     };
   } catch (error) {
     ctx.throw(error);

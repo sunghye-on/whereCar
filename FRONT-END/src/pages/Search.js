@@ -2,12 +2,12 @@ import React, { useEffect } from 'react';
 import { connect } from 'react-redux';
 import { bindActionCreators } from 'redux';
 import * as baseActions from 'redux/modules/base';
-import { AuthWrapper } from '../components/Auth';
+import { AuthWrapper } from 'components/Auth';
 import { ListWrapper } from 'components/List';
-import { SearchContainer, SearchDetail } from '../containers/Search';
+import { SearchContainer, SearchDetail, SearchDriver} from 'containers/Search';
 import { Route, Redirect } from 'react-router-dom';
 
-function Search({ BaseActions, loggedIn }) {
+function Search({ BaseActions, memberInfo, groupInfo, loggedIn }) {
   useEffect(() => {
     BaseActions.setHeaderVisibility(false);
     return () => {
@@ -20,7 +20,10 @@ function Search({ BaseActions, loggedIn }) {
     <ListWrapper>
       <Route path="/search/list" component={ SearchContainer } >
       </Route>
+      <Route path="/search/driverSelector/:id" component={ SearchDriver } >
+      </Route>
       <Route path="/search/result/:id" component={ SearchDetail } >
+        {memberInfo.role == "driver" ? <Redirect to={`/search/driverSelector/${ groupInfo._id }`} /> : memberInfo.role == "none" && <Redirect to="/" />}
       </Route>
     </ListWrapper>
   );
@@ -28,7 +31,9 @@ function Search({ BaseActions, loggedIn }) {
 
 export default connect(
   (state) => ({
-    loggedIn: state.user.get('logged')
+    loggedIn: state.user.get('logged'),
+    memberInfo: state.list.getIn(['courseInfo', 'memberInfo']),
+    groupInfo: state.list.getIn(['courseInfo', 'groupInfo'])
   }),
   (dispatch) => ({
       BaseActions: bindActionCreators(baseActions, dispatch)

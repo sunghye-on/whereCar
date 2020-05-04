@@ -12,6 +12,14 @@ const Course = new mongoose.Schema({
     type: mongoose.Schema.Types.ObjectId,
     ref: 'GroupInfo'
   },
+  driver: { 
+    type: mongoose.Schema.Types.ObjectId,
+    ref: 'User'
+  },
+  car: { 
+    type: mongoose.Schema.Types.ObjectId,
+    ref: 'CarInfo'
+  },
   createdAt: {
     type: Date,
     default: Date.now
@@ -41,6 +49,14 @@ Course.statics.findById = function({ _id }) {
 };
 Course.statics.findsByGroup = function({ group }) {
   return this.find({ group });
+};
+
+Course.statics.activeCourse = function({ _id, userId, carId }) {
+  return this.updateOne({ _id }, { driver: userId, car: carId });
+};
+
+Course.statics.deactiveCourse = function({ _id }) {
+  return this.updateOne({ _id }, { driver: null, car: null });
 };
 
 module.exports = mongoose.model('Course', Course);

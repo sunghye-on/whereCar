@@ -119,23 +119,26 @@ GroupInfo.methods.memeberValidation = function({ _id }) {
     userId: '',
     groupInfoId: this._id
   };
-  const userCheck = this.users.filter(userId => userId === _id);
-  const driverCheck = this.drivers.filter(userId => userId === _id);
-
-  if(userCheck) {
+  const userCheck = this.users.filter(userId => userId == _id);
+  const driverCheck = this.drivers.filter(userId => userId == _id);
+  if(userCheck.length !== 0) {
     return {
       ...result,
       role: 'user',
       userId: _id
     };
-  }else if(driverCheck) {
+  }else if(driverCheck.length !== 0) {
     return {
       ...result,
       role: 'driver',
       userId: _id
     };
   } else {
-    return null;
+    return {
+      ...result,
+      role: 'none',
+      userId: _id
+    };
   }
 };
 
