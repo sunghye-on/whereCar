@@ -21,9 +21,9 @@ function Search({ BaseActions, memberInfo, groupInfo, loggedIn }) {
       <Route path="/search/list" component={ SearchContainer } >
       </Route>
       <Route path="/search/driverSelector/:id" component={ SearchDriver } >
+        {memberInfo.role != "driver" && <Redirect to="/" />}
       </Route>
       <Route path="/search/result/:id" component={ SearchDetail } >
-        {memberInfo.role == "driver" ? <Redirect to={`/search/driverSelector/${ groupInfo._id }`} /> : memberInfo.role == "none" && <Redirect to="/" />}
       </Route>
     </ListWrapper>
   );

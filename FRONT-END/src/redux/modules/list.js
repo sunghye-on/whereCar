@@ -20,6 +20,8 @@ const GET_MYLIST = 'list/GET_MYLIST'; // mylist 받아오기
 const GROUP_PUSH_REMOVE = 'list/GROUP_PUSH_REMOVE';
 const COURSE_PUSH_REMOVE = 'list/COURSE_PUSH_REMOVE';
 
+const GROUP_REGISTER = 'list/GROUP_REGISTER';
+
 export const getCars = createAction(GET_CARS, MyListAPI.getCars); // groupId
 export const getCar = createAction(GET_CAR, MyListAPI.getCar); // carId
 export const deleteCar = createAction(DELETE_CAR, MyListAPI.deleteCar); // carId
@@ -32,6 +34,8 @@ export const getMyList = createAction(GET_MYLIST, MyListAPI.getMyList); // no qu
 
 export const groupPushRemove = createAction(GROUP_PUSH_REMOVE, MyListAPI.groupPushRemove); // groupId
 export const coursePushRemove = createAction(COURSE_PUSH_REMOVE, MyListAPI.coursePushRemove); // groupId, courseId
+
+export const groupRegister = createAction(GROUP_REGISTER, MyListAPI.groupRegister) // groupId
 
 const initialState = Map({
   carInfo: Map({
@@ -98,6 +102,12 @@ export default handleActions({
   ...pender({
     type: COURSE_PUSH_REMOVE,
     onSuccess: (state, action) => state.set('result', Map(action.payload.data)),
+    onFailure: (state, action) => initialState
+  }),
+
+  ...pender({
+    type: GROUP_REGISTER,
+    onSuccess: (state, action) => state.setIn(['courseInfo', 'memberInfo'], action.payload.data),
     onFailure: (state, action) => initialState
   })
 }, initialState);

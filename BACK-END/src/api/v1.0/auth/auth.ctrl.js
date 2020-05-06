@@ -2,6 +2,7 @@ const Joi = require('joi');
 const User = require('db/models/User');
 const GroupInfo = require('db/models/GroupInfo');
 const Admin = require('db/models/Admin');
+const MyList = require("db/models/MyList");
 
 // local register function
 exports.localRegister = async (ctx) => {
@@ -309,6 +310,64 @@ exports.adminRegister = async (ctx) => {
 
     ctx.body = {
       admin
+    };
+  } catch (error) {
+    console.log(error);
+    ctx.throw(500);
+  }
+};
+
+// group register function
+exports.groupRegister = async (ctx) => {
+  const { user, body } = ctx.request;
+
+  /* 
+    Version 2.0에서 개선되어야 함 
+    Version 1.0에서는 별도의 데이터를 받지않고 바로 인증/가입 해줍니다.
+  */
+  // const schema = Joi.object({
+  //   name: Joi.string().min(2).max(30).required(),
+  //   location: Joi.string().min(2).max(30).required(),
+  //   description: Joi.string().min(2).max(30).required(),
+  //   tell: Joi.string().min(2).max(30).required()
+  // });
+
+  // const result = Joi.validate(body, schema);
+  // // Schema error 
+  // if(result.error) {
+  //   ctx.status = 400;
+  //   ctx.body = 'Schema error';
+  //   return;
+  // }
+
+  const { groupId } = body;
+
+  try {
+    // find groupInfo by Id
+    const groupInfo = await GroupInfo.findById({ _id: groupId });
+    // update group info
+    const result = await groupInfo.addMember({
+      _id: user._id
+    });
+    if(!result) {
+      // addMember failed
+      ctx.status = 409;
+      ctx.body = `addMember faild::: group Register faild`;
+      return;
+    }
+    const memberInfo = await groupInfo.memeberValidation({ _id: user._id });
+    
+    /* group에 memeber로 등록됨과 동시에 즐겨찾기에 그룹추가 */
+    // user의 myList
+    const mylist = await MyList.findById({ user: user._id });
+
+    // myList가 없으면 새로운 myList를 생성함과 동시에 요청받은 group을 즐겨찾기에 추가한다.
+    mylist
+      ? await MyList.myListRegister({ user: user._id, group: groupId })
+      : await mylist.groupPushRemove({ group: groupId });
+    
+    ctx.body = {
+      memberInfo
     };
   } catch (error) {
     console.log(error);

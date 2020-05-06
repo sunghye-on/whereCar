@@ -105,7 +105,7 @@ const SlideBtn = ({handleChange, carId, carList}) => {
           carList.map(car => (
             <MenuItem value={car._id}>
               <span>{car.carName+" | "+car.carNumber}</span>
-              <span><img width="100%" src={imgParser({imageUrl: car.carImageUrl})} /></span>
+              <span><img width="20%" src={imgParser({imageUrl: car.carImageUrl})} /></span>
             </MenuItem>
             )
           )

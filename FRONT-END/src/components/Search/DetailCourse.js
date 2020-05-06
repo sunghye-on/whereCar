@@ -42,7 +42,7 @@ const useStyles = makeStyles((theme) => ({
 
 const handleOnUpdate = (route) => {
 };
-export default function DetailCourse({ courseList, isExist, validationCourse, handleFavorite }) {
+export default function DetailCourse({ role, courseList, isExist, validationCourse, handleFavorite }) {
   const classes = useStyles();
   return (
     <>
@@ -55,24 +55,28 @@ export default function DetailCourse({ courseList, isExist, validationCourse, ha
               <ListItem key="1" role={undefined} dense button onClick={function(){}}>
                 <DriveEtaIcon className={classes.icon}/>
                   <ListItemText id={1} primary={<ExtendListItem title={course.courseName} subContent={course.stations}/> }/>      
-                  <FormControlLabel
-                    className = {classes.favorite}
-                    control={
-                      <Checkbox 
-                        icon={
-                          result
-                          ?<StarIcon style={{ color: yellow[500] }} />
-                          :<StarBorderIcon /> 
-                        } 
-                        checkedIcon={
-                          result
-                          ?<StarIcon style={{ color: yellow[500] }} />
-                          :<StarBorderIcon style={{ color: "#696969" }}/>
-                        } name="checkedH" 
-                      />   
-                    }
-                    onClick = {() => handleFavorite({courseId: course._id, groupId: course.group})}
-                  />
+                  {
+                    role !== 'none'
+                    ? (<FormControlLabel
+                      className = {classes.favorite}
+                      control={
+                        <Checkbox 
+                          icon={
+                            result
+                            ?<StarIcon style={{ color: yellow[500] }} />
+                            :<StarBorderIcon /> 
+                          } 
+                          checkedIcon={
+                            result
+                            ?<StarIcon style={{ color: yellow[500] }} />
+                            :<StarBorderIcon style={{ color: "#696969" }}/>
+                          } name="checkedH" 
+                        />   
+                      }
+                      onClick = {() => handleFavorite({courseId: course._id, groupId: course.group})}
+                    />)
+                    : null
+                  }
               </ListItem>
             )}
           )

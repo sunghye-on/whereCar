@@ -29,10 +29,10 @@ const MyList = new mongoose.Schema({
   }
 });
 MyList.statics.myListRegister = function ({ user, group }) {
-  const form = {
+  const form = group ? {
     group,
     courses: []
-  };
+  } : {};
   const myList = new this({
     user,
     groupList: form

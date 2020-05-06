@@ -5,6 +5,7 @@ import * as baseActions from 'redux/modules/base';
 import { AuthWrapper } from '../components/Auth';
 import { Login, Register, UpdateProfile } from '../containers/Auth';
 import { AdminRegister, Maintain } from '../containers/Admin';
+import { Register as GroupRegister } from '../containers/Group';
 import { Route, Redirect } from 'react-router-dom';
 
 function Auth({ BaseActions, loggedIn }) {
@@ -30,6 +31,9 @@ function Auth({ BaseActions, loggedIn }) {
         {!loggedIn && <Redirect to="/" />}
       </Route>
       <Route path="/auth/admin/management" component={ Maintain } >
+        {!loggedIn && <Redirect to="/" />}
+      </Route>
+      <Route path="/auth/group/register/:id" component={ GroupRegister } >
         {!loggedIn && <Redirect to="/" />}
       </Route>
     </AuthWrapper>

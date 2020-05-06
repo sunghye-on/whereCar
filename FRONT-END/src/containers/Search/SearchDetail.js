@@ -14,11 +14,14 @@ import CardMedia from '@material-ui/core/CardMedia';
 import Modal from '@material-ui/core/Modal';
 
 import { DetailContent, DetailCourse } from 'components/Search';
-import StarIcon from '@material-ui/icons/Star';
-import StarBorderIcon from '@material-ui/icons/StarBorder';
 import FormControlLabel from '@material-ui/core/FormControlLabel';
 import Checkbox from '@material-ui/core/Checkbox';
 import { yellow } from '@material-ui/core/colors';
+import { IconButton, Button } from '@material-ui/core';
+import StarIcon from '@material-ui/icons/Star';
+import StarBorderIcon from '@material-ui/icons/StarBorder';
+import DriveEtaIcon from '@material-ui/icons/DriveEta';
+import AccountBoxIcon from '@material-ui/icons/AccountBox';
 
 const useStyles = makeStyles((theme) => ({
   
@@ -62,6 +65,10 @@ const useStyles = makeStyles((theme) => ({
     marginLeft: 2,
     width: 20,
     height: 20
+  },
+  button: {
+    margin: theme.spacing(1),
+    width: '10em'
   }
 }));
 
@@ -88,6 +95,62 @@ const isExist = ({ dataList, attr, target }) => {
     : dataList.filter(el => String(el) === target);
 
   return exist.length == 0 ? false : true;
+}
+
+const RoleController = ({role, handleHistory, id, classes}) => {
+  let result = {
+    path: '',
+    title: '',
+    startIcon: '',
+    endIcon: ''
+  };
+
+  switch (role) {
+    case 'driver':
+      result = {
+        path: `/search/driverSelector/${ id }`,
+        title: '운전하기',
+        startIcon: <DriveEtaIcon />
+      };
+      break;
+    case 'none':
+      result = {
+        path: `/auth/group/register/${ id }`,
+        title: '그룹가입',
+        startIcon: <AccountBoxIcon />
+      };
+      break;
+    default:
+      result = null;
+      break;
+  }
+  const content = result
+  ? (<div>
+        <Button
+          variant="contained"
+          color="primary"
+          className={classes.button}
+          startIcon={result.startIcon}
+          onClick={()=>handleHistory({path: result.path})}
+        >
+          {result.title}
+        </Button>
+      </div>)
+  : null;
+
+  return result
+  ? (<div>
+        <Button
+          variant="contained"
+          color="primary"
+          className={classes.button}
+          startIcon={result.startIcon}
+          onClick={()=>handleHistory({path: result.path})}
+        >
+          {result.title}
+        </Button>
+      </div>)
+  : null;
 }
 
 function SearchDetail({history, match, ListActions, courseInfo, myList}) {
@@ -157,6 +220,20 @@ function SearchDetail({history, match, ListActions, courseInfo, myList}) {
     }
   }
 
+  const handleHistory = ({type, path}) => {
+    switch (type) {
+      case 'go':
+        history.go(path); // path 로 이동, redirection이 일어남
+        break;
+
+      default:
+        path
+        ? history.push(path)
+        : history.push('/');  // 메인으로
+        break;
+    }
+  }
+
   // this is modal component
   const body = (
     <Grid container spacing={3} style={modalStyle} className={classes.modalPaper}>
@@ -192,28 +269,39 @@ function SearchDetail({history, match, ListActions, courseInfo, myList}) {
               title="certification"
               onClick={handleOpen}
             />
-            <FormControlLabel
-              className = {classes.favorite}
-              control={
-                <Checkbox 
-                  icon={
-                    favouritesGroup
-                    ?<StarIcon style={{ color: yellow[500] }} />
-                    :<StarBorderIcon /> 
-                  } 
-                  checkedIcon={
-                    favouritesGroup
-                    ?<StarIcon style={{ color: yellow[500] }} />
-                    :<StarBorderIcon style={{ color: "#696969" }}/>
-                  } name="checkedH" 
-                />        
-              }
-              onClick = {() => handleFavorite({groupId: id})}
-            />
+            {
+              memberInfo.role !== 'none'
+              ? (<FormControlLabel
+                  className = {classes.favorite}
+                  control={
+                    <>
+                      <Checkbox 
+                        icon={
+                          favouritesGroup
+                          ?<StarIcon style={{ color: yellow[500] }} />
+                          :<StarBorderIcon /> 
+                        } 
+                        checkedIcon={
+                          favouritesGroup
+                          ?<StarIcon style={{ color: yellow[500] }} />
+                          :<StarBorderIcon style={{ color: "#696969" }}/>
+                        } name="checkedH" 
+                      />
+                    </>        
+                  }
+                  onClick = {() => handleFavorite({groupId: id})}
+              />)
+              : null
+            }
+            
+            {
+              RoleController({role: memberInfo.role, handleHistory, id: groupInfo._id, classes})
+            }
             <DetailContent content={groupInfo} />
             <DetailCourse 
                 courseList={courseList}
                 validationCourse={validationCourse}
+                role={memberInfo.role}
                 isExist = {isExist}
                 handleFavorite={handleFavorite}
             />

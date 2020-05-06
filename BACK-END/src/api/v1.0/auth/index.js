@@ -30,5 +30,6 @@ auth.get('/profile'); // profile Read
 // admin 관련
 auth.post('/register/admin', upload.single('certification'), authCtrl.adminRegister); // profile update
 auth.get('/profile/admin'); // profile Read
-
+// group 관련
+auth.post('/register/group', authCtrl.groupRegister);
 module.exports = auth;

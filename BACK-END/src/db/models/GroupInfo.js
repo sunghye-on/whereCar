@@ -1,3 +1,4 @@
+/* eslint-disable eqeqeq */
 /* eslint-disable prefer-const */
 const mongoose = require('mongoose');
 const { PASSWORD_HASH_KEY: secret } = process.env;
@@ -43,6 +44,10 @@ const GroupInfo = new mongoose.Schema({
     }
   ]
 });
+
+GroupInfo.statics.findById = function({ _id }) {
+  return this.findOne({ _id });
+};
 
 // 이름과 위치로 그룹 검색하기.
 GroupInfo.statics.findExistancy = function({ name, location }) {
@@ -141,5 +146,13 @@ GroupInfo.methods.memeberValidation = function({ _id }) {
     };
   }
 };
-
+GroupInfo.methods.addMember = function({ _id }) {
+  let result = this.update({
+    $addToSet: {
+      users: _id,
+      driver: _id
+    }
+  });
+  return result;
+};
 module.exports = mongoose.model('GroupInfo', GroupInfo);

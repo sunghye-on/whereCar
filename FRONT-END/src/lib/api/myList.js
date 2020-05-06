@@ -21,3 +21,6 @@ export const getMyList = () => axios.get(`/api/v1.0/mylist`);
 /* 즐겨찾기 부분 */
 export const groupPushRemove = ({groupId}) => axios.post(`/api/v1.0/mylist/groupPushRemove`, {groupId});
 export const coursePushRemove = ({groupId, courseId}) => axios.post(`/api/v1.0/mylist/coursePushRemove`, {groupId, courseId});
+
+// 그룹에 가입
+export const groupRegister = ({groupId}) => axios.post(`/api/v1.0/auth/register/group`, {groupId});

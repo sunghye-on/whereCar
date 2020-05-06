@@ -135,7 +135,9 @@ exports.getMyList = async (ctx) => {
     return;
   }
   try {
-    const mylist = await MyList.findById({ user: user._id });
+    let mylist = await MyList.findById({ user: user._id });
+    mylist = mylist || await MyList.myListRegister({ user: user._id });
+    
     ctx.body = {
       user: user._id,
       mylist
