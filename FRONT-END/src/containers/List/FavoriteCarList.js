@@ -39,7 +39,7 @@ const useStyles = makeStyles(theme => ({
 const Contents = styled.div`
     background: white;
     padding: 1rem 0 1rem 0;
-    height: 400px;
+    height: 350px;
     overflow-y: auto;
 `;
 

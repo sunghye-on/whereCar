@@ -65,8 +65,8 @@ const useStyles = makeStyles(theme => ({
     },
     none:{},
     skeleton: {
-      width: '300px',
-      height: '30px'
+      width: '100%',
+      height: '50px'
     }
   }));
 
@@ -128,7 +128,7 @@ function CarItem({ groupId, courseInfo, ListActions }) {
     </ExpansionPanel>
   ) 
   : (<div className={classes.skeleton}>
-      <Skeleton animation="wave" />
+      <Skeleton variant="rect" animation="wave" height={40}/>
     </div>)
 }
 
