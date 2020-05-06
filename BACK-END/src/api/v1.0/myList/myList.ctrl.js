@@ -1,10 +1,6 @@
 const Joi = require('joi');
-const User = require('db/models/User');
-const GroupInfo = require('db/models/GroupInfo');
-const CarInfo = require('db/models/CarInfo');
 const Course = require('db/models/Course');
 const MyList = require("db/models/MyList");
-const Admin = require('db/models/Admin');
 const fs = require('fs');
 
 const dummyLists = [
