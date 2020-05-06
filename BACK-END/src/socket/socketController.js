@@ -1,3 +1,26 @@
+// dummy Data [ test용 ]
+const driver1 = {
+  id: 0,
+  driverName: '홍길동1',
+  routes: [
+    { locationName: '1', Latitude: '0', longitude: '0' },
+    { locationName: '2', Latitude: '0', longitude: '0' },
+    { locationName: '3', Latitude: '0', longitude: '0' }
+  ],
+  currentLoc: { Latitude: '0', longitude: '0' }
+};
+const driver2 = {
+  id: 1,
+  driverName: '홍길동2',
+  routes: [
+    { locationName: '1', Latitude: '0', longitude: '0' },
+    { locationName: '2', Latitude: '0', longitude: '0' },
+    { locationName: '3', Latitude: '0', longitude: '0' }
+  ],
+  currentLoc: { Latitude: '0', longitude: '0' }
+};
+
+
 /* Server에서 event 를 emit 하고 on하는 파일 */
 const events = require('./events');
 
@@ -19,6 +42,10 @@ const socketController = (socket, io) => {
     // 해당 Driver를 즐겨찾기한 User들에게(집단) 이를 알린다. [roomName = displayName]
     socket.emit(events.sendLocation, { displayName, Latitude, longitude });
   });
+
+  /* test emit */
+  socket.emit(events.sendNotifDriverActive, { driver: driver1, active: true });    
+  socket.emit(events.sendNotifDriverActive, { driver: driver2, active: true });
 
   // refresh에 대한 이벤트
 };

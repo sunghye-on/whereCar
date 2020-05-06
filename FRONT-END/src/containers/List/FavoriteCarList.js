@@ -11,7 +11,7 @@ import { connect } from 'react-redux';
 import { bindActionCreators } from 'redux';
 import * as socketActions from 'redux/modules/socket';
 import * as listActions from 'redux/modules/list';
-import { driverListSoc } from 'sockets';
+import { DriverListSoc } from 'sockets';
 
 const useStyles = makeStyles(theme => ({
   root: {
@@ -65,19 +65,23 @@ function FavoriteCarList({children, socket, driverList, SocketActions, ListActio
   const classes = useStyles();
   const [bottomValue, setBottomValue] = React.useState(0);
 
-  /* [김성현님 수정바람] test용 데이터 송수신 */
+  /* ▼▼▼ [김성현님 수정바람] test용 데이터 송수신 ▼▼▼*/
+  /* active socket event */
+  useEffect(() => {
+    if(socket){
+      DriverListSoc(socket, SocketActions);
+    }
+    // 여기서 룸 나가기(소켓 닫기)
+    return () => {
+    }
+  }, [SocketActions, socket])
+
+  /* initialize socket */
   useEffect(() => {
     // soket 초기화 부분
     const endpoint = 'http://localhost:4000';
     const socket = socketIOClient(endpoint);
     SocketActions.setSocket({socket});
-
-    // driverList 소켓통신 관련
-    driverListSoc(socket, SocketActions);
-
-    // 여기서 룸 나가기(소켓 닫기)
-    return () => {
-    }
   }, [SocketActions])
 
   // MyList 갱신부분
@@ -85,16 +89,6 @@ function FavoriteCarList({children, socket, driverList, SocketActions, ListActio
     ListActions.getMyList(); // MyList 갱신
   }, [ListActions])
 
-  /*
-    test용입니다. [Server에서 사용되는 소스]
-    client에서 강제로 드라이버들을 활성화 시킨 소스입니다.
-  */
-   if(socket){
-    socket.emit("driverActive", {driver: driver1, active: true}); // test용 driver 활성화 [test]
-    socket.emit("driverActive", {driver: driver2, active: true}); // test용 driver 활성화 [test]
-  }
-
-  console.log(driverList);
   return (
     <ListWrapper>
       <LogoWrapper title="My Car List" titleUrl="/">

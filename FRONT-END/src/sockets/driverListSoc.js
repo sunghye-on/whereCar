@@ -1,4 +1,4 @@
-export default function driverListSoc(socket, SocketActions) {
+function DriverListSoc(socket, SocketActions) {
   // driverList 받아오기 [API]
   SocketActions.setDriverList();
 
@@ -9,3 +9,5 @@ export default function driverListSoc(socket, SocketActions) {
     SocketActions.setDriverStatus(data);
   });
 }
+
+export default DriverListSoc;
