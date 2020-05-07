@@ -128,9 +128,9 @@ export default handleActions({
           location: groupInfo.location
         },
         myRole: memberInfo.role,
-        courseList: courseList.map(list => ({...list, active: false, nextStation: ''}))
+        courseList: courseList.map(list => ({...list, active: false, nextStation: '', distPer: 0}))
       }
-      // local storage에서 myData 정보 유지
+      // local storage에서 myData 정보 유지s
       storage.set('myData', {...myData, [groupInfo._id]: data});
       return state.set('myData', Map({...myData, [groupInfo._id]: data}));
     },
