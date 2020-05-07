@@ -1,10 +1,11 @@
-const Joi = require('joi');
-const User = require('db/models/User');
-const GroupInfo = require('db/models/GroupInfo');
-const CarInfo = require('db/models/CarInfo');
-const Course = require('db/models/Course');
-const Admin = require('db/models/Admin');
-const fs = require('fs');
+const Joi = require("joi");
+const User = require("db/models/User");
+const GroupInfo = require("db/models/GroupInfo");
+const CarInfo = require("db/models/CarInfo");
+const Course = require("db/models/Course");
+const Admin = require("db/models/Admin");
+const Station = require("db/models/Station");
+const fs = require("fs");
 
 // 그룹에 속한 유저들 정보가져오기, 그룹에 대한 관리자권한만 접근
 exports.groupUsers = async (ctx) => {
@@ -12,9 +13,9 @@ exports.groupUsers = async (ctx) => {
   // find admin
   const admin = await Admin.findByUser(user);
   // user session또는 관리자 권한이 없다면
-  if(!user || !admin) {
+  if (!user || !admin) {
     ctx.status = 403;
-    ctx.body = 'Any session not founded!';
+    ctx.body = "Any session not founded!";
     // eslint-disable-next-line no-useless-return
     return;
   }
@@ -23,7 +24,7 @@ exports.groupUsers = async (ctx) => {
     const group = await GroupInfo.findOne({ _id: admin.group });
     ctx.body = {
       groupUsers: group.users,
-      admin: admin
+      admin: admin,
     };
   } catch (error) {
     ctx.throw(error);
@@ -40,16 +41,16 @@ exports.groupManagers = async (ctx) => {
     // find GroupInfo
     const groupInfo = await GroupInfo.findOne({ _id: admin.group });
     // user session또는 관리자 권한이 없다면
-    if(!user || !admin) {
+    if (!user || !admin) {
       ctx.status = 403;
-      ctx.body = 'Any session not founded!';
+      ctx.body = "Any session not founded!";
       // eslint-disable-next-line no-useless-return
       return;
     }
     // response message(=data)
     ctx.body = {
       Users: await User.findByIds(groupInfo.users),
-      Drivers: await User.findByIds(groupInfo.drivers)
+      Drivers: await User.findByIds(groupInfo.drivers),
     };
   } catch (error) {
     ctx.throw(error);
@@ -63,9 +64,9 @@ exports.updateManagers = async (ctx) => {
     // find admin
     const admin = await Admin.findByUser(user);
     // user session또는 관리자 권한이 없다면
-    if(!user || !admin) {
+    if (!user || !admin) {
       ctx.status = 403;
-      ctx.body = 'Any session not founded!';
+      ctx.body = "Any session not founded!";
       // eslint-disable-next-line no-useless-return
       return;
     }
@@ -74,14 +75,18 @@ exports.updateManagers = async (ctx) => {
 
     let { users, drivers } = groupInfo;
     const { Users, Drivers } = body;
-    
+
     const beforeMembers = Users.concat(Drivers);
     for (const i in body) {
-      if(i === 'Users') {
-        const rest = users.filter(value => beforeMembers.indexOf(value) !== -1);
+      if (i === "Users") {
+        const rest = users.filter(
+          (value) => beforeMembers.indexOf(value) !== -1
+        );
         users = [...rest, ...body[i]];
       } else {
-        const rest = drivers.filter(value => beforeMembers.indexOf(value) !== -1);
+        const rest = drivers.filter(
+          (value) => beforeMembers.indexOf(value) !== -1
+        );
         drivers = [...rest, ...body[i]];
       }
     }
@@ -91,8 +96,8 @@ exports.updateManagers = async (ctx) => {
     ctx.body = {
       managers: {
         Users: groupInfo.users,
-        Drivers: groupInfo.drivers
-      }
+        Drivers: groupInfo.drivers,
+      },
     };
   } catch (error) {
     ctx.throw(error);
@@ -105,14 +110,13 @@ exports.groupDrivers = async (ctx) => {
   // find admin
   const admin = await Admin.findByUser(user);
   // user session또는 관리자 권한이 없다면
-  if(!user || !admin) {
+  if (!user || !admin) {
     ctx.status = 403;
-    ctx.body = 'Any session not founded!';
+    ctx.body = "Any session not founded!";
     // eslint-disable-next-line no-useless-return
     return;
   }
   try {
-    
   } catch (error) {
     ctx.throw(error);
   }
@@ -125,27 +129,27 @@ exports.carRegister = async (ctx) => {
   // find admin
   const admin = await Admin.findByUser(user);
   // user session또는 관리자 권한이 없다면
-  if(!user || !admin) {
+  if (!user || !admin) {
     ctx.status = 403;
-    ctx.body = 'Any session not founded!';
+    ctx.body = "Any session not founded!";
     // eslint-disable-next-line no-useless-return
     return;
-  };
+  }
 
   // body에서 받은정보 validation하기
   const schema = Joi.object({
     carName: Joi.string().min(2).max(30).required(),
     carNumber: Joi.string().min(4).max(30),
     seatNumber: Joi.number(),
-    inspectionDate: Joi.date()
+    inspectionDate: Joi.date(),
   });
 
   const result = Joi.validate(body, schema);
-  // Schema error 
-  if(result.error) {
-    console.log('🔥Schema error', result.error);
+  // Schema error
+  if (result.error) {
+    console.log("🔥Schema error", result.error);
     ctx.status = 400;
-    ctx.body = 'Schema error';
+    ctx.body = "Schema error";
     // eslint-disable-next-line no-useless-return
     return;
   }
@@ -158,11 +162,11 @@ exports.carRegister = async (ctx) => {
       seatNumber,
       inspectionDate,
       carImageUrl: file ? file.path : null,
-      group: admin.group
+      group: admin.group,
     });
     // response message(=data)
     ctx.body = {
-      carInfo
+      carInfo,
     };
   } catch (error) {
     ctx.throw(error);
@@ -175,12 +179,12 @@ exports.carUpdate = async (ctx) => {
   // find admin
   const admin = await Admin.findByUser(user);
   // user session또는 관리자 권한이 없다면
-  if(!user || !admin) {
+  if (!user || !admin) {
     ctx.status = 403;
-    ctx.body = 'Any session not founded!';
+    ctx.body = "Any session not founded!";
     // eslint-disable-next-line no-useless-return
     return;
-  };
+  }
 
   // body에서 받은정보 validation하기
   const schema = Joi.object({
@@ -188,15 +192,15 @@ exports.carUpdate = async (ctx) => {
     carName: Joi.string().min(2).max(30).required(),
     carNumber: Joi.string().min(4).max(30),
     seatNumber: Joi.number(),
-    inspectionDate: Joi.date()
+    inspectionDate: Joi.date(),
   });
 
   const result = Joi.validate(body, schema);
-  // Schema error 
-  if(result.error) {
-    console.log('🔥Schema error', result.error);
+  // Schema error
+  if (result.error) {
+    console.log("🔥Schema error", result.error);
     ctx.status = 400;
-    ctx.body = 'Schema error';
+    ctx.body = "Schema error";
     // eslint-disable-next-line no-useless-return
     return;
   }
@@ -205,31 +209,35 @@ exports.carUpdate = async (ctx) => {
   try {
     const car = await CarInfo.findsById({ _id: carId });
 
-    if(file) { // if user send a new imageFile
-      await fs.stat(car.carImageUrl, function(err) { 
-        if (!err) { // if file or directory exists
-          console.log('file or directory exists');
-          
-          fs.unlink('./' + car.carImageUrl, function(err) { // delete file
+    if (file) {
+      // if user send a new imageFile
+      await fs.stat(car.carImageUrl, function (err) {
+        if (!err) {
+          // if file or directory exists
+          console.log("file or directory exists");
+
+          fs.unlink("./" + car.carImageUrl, function (err) {
+            // delete file
             if (err) throw ctx.throw(err);
-            console.log('file deleted');
+            console.log("file deleted");
           });
-        } else if (err.code === 'ENOENT') {
-          console.log('file or directory does not exist');
+        } else if (err.code === "ENOENT") {
+          console.log("file or directory does not exist");
         }
       });
-    };
-    
+    }
+
     const carInfo = await car.updateOne({
       carName,
       carNumber,
       seatNumber,
       inspectionDate,
-      carImageUrl: file ? file.path : car.carImageUrl
+      carImageUrl: file ? file.path : car.carImageUrl,
     });
 
-    ctx.body = { // response message(=data)
-      carInfo
+    ctx.body = {
+      // response message(=data)
+      carInfo,
     };
   } catch (error) {
     ctx.throw(error);
@@ -243,9 +251,9 @@ exports.carDelete = async (ctx) => {
   // find admin
   const admin = await Admin.findByUser(user);
   // user session또는 관리자 권한이 없다면
-  if(!user || !admin) {
+  if (!user || !admin) {
     ctx.status = 403;
-    ctx.body = 'Any session not founded!';
+    ctx.body = "Any session not founded!";
     // eslint-disable-next-line no-useless-return
     return;
   }
@@ -253,7 +261,7 @@ exports.carDelete = async (ctx) => {
     const result = await CarInfo.removeById({ _id: id });
     // response message(=data)
     ctx.body = {
-      result
+      result,
     };
   } catch (error) {
     ctx.throw(error);
@@ -266,9 +274,9 @@ exports.getCars = async (ctx) => {
   const { id } = ctx.params;
 
   // user session이 없다면
-  if(!user) {
+  if (!user) {
     ctx.status = 403;
-    ctx.body = 'Any session not founded!';
+    ctx.body = "Any session not founded!";
     // eslint-disable-next-line no-useless-return
     return;
   }
@@ -280,7 +288,7 @@ exports.getCars = async (ctx) => {
     const carList = await CarInfo.findsByGroup({ group: id });
     ctx.body = {
       groupInfo,
-      carList
+      carList,
     };
   } catch (error) {
     ctx.throw(error);
@@ -293,9 +301,9 @@ exports.getCar = async (ctx) => {
   const { id } = ctx.params;
 
   // user session이 없다면
-  if(!user) {
+  if (!user) {
     ctx.status = 403;
-    ctx.body = 'Any session not founded!';
+    ctx.body = "Any session not founded!";
     // eslint-disable-next-line no-useless-return
     return;
   }
@@ -304,7 +312,7 @@ exports.getCar = async (ctx) => {
     // find Car List
     const car = await CarInfo.findOne({ _id: id });
     ctx.body = {
-      car
+      car,
     };
   } catch (error) {
     ctx.throw(error);
@@ -317,12 +325,12 @@ exports.courseRegister = async (ctx) => {
   // find admin
   const admin = await Admin.findByUser(user);
   // user session또는 관리자 권한이 없다면
-  if(!user || !admin) {
+  if (!user || !admin) {
     ctx.status = 403;
-    ctx.body = 'Any session not founded!';
+    ctx.body = "Any session not founded!";
     // eslint-disable-next-line no-useless-return
     return;
-  };
+  }
 
   // body에서 받은정보 validation하기
   const schema = Joi.object({
@@ -331,17 +339,17 @@ exports.courseRegister = async (ctx) => {
       Joi.object({
         stationName: Joi.string(),
         longitude: Joi.number(),
-        latitude: Joi.number()
+        latitude: Joi.number(),
       })
-    )
+    ),
   });
 
   const result = Joi.validate(body, schema);
-  // Schema error 
-  if(result.error) {
-    console.log('🔥Schema error', result.error);
+  // Schema error
+  if (result.error) {
+    console.log("🔥Schema error", result.error);
     ctx.status = 400;
-    ctx.body = 'Schema error';
+    ctx.body = "Schema error";
     // eslint-disable-next-line no-useless-return
     return;
   }
@@ -351,11 +359,16 @@ exports.courseRegister = async (ctx) => {
     const courseInfo = await Course.courseRegister({
       courseName,
       stations,
-      group: admin.group
+      group: admin.group,
+    });
+    // 각 station 등록하기
+    const stationObjs = await Station.registerStations({
+      stations,
+      courseId: courseInfo._id,
     });
     // response message(=data)
     ctx.body = {
-      courseInfo
+      courseInfo,
     };
   } catch (error) {
     ctx.throw(error);
@@ -368,12 +381,12 @@ exports.courseUpdate = async (ctx) => {
   // find admin
   const admin = await Admin.findByUser(user);
   // user session또는 관리자 권한이 없다면
-  if(!user || !admin) {
+  if (!user || !admin) {
     ctx.status = 403;
-    ctx.body = 'Any session not founded!';
+    ctx.body = "Any session not founded!";
     // eslint-disable-next-line no-useless-return
     return;
-  };
+  }
 
   // body에서 받은정보 validation하기
   const schema = Joi.object({
@@ -383,17 +396,17 @@ exports.courseUpdate = async (ctx) => {
       Joi.object({
         stationName: Joi.string(),
         longitude: Joi.number(),
-        latitude: Joi.number()
+        latitude: Joi.number(),
       })
-    )
+    ),
   });
 
   const result = Joi.validate(body, schema);
-  // Schema error 
-  if(result.error) {
-    console.log('🔥Schema error', result.error);
+  // Schema error
+  if (result.error) {
+    console.log("🔥Schema error", result.error);
     ctx.status = 400;
-    ctx.body = 'Schema error';
+    ctx.body = "Schema error";
     // eslint-disable-next-line no-useless-return
     return;
   }
@@ -403,11 +416,11 @@ exports.courseUpdate = async (ctx) => {
     const courseInfo = await Course.courseUpdateById({
       _id: courseId,
       courseName,
-      stations
+      stations,
     });
     // response message(=data)
     ctx.body = {
-      courseInfo
+      courseInfo,
     };
   } catch (error) {
     ctx.throw(error);
@@ -421,9 +434,9 @@ exports.courseDelete = async (ctx) => {
   // find admin
   const admin = await Admin.findByUser(user);
   // user session또는 관리자 권한이 없다면
-  if(!user || !admin) {
+  if (!user || !admin) {
     ctx.status = 403;
-    ctx.body = 'Any session not founded!';
+    ctx.body = "Any session not founded!";
     // eslint-disable-next-line no-useless-return
     return;
   }
@@ -431,7 +444,7 @@ exports.courseDelete = async (ctx) => {
     const result = await Course.removeById({ _id: id });
     // response message(=data)
     ctx.body = {
-      result
+      result,
     };
   } catch (error) {
     ctx.throw(error);
@@ -448,19 +461,19 @@ exports.getCourseById = async (ctx) => {
   const groupInfo = await GroupInfo.findOne({ _id: id });
   // 디폴트로 관리자로 식별
   let memberInfo = {
-    role: 'super',
+    role: "super",
     userId: user._id,
-    groupInfoId: id
+    groupInfoId: id,
   };
   // 관리자가 아니라면
-  if(!admin) {
+  if (!admin) {
     // 특정그룹에 특정유저가 속해있는지 확인
     memberInfo = groupInfo.memeberValidation({ _id: user._id });
   }
   // user session이 없다면
-  if(!user) {
+  if (!user) {
     ctx.status = 403;
-    ctx.body = 'Any session not founded!';
+    ctx.body = "Any session not founded!";
     // eslint-disable-next-line no-useless-return
     return;
   }
@@ -469,7 +482,7 @@ exports.getCourseById = async (ctx) => {
     // response message(=data)
     ctx.body = {
       course,
-      memberInfo
+      memberInfo,
     };
   } catch (error) {
     ctx.throw(error);
@@ -486,20 +499,20 @@ exports.getCoursesByGroup = async (ctx) => {
   const groupInfo = await GroupInfo.findOne({ _id: id });
   // 디폴트로 관리자로 식별
   let memberInfo = {
-    role: 'super',
+    role: "super",
     userId: user._id,
-    groupInfoId: id
+    groupInfoId: id,
   };
   // 관리자가 아니라면
-  if(!admin) {
+  if (!admin) {
     // 특정그룹에 특정유저가 속해있는지 확인
     memberInfo = groupInfo.memeberValidation({ _id: user._id });
   }
   // user session또는 그룹에 소속이 안되어 있다면
-  if(!user || !memberInfo) {
-    console.log('에러발생');
+  if (!user || !memberInfo) {
+    console.log("에러발생");
     ctx.status = 403;
-    ctx.body = 'Any session not founded!';
+    ctx.body = "Any session not founded!";
     // eslint-disable-next-line no-useless-return
     return;
   }
@@ -509,7 +522,7 @@ exports.getCoursesByGroup = async (ctx) => {
     ctx.body = {
       groupInfo,
       memberInfo,
-      courseList: result
+      courseList: result,
     };
   } catch (error) {
     ctx.throw(error);
