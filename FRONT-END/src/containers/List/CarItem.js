@@ -14,6 +14,7 @@ import ExpandMoreIcon from "@material-ui/icons/ExpandMore";
 import { FavoriteExtendListItem } from 'components/Base/List';
 import StarIcon from '@material-ui/icons/Star';
 import { yellow } from '@material-ui/core/colors';
+import storage from 'lib/storage';
 
 const useStyles = makeStyles(theme => ({
     root: {
@@ -70,21 +71,26 @@ const useStyles = makeStyles(theme => ({
     }
   }));
 
-function CarItem({ groupId, courseInfo, ListActions }) {
+function CarItem({ groupId, courseInfo, myData, ListActions }) {
   const classes = useStyles();
-  const [data, setData] = useState ({})
+  let myRole, courseList, groupInfo = null;
+  // 데이터 초기화
+  if(myData[groupId] || storage.get('myData')){
+    myRole = myData[groupId] 
+      ? myData[groupId].myRole 
+      : storage.get('myData').myRole;
+    courseList = myData[groupId] 
+      ? myData[groupId].courseList 
+      : storage.get('myData').courseList;
+    groupInfo = myData[groupId] 
+      ? myData[groupId].groupInfo 
+      : storage.get('myData').groupInfo;
+  };
 
+  // 데이터를 보관 및 관리
   useEffect(()=>{
-    const result = ListActions.getCourses({id: groupId});
-  }, [ListActions])
-
-  useEffect(()=>{
-    if(courseInfo.groupInfo._id == groupId) {
-      setData({
-        ...courseInfo
-      });
-    }
-  }, [courseInfo])
+    ListActions.setMyData({id: groupId});
+  }, [ListActions, groupId])
   
   // 아이 탑승 여부에 따라서 학원 색상이 변경!
   // 여기다가 아이가 탑승했다는 값을 받아와서 비교하고 아이가 탑승하고 있다면 색상 변경하는 id를 반환
@@ -106,7 +112,7 @@ function CarItem({ groupId, courseInfo, ListActions }) {
     setExpanded(isExpanded ? panel : false);
   };
 
-  return data.groupInfo !== undefined ? (
+  return myData[groupId] ? (
     <ExpansionPanel className = {childin === true ? checkchild() : none()} >
       {/*child 값에 따라서 색상 변경*/}
       <ExpansionPanelSummary
@@ -115,11 +121,11 @@ function CarItem({ groupId, courseInfo, ListActions }) {
           id="panel1bh-header"
       >
           <StarIcon style={{ color: yellow[500] }} className={classes.padding}/>
-          <Typography className={classes.heading}>이름: {data.groupInfo.name}</Typography>
+          <Typography className={classes.heading}>이름: {groupInfo.name}</Typography>
           {/* 위의 현재: 이후의 {}안에 현재 위치 값 받아오기를 넣어야 한다!*/}
       </ExpansionPanelSummary>
       {
-        data.courseList.map(obj => (
+        courseList.map(obj => (
           <ExpansionPanelDetails>
               <FavoriteExtendListItem title={obj.courseName} subContent={obj.stations}/>
           </ExpansionPanelDetails>
@@ -135,6 +141,7 @@ function CarItem({ groupId, courseInfo, ListActions }) {
 export default connect(
   (state) => ({
     courseInfo: state.list.get('courseInfo').toJS(),
+    myData: state.list.get('myData').toJS(),
   }),
   (dispatch) => ({
     ListActions: bindActionCreators(listActions, dispatch) 

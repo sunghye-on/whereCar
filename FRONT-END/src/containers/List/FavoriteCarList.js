@@ -93,9 +93,6 @@ function FavoriteCarList({children, myList, socket, driverList, SocketActions, L
     setExpanded(isExpanded ? panel : false);
   };
 
-
-
-
   return (
     <ListWrapper>
       <LogoWrapper title="My Page" titleUrl="/">
