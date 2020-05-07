@@ -1,1 +1,1 @@
-export { default as DriverListSoc } from './DriverListSoc';
+export { default as DriverListSoc } from "./driverListSoc";
