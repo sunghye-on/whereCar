@@ -52,9 +52,9 @@ function FavoriteCarList({children, myList, socket, driverList, SocketActions, L
   /* active socket event */
   useEffect(() => {
     if(socket){
-      DriverListSoc(socket, SocketActions);
+      DriverListSoc(socket, ListActions);
     }
-    // 여기서 룸 나가기(소켓 닫기)
+    // (소켓 닫기)
     return () => {
     }
   }, [SocketActions, socket])
@@ -71,8 +71,6 @@ function FavoriteCarList({children, myList, socket, driverList, SocketActions, L
   useEffect(() => {
     ListActions.getMyList(); // MyList 갱신
   }, [ListActions])
-
-
 
   // 아이 탑승 여부에 따라서 학원 색상이 변경!
   // 여기다가 아이가 탑승했다는 값을 받아와서 비교하고 아이가 탑승하고 있다면 색상 변경하는 id를 반환
