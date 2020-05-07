@@ -1,14 +1,24 @@
+<<<<<<< HEAD
 import storage from "lib/storage";
 function DriverListSoc(socket, SocketActions) {
+=======
+function DriverListSoc(socket, ListActions) {
+>>>>>>> upstream/master
   // driverList 받아오기 [API]
-  SocketActions.setDriverList();
+  // SocketActions.setDriverList();
 
   // 초기상태 만들기 with DriverActive상태도 받아오기.
 
   // Active상태 갱신하기 [Socket]
+<<<<<<< HEAD
   socket.on("sendNotifDriverActive", (data) => {
     // data = {driver, active}
     SocketActions.setDriverStatus(data);
+=======
+  socket.on("sendNotifDriverActive", (data) => { // data = {driver, active}
+    // SocketActions.setDriverStatus(data);
+    
+>>>>>>> upstream/master
   });
   /* 일반 유저가 방에 입장하기 위함*/
   const a = storage.get("myList");
