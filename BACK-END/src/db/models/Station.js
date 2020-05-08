@@ -19,7 +19,26 @@ const Station = new mongoose.Schema({
     default: Date.now,
   },
 });
+Station.index({ location: "2dsphere" });
 
+Station.statics.getNearStation = async function ({ longitude, latitude }) {
+  const a = await this.aggregate([
+    {
+      $geoNear: {
+        spherical: true,
+        // limit:2
+        maxDistance: 10000,
+        near: {
+          type: "Point",
+          coordinates: [longitude, latitude],
+        },
+        distanceField: "distance",
+        key: "location",
+      },
+    },
+  ]);
+  return a;
+};
 Station.statics.registerStations = function ({ stations, courseId }) {
   let station = [];
   try {

@@ -19,4 +19,14 @@ const DriverLog = new mongoose.Schema({
   },
 });
 
+DriverLog.statics.driverLogRegister = function ({ driverId, name, location }) {
+  const driverLog = new this({
+    driverId,
+    name,
+    location,
+  });
+  driverLog.save();
+  return driverLog;
+};
+
 module.exports = mongoose.model("DriverLog", DriverLog);
