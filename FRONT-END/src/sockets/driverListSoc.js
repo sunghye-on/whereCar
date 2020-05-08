@@ -1,36 +1,26 @@
-<<<<<<< HEAD
 import storage from "lib/storage";
-function DriverListSoc(socket, SocketActions) {
-=======
 function DriverListSoc(socket, ListActions) {
->>>>>>> upstream/master
   // driverList 받아오기 [API]
   // SocketActions.setDriverList();
 
   // 초기상태 만들기 with DriverActive상태도 받아오기.
 
   // Active상태 갱신하기 [Socket]
-<<<<<<< HEAD
   socket.on("sendNotifDriverActive", (data) => {
     // data = {driver, active}
-    SocketActions.setDriverStatus(data);
-=======
-  socket.on("sendNotifDriverActive", (data) => { // data = {driver, active}
     // SocketActions.setDriverStatus(data);
-    
->>>>>>> upstream/master
   });
   /* 일반 유저가 방에 입장하기 위함*/
   const a = storage.get("myList");
+  const data = storage.get("myData");
+  console.log("data==============", data);
   let roomNames = [];
   console.log("AllgroupListData:::::", a.mylist.groupList);
 
   for (let i in a.mylist.groupList) {
     console.log("GroupData:::::", a.mylist.groupList[i]);
-
     for (let k in a.mylist.groupList[i].courses) {
       console.log("CourseData:::::", a.mylist.groupList[i].courses[k]);
-
       roomNames.push(a.mylist.groupList[i].courses[k]);
     }
   }
@@ -40,14 +30,8 @@ function DriverListSoc(socket, ListActions) {
     socket.emit("joinRoom", { roomName });
     socket.emit("requestLocation", { roomName });
   }
-  // for (let i in roomNames) {
-  //   let roomName = roomNames[i];
-  // }
-  socket.on("sendtest", (data) => {
-    console.log("data rkqtdma::::::::::::::::", data);
-  });
 
-  socket.on("receiveLocation", (roomName) => {
+  socket.on("receiveLocation", ({ roomName }) => {
     const getLocation = () => {
       if (navigator.geolocation) {
         navigator.geolocation.getCurrentPosition(showPosition);
@@ -63,6 +47,7 @@ function DriverListSoc(socket, ListActions) {
     getLocation();
     console.log(roomName);
   });
+
   socket.on("sendLocation", (data) => {
     console.log(data);
   });

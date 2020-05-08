@@ -42,20 +42,19 @@ const socketController = (socket, io) => {
   });
   socket.emit(events.sendNotifDriverActive, { driver: driver1, active: true });
   socket.emit(events.sendNotifDriverActive, { driver: driver2, active: true });
-  // io.to(testRoom).emit(events.test, { hi });
-  // socket.emit(events.test, { hi });
+
   // refresh에 대한 이벤트
   socket.on(events.requestLocation, ({ roomName }) => {
     io.to(roomName).emit(events.receiveLocation, { roomName });
     console.log("send to ", roomName);
   });
   socket.on(events.receiveGPS, (data) => {
-    // console.log(data.roomName.roomName);
+    // console.log(data);
     /* 계산 과정이 들어갈곳 */
 
     // 나중에 계산된 내용을 locationName에 넣어 보내주자
     // io.to(roomName).emit(events.sendLocation, { locationName });
-    io.to(data.roomName.roomName).emit(events.sendLocation, { data });
+    io.to(data.roomName).emit(events.sendLocation, { data });
   });
 };
 module.exports = socketController;
