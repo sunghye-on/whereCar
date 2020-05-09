@@ -55,13 +55,6 @@ function union(a, b) {
   return [...a, ...not(b, a)];
 }
 
-// 테스트를 위한 더미 데이터
-const dummyRole = {
-  Users: [1, 2, 3, 4],
-  Drivers: [11, 22, 33, 44],
-  Super: [111, 222, 333, 444]
-};
-
 // role 리스트
 const RoleSelector = ({ roles, setRoles, dir }) => {
   const classes = useStyles();

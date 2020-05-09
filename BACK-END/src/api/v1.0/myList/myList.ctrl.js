@@ -76,9 +76,9 @@ exports.activeCourse = async (ctx) => {
       carId,
       userId: user._id
     });
-    console.log(result)
+    console.log("=======", result)
     // response message(=data)
-    ctx.body = result;
+    ctx.body = result.ok === 1;
   } catch (error) {
     ctx.throw(error);
   }

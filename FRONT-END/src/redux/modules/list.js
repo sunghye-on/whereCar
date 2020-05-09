@@ -24,6 +24,9 @@ const GROUP_REGISTER = 'list/GROUP_REGISTER';
 
 const SET_MYDATA = 'list/SET_MYDATA';
 
+const ACTIVE_COURSE = 'list/ACTIVE_COURSE'; // driver가 course를 선택
+const CHANGE_DRIVERINFO = 'list/CHANGE_DRIVERINFO' // cadId & courseId 변경
+
 export const getCars = createAction(GET_CARS, MyListAPI.getCars); // groupId
 export const getCar = createAction(GET_CAR, MyListAPI.getCar); // carId
 export const deleteCar = createAction(DELETE_CAR, MyListAPI.deleteCar); // carId
@@ -40,6 +43,9 @@ export const coursePushRemove = createAction(COURSE_PUSH_REMOVE, MyListAPI.cours
 export const groupRegister = createAction(GROUP_REGISTER, MyListAPI.groupRegister); // groupId
 
 export const setMyData = createAction(SET_MYDATA, MyListAPI.getCourses); // groupId
+
+export const activeCourse = createAction(ACTIVE_COURSE, MyListAPI.activeCourse); // courseId, carId
+export const changeDriverInfo = createAction(CHANGE_DRIVERINFO); // name: (courseId or carId), value
 
 const initialState = Map({
   carInfo: Map({
@@ -58,10 +64,20 @@ const initialState = Map({
     groupList: List([])
   }),
   myData: Map({}),
-  result: Map({})
+  result: Map({}),
+  driverInfo: Map({
+    auth: false,
+    carId: '', 
+    courseId: '',
+    coordinates: []
+  }),
 })
 
 export default handleActions({
+  [CHANGE_DRIVERINFO]: (state, action) => {
+    const { name, value } = action.payload;
+    return state.setIn( ['driverInfo', name], value );
+  },
   ...pender({
     type: GET_CARS,
     onSuccess: (state, action) => state.set('carInfo', action.payload.data),
@@ -134,6 +150,12 @@ export default handleActions({
       storage.set('myData', {...myData, [groupInfo._id]: data});
       return state.set('myData', Map({...myData, [groupInfo._id]: data}));
     },
+    onFailure: (state, action) => initialState
+  }),
+
+  ...pender({
+    type: ACTIVE_COURSE,
+    onSuccess: (state, action) => state.setIn(['driverInfo', 'auth'], action.payload.data),
     onFailure: (state, action) => initialState
   }),
 }, initialState);

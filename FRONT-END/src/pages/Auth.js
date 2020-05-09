@@ -45,6 +45,6 @@ export default connect(
     loggedIn: state.user.get('logged')
   }),
   (dispatch) => ({
-      BaseActions: bindActionCreators(baseActions, dispatch)
+    BaseActions: bindActionCreators(baseActions, dispatch)
   })
 )(Auth);

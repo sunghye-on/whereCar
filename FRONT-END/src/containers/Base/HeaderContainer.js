@@ -77,7 +77,7 @@ function HeaderContainer({ visible, user, UserActions, SearchActions, history, k
 
 export default connect(
   (state) => ({
-    visible: state.base.getIn(['header', 'visible']),
+    visible: state.base.getIn(['header', 'default']),
     user: state.user,
     keywords: state.search.get('keywords')
   }),

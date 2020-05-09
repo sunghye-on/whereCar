@@ -1,17 +1,16 @@
 import React, { useEffect, useState } from 'react';
-import { AuthContent, InputWithLabel, AuthButton, AuthError } from 'components/Auth';
 import { SearchStepper } from 'components/Search';
 import { connect } from 'react-redux';
 import { bindActionCreators } from 'redux';
 import * as authActions from 'redux/modules/auth';
 import * as userActions from 'redux/modules/user';
 import * as listActions from 'redux/modules/list';
-import storage from 'lib/storage';
 import {isEmail, isLength, isAlphanumeric} from 'validator';
-import Axios from 'axios';
 import { LogoWrapper } from 'components/List/Car';
 import styled from 'styled-components';
 import * as MyListAPI  from 'lib/api/myList';
+import storage from 'lib/storage';
+import CustomConsole from 'lib/CustomConsole';
 
 const Contents = styled.div`
     background: white;
@@ -19,13 +18,9 @@ const Contents = styled.div`
     height: auto;
 `;
 
-function AdminRegister({ courseList, carList, error, AuthActions, match, ListActions, history }) {
+function AdminRegister({ driverInfo, courseList, carList, error, AuthActions, match, ListActions, history }) {
   const adminInfoId = storage.get('adminInfo');
-  const [sendData, setSendData] = useState({
-    carId: null,
-    courseId: null
-  })
-  const { carId, courseId } = sendData;
+  const { carId, courseId } = driverInfo;
 
   useEffect(() => {
     return () => {
@@ -61,15 +56,9 @@ function AdminRegister({ courseList, carList, error, AuthActions, match, ListAct
     }
   };
 
-
-
   const handleChange = e => {
     const { name, value } = e.target;
-    console.log(e.target)
-    setSendData({
-      ...sendData,
-      [name]: value
-    });
+    ListActions.changeDriverInfo({name: name, value});
   };
 
   
@@ -79,18 +68,15 @@ function AdminRegister({ courseList, carList, error, AuthActions, match, ListAct
     if(!validate['carId'](carId)||
        !validate['courseId'](courseId)) return; // 하나라도 실패하면 진행하지 않음
 
-    let formdata = new FormData();
-    formdata.append('courseId', courseId);
-    formdata.append('carId', carId);
-    console.log(formdata.append('courseId', courseId))
-    console.log("formdata==========",sendData)
-    console.log("formdata==========",formdata)
     try {
-      await MyListAPI.activeCourse({courseId, carId}).then(
+      await ListActions.activeCourse({courseId, carId}).then(
         result => {
           console.log(result);
-      });
-      history.push('/'); // 회원가입 성공시 홈페이지로 이동
+          result.data
+          ? CustomConsole.correct('인증되었습니다.', `운전자페이지로 이동합니다.`)
+          : CustomConsole.error('메인페이지로 이동합니다.')
+          history.push('/controller/driver'); // 회원가입 성공시 운전자 페이지로 이동
+      });;
     } catch (error) {
       // 에러 처리하기
       if(error.response.status === 409) {
@@ -106,7 +92,7 @@ function AdminRegister({ courseList, carList, error, AuthActions, match, ListAct
     <LogoWrapper title="Home" >
     </LogoWrapper>
     <Contents>
-        <SearchStepper error={error} handleChange={handleChange} sendData={sendData} handleRegister={handleRegister} data={ {carList, courseList} }/>
+        <SearchStepper error={error} handleChange={handleChange} sendData={driverInfo} handleRegister={handleRegister} data={ {carList, courseList} }/>
     </Contents>
      </>  
   );
@@ -116,7 +102,8 @@ export default connect(
   (state) => ({
     error: state.auth.getIn(['admin', 'error']),
     carList: state.list.getIn(['carInfo', 'carList']),
-    courseList: state.list.getIn(['courseInfo', 'courseList'])
+    courseList: state.list.getIn(['courseInfo', 'courseList']),
+    driverInfo: state.list.get('driverInfo').toJS()
   }),
   (dispatch) => ({
     AuthActions: bindActionCreators(authActions, dispatch),
