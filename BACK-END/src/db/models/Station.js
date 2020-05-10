@@ -36,6 +36,9 @@ Station.statics.getNearStation = async function ({ longitude, latitude }) {
         key: "location",
       },
     },
+    {
+      $limit: 4,
+    },
   ]);
   return a;
 };
