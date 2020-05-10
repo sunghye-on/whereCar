@@ -12,6 +12,8 @@ const events = {
   joinRoom: "joinRoom", // 방에 입장하기 위한 이벤트
   leaveRoom: "leaveRoom",
   requestLocation: "requestLocation",
+  courseActive: "courseActive",
+  notifiCourseActive: "notifiCourseActive",
 };
 
 module.exports = events;

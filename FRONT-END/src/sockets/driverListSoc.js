@@ -2,7 +2,8 @@ import storage from "lib/storage";
 function DriverListSoc(socket, ListActions) {
   // driverList 받아오기 [API]
   // SocketActions.setDriverList();
-
+  // const courseId = "5e93f8d6f6da8e0d7803d3fc";
+  // ListActions.activeUpdate({ id: courseId });
   // 초기상태 만들기 with DriverActive상태도 받아오기.
 
   // Active상태 갱신하기 [Socket]
@@ -14,6 +15,7 @@ function DriverListSoc(socket, ListActions) {
   const a = storage.get("myList");
   const data = storage.get("myData");
   console.log("data==============", data);
+
   let roomNames = [];
   console.log("AllgroupListData:::::", a.mylist.groupList);
 
@@ -27,10 +29,33 @@ function DriverListSoc(socket, ListActions) {
   console.log("%cAllRooms", "color: yellow; font-size:40px", roomNames);
   for (let i in roomNames) {
     let roomName = roomNames[i];
-    socket.emit("joinRoom", { roomName });
-    socket.emit("requestLocation", { roomName });
+    // socket.emit("joinRoom", { roomName });
+    // socket.emit("requestLocation", { roomName });
   }
+  for (let o in data) {
+    console.log(data[o]);
+    // if (data[o].myRole === "driver") {
+    //   ListActions.activeUpdate();
+    // } else {
+    // }
+    // console.log(data[o].courseList);
 
+    // 테스트용
+    // const courseId = "5eb51e1c8848fc37cc52b0a2";
+    // socket.emit("courseActive", { courseId });
+
+    for (let k in data[o].courseList) {
+      console.log(data[o].courseList[k]._id);
+      if (data[o].courseList[k].active === true) {
+        const courseId = data[o].courseList[k]._id;
+        console.log(courseId);
+        socket.emit("courseActive", { courseId });
+      }
+    }
+  }
+  socket.on("notifiCourseActive", ({ courseName }) => {
+    console.log(courseName);
+  });
   socket.on("receiveLocation", ({ roomName }) => {
     const getLocation = () => {
       if (navigator.geolocation) {

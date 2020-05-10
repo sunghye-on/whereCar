@@ -23,6 +23,7 @@ testRoom = "5eb39a64fbd20d039400629f";
 /* Server에서 event 를 emit 하고 on하는 파일 */
 const events = require("./events");
 const Station = require("db/models/Station");
+const Course = require("db/models/Course");
 // socket: 연결된 소켓, io: 전역소켓(Server Socket)
 const socketController = (socket, io) => {
   console.log("❤  socket connecting success!!");
@@ -58,6 +59,15 @@ const socketController = (socket, io) => {
     console.log(locationName);
     // 나중에 계산된 내용을 locationName에 넣어 보내주자
     io.to(data.roomName).emit(events.sendLocation, { locationName });
+  });
+  socket.on(events.courseActive, async ({ courseId }) => {
+    console.log(courseId);
+    const course = await Course.findById({ _id: courseId });
+
+    console.log(courseName.courseName);
+    io.sockets.emit(events.notifiCourseActive, {
+      courseName: course.courseName,
+    });
   });
 };
 module.exports = socketController;

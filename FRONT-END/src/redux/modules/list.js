@@ -23,6 +23,7 @@ const COURSE_PUSH_REMOVE = "list/COURSE_PUSH_REMOVE";
 const GROUP_REGISTER = "list/GROUP_REGISTER";
 
 const SET_MYDATA = "list/SET_MYDATA";
+const ACTIVE_UPDATE = "list/ACTIVE_UPDATE";
 
 export const getCars = createAction(GET_CARS, MyListAPI.getCars); // groupId
 export const getCar = createAction(GET_CAR, MyListAPI.getCar); // carId
@@ -33,6 +34,7 @@ export const getCourse = createAction(GET_COURSE, MyListAPI.getCourse); // cours
 export const deleteCourse = createAction(DELETE_COURSE, MyListAPI.deleteCourse); // courseId
 
 export const getMyList = createAction(GET_MYLIST, MyListAPI.getMyList); // no query & parameter
+export const activeUpdate = createAction(ACTIVE_UPDATE, MyListAPI.activeUpdate);
 
 export const groupPushRemove = createAction(
   GROUP_PUSH_REMOVE,
@@ -160,6 +162,15 @@ export default handleActions(
         return state.set("myData", Map({ ...myData, [groupInfo._id]: data }));
       },
       onFailure: (state, action) => initialState,
+    }),
+    ...pender({
+      type: ACTIVE_UPDATE,
+      onSuccess: (state, action) => {
+        const myData = state.get("myData").toJS();
+        const { groupInfo, memberInfo, courseList } = action.payload.data;
+        console.log("asdasdasdasdasdasd", myData);
+      },
+      onFailure: () => initialState,
     }),
   },
   initialState
