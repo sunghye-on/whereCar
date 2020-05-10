@@ -70,6 +70,8 @@ const initialState = Map({
   }),
   driverInfo: Map({
     auth: false,
+    groupName: '',
+    groupId: '',
     carId: '', 
     courseId: '',
     coordinates: []
@@ -88,7 +90,7 @@ export default handleActions({
   }),
   ...pender({
     type: GET_CAR,
-    onSuccess: (state, action) => state.setIn(['result', 'car'], Map(action.payload.data)),
+    onSuccess: (state, action) => state.setIn(['result', 'car'], Map(action.payload.data.car)),
     onFailure: (state, action) => initialState
   }),
   

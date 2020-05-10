@@ -97,62 +97,6 @@ const isExist = ({ dataList, attr, target }) => {
   return exist.length == 0 ? false : true;
 }
 
-const RoleController = ({role, handleHistory, id, classes}) => {
-  let result = {
-    path: '',
-    title: '',
-    startIcon: '',
-    endIcon: ''
-  };
-
-  switch (role) {
-    case 'driver':
-      result = {
-        path: `/search/driverSelector/${ id }`,
-        title: '운전하기',
-        startIcon: <DriveEtaIcon />
-      };
-      break;
-    case 'none':
-      result = {
-        path: `/auth/group/register/${ id }`,
-        title: '그룹가입',
-        startIcon: <AccountBoxIcon />
-      };
-      break;
-    default:
-      result = null;
-      break;
-  }
-  const content = result
-  ? (<div>
-        <Button
-          variant="contained"
-          color="primary"
-          className={classes.button}
-          startIcon={result.startIcon}
-          onClick={()=>handleHistory({path: result.path})}
-        >
-          {result.title}
-        </Button>
-      </div>)
-  : null;
-
-  return result
-  ? (<div>
-        <Button
-          variant="contained"
-          color="primary"
-          className={classes.button}
-          startIcon={result.startIcon}
-          onClick={()=>handleHistory({path: result.path})}
-        >
-          {result.title}
-        </Button>
-      </div>)
-  : null;
-}
-
 function SearchDetail({history, match, ListActions, courseInfo, myList}) {
   const classes = useStyles();
   const [modalStyle] = React.useState(getModalStyle);
@@ -254,6 +198,65 @@ function SearchDetail({history, match, ListActions, courseInfo, myList}) {
     </Grid>
   );
 
+  
+const RoleController = ({role, handleHistory, id}) => {
+  let result = {
+    path: '',
+    title: '',
+    startIcon: '',
+    endIcon: ''
+  };
+
+  switch (role) {
+    case 'driver':
+      ListActions.changeDriverInfo({name: 'groupName', value: groupInfo.name});
+      ListActions.changeDriverInfo({name: 'groupId', value: groupInfo._id});
+      result = {
+        path: `/search/driverSelector/${ id }`,
+        title: '운전하기',
+        startIcon: <DriveEtaIcon />
+      };
+      break;
+    case 'none':
+      result = {
+        path: `/auth/group/register/${ id }`,
+        title: '그룹가입',
+        startIcon: <AccountBoxIcon />
+      };
+      break;
+    default:
+      result = null;
+      break;
+  }
+  const content = result
+  ? (<div>
+        <Button
+          variant="contained"
+          color="primary"
+          className={classes.button}
+          startIcon={result.startIcon}
+          onClick={()=>handleHistory({path: result.path})}
+        >
+          {result.title}
+        </Button>
+      </div>)
+  : null;
+
+  return result
+  ? (<div>
+        <Button
+          variant="contained"
+          color="primary"
+          className={classes.button}
+          startIcon={result.startIcon}
+          onClick={()=>handleHistory({path: result.path})}
+        >
+          {result.title}
+        </Button>
+      </div>)
+  : null;
+}
+
   return (
     <div className = "null" style={{overflowX: "hidden", height: "39rem"}}>
       <LogoWrapper title={groupInfo.name} >
@@ -295,7 +298,7 @@ function SearchDetail({history, match, ListActions, courseInfo, myList}) {
             }
             
             {
-              RoleController({role: memberInfo.role, handleHistory, id: groupInfo._id, classes})
+              RoleController({role: memberInfo.role, handleHistory, id: groupInfo._id})
             }
             <DetailContent content={groupInfo} />
             <DetailCourse 
