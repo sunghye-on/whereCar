@@ -1,4 +1,5 @@
-import React from 'react';
+/* eslint-disable react-hooks/exhaustive-deps */
+import React, { useEffect } from 'react';
 import { Grid, ButtonGroup } from '@material-ui/core';
 import Button from '@material-ui/core/Button';
 import { connect } from 'react-redux';
@@ -6,6 +7,7 @@ import { bindActionCreators } from 'redux';
 import * as listActions from 'redux/modules/list';
 import { makeStyles } from '@material-ui/core/styles';
 import Avatar from '@material-ui/core/Avatar';
+import storage from 'lib/storage.js';
 
 const useStyles = makeStyles((theme) => ({
   root: {
@@ -23,9 +25,15 @@ const useStyles = makeStyles((theme) => ({
     height: theme.spacing(10),
   },
 }));
-const DriverInfo = () => {
+const DriverInfo = ({driverInfo, result}) => {
   const classes = useStyles();
   const active = false; // 운전활성화 버튼
+  let data = null;
+  useEffect(() => {
+    data = storage.get('driverInfo')
+      ? storage.get('driverInfo')
+      : driverInfo;
+  }, [])
   return (
     <Grid container direction="row" justify="center" alignItems="center">
       <Grid item xs={4}>
@@ -45,7 +53,8 @@ export default connect(
   (state) => ({
     carList: state.list.getIn(['carInfo', 'carList']),
     carInfo: state.list.get('result'),
-    driverInfo: state.list.get('driverInfo').toJS()
+    driverInfo: state.list.get('driverInfo').toJS(),
+    result: state.list.get('result').toJS()
   }),
   (dispatch) => ({
       ListActions: bindActionCreators(listActions, dispatch)

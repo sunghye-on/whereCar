@@ -46,7 +46,8 @@ const Contents = styled.div`
 function FavoriteCarList({children, myList, socket, driverList, SocketActions, ListActions}) {
   const classes = useStyles();
   const [bottomValue, setBottomValue] = React.useState(0);
-  const copyMyList = myList.mylist != undefined ? myList.mylist : storage.get('myList').mylist;
+  console.log('==========myList', myList)
+  const copyMyList = myList.user ? myList.mylist : storage.get('myList') ? storage.get('myList').mylist : null;
   
   /* ▼▼▼ [김성현님 수정바람] test용 데이터 송수신 ▼▼▼*/
   /* active socket event */

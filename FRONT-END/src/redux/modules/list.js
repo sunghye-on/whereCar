@@ -64,7 +64,10 @@ const initialState = Map({
     groupList: List([])
   }),
   myData: Map({}),
-  result: Map({}),
+  result: Map({
+    car: null,
+    course: null
+  }),
   driverInfo: Map({
     auth: false,
     carId: '', 
@@ -85,7 +88,7 @@ export default handleActions({
   }),
   ...pender({
     type: GET_CAR,
-    onSuccess: (state, action) => state.set('result', Map(action.payload.data)),
+    onSuccess: (state, action) => state.setIn(['result', 'car'], Map(action.payload.data)),
     onFailure: (state, action) => initialState
   }),
   
@@ -96,7 +99,7 @@ export default handleActions({
   }),
   ...pender({
     type: GET_COURSE,
-    onSuccess: (state, action) => state.set('result', Map(action.payload.data)),
+    onSuccess: (state, action) => state.setIn(['result', 'course'], Map(action.payload.data.course)),
     onFailure: (state, action) => initialState
   }),
   ...pender({
