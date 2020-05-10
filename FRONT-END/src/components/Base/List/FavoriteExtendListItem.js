@@ -15,6 +15,7 @@ import { CourseTitle } from 'components/List/Car';
 const useStyles = makeStyles((theme) => ({
   root: {
     width: '100%',
+    padding: 0
   },
   heading: {
     fontSize: theme.typography.pxToRem(15),

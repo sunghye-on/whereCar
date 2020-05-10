@@ -108,7 +108,7 @@ function FavoriteCarList({children, myList, socket, driverList, SocketActions, L
                     <Grid item xs={2} sm={2}>
                       <Grid container justify="center" alignItems="center">
                         <IconButton aria-label="delete" onClick={()=>handleClick(obj.group)}>
-                          <FormatLineSpacingIcon fontSize="large"/>
+                          <FormatLineSpacingIcon />
                         </IconButton>
                       </Grid>
                     </Grid>

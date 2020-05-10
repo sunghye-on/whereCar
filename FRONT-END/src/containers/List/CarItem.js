@@ -15,18 +15,8 @@ import { FavoriteExtendListItem } from 'components/Base/List';
 import StarIcon from '@material-ui/icons/Star';
 import { yellow } from '@material-ui/core/colors';
 import storage from 'lib/storage';
-import { Button } from '@material-ui/core';
 
 const useStyles = makeStyles(theme => ({
-    root: {
-      width: '100%',
-      height: '21rem',
-      // maxWidth: 400,
-      backgroundColor: theme.palette.background.paper,
-      position: 'relative',
-      overflow: 'auto',
-      maxHeight: '21rem',
-    },
     listSection: {
       backgroundColor: 'inherit',
     },
@@ -129,7 +119,7 @@ function CarItem({ groupId, courseInfo, myData, ListActions }) {
       </ExpansionPanelSummary>
       {
         courseList.map(obj => (
-          <ExpansionPanelDetails>
+          <ExpansionPanelDetails style={{ padding: '0 24px 12px 24px'}}>
               <FavoriteExtendListItem title={obj.courseName} subContent={obj.stations}/>
           </ExpansionPanelDetails>
         ))
