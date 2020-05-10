@@ -15,6 +15,7 @@ import { FavoriteExtendListItem } from 'components/Base/List';
 import StarIcon from '@material-ui/icons/Star';
 import { yellow } from '@material-ui/core/colors';
 import storage from 'lib/storage';
+import { Button } from '@material-ui/core';
 
 const useStyles = makeStyles(theme => ({
     root: {
@@ -113,7 +114,7 @@ function CarItem({ groupId, courseInfo, myData, ListActions }) {
   };
 
   return myData[groupId] ? (
-    <ExpansionPanel className = {childin === true ? checkchild() : none()} >
+    <ExpansionPanel className = {childin === true ? checkchild() : none()} width="100%">
       {/*child 값에 따라서 색상 변경*/}
       <ExpansionPanelSummary
           expandIcon={<ExpandMoreIcon />}
@@ -121,7 +122,9 @@ function CarItem({ groupId, courseInfo, myData, ListActions }) {
           id="panel1bh-header"
       >
           <StarIcon style={{ color: yellow[500] }} className={classes.padding}/>
-          <Typography className={classes.heading}>이름: {groupInfo.name}</Typography>
+          <Typography className={classes.heading}>
+            이름: {groupInfo.name}
+          </Typography>
           {/* 위의 현재: 이후의 {}안에 현재 위치 값 받아오기를 넣어야 한다!*/}
       </ExpansionPanelSummary>
       {

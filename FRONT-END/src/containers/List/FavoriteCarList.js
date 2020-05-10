@@ -15,16 +15,13 @@ import { DriverListSoc } from 'sockets';
 import storage from 'lib/storage';
 
 import { CarItem } from 'containers/List'
+import { Button, Grid, IconButton } from '@material-ui/core';
+import FormatLineSpacingIcon from '@material-ui/icons/FormatLineSpacing';
 
 const useStyles = makeStyles(theme => ({
   root: {
     width: '100%',
-    height: '21rem',
-    // maxWidth: 400,
-    backgroundColor: theme.palette.background.paper,
-    position: 'relative',
-    overflow: 'auto',
-    maxHeight: '21rem',
+    marginBottom: '0.5rem'
   },
   listSection: {
     backgroundColor: 'inherit',
@@ -43,7 +40,7 @@ const Contents = styled.div`
     overflow-y: auto;
 `;
 
-function FavoriteCarList({children, myList, socket, driverList, SocketActions, ListActions}) {
+function FavoriteCarList({children, myList, socket, driverList, SocketActions, ListActions, history}) {
   const classes = useStyles();
   const [bottomValue, setBottomValue] = React.useState(0);
   console.log('==========myList', myList)
@@ -92,6 +89,11 @@ function FavoriteCarList({children, myList, socket, driverList, SocketActions, L
     setExpanded(isExpanded ? panel : false);
   };
 
+  console.log("history=========",history)
+  const handleClick = (id) => {
+    history.push(`/search/result/${id}`)
+  }
+
   return (
     <ListWrapper>
       <LogoWrapper title="My Page" titleUrl="/">
@@ -102,7 +104,18 @@ function FavoriteCarList({children, myList, socket, driverList, SocketActions, L
           ? copyMyList.groupList.map(obj => {
               if (obj.group) {
                 return (
-                  <CarItem groupId={obj.group} />
+                  <Grid container className={classes.root} justify="center" alignItems="center">
+                    <Grid item xs={2} sm={2}>
+                      <Grid container justify="center" alignItems="center">
+                        <IconButton aria-label="delete" onClick={()=>handleClick(obj.group)}>
+                          <FormatLineSpacingIcon fontSize="large"/>
+                        </IconButton>
+                      </Grid>
+                    </Grid>
+                    <Grid item xs={10} sm={10}>
+                      <CarItem groupId={obj.group}/>
+                    </Grid>
+                  </Grid>
                 )
               }
             } 
