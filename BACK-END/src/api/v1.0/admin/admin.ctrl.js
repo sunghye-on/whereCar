@@ -457,8 +457,9 @@ exports.getCourseById = async (ctx) => {
   const { id } = ctx.params;
   // find admin
   const admin = await Admin.findByUser(user);
+  const course = await Course.findById({ _id: id });
   // find GroupInfo
-  const groupInfo = await GroupInfo.findOne({ _id: id });
+  const groupInfo = await GroupInfo.findOne({ _id: course.group });
   // 디폴트로 관리자로 식별
   let memberInfo = {
     role: "super",
@@ -478,7 +479,6 @@ exports.getCourseById = async (ctx) => {
     return;
   }
   try {
-    const course = await Course.findById({ _id: id });
     // response message(=data)
     ctx.body = {
       course,

@@ -34,11 +34,6 @@ function DriverListSoc(socket, ListActions) {
   }
   for (let o in data) {
     console.log(data[o]);
-    // if (data[o].myRole === "driver") {
-    //   ListActions.activeUpdate();
-    // } else {
-    // }
-    // console.log(data[o].courseList);
 
     // 테스트용
     // const courseId = "5eb51e1c8848fc37cc52b0a2";
@@ -54,6 +49,7 @@ function DriverListSoc(socket, ListActions) {
     }
   }
   socket.on("notifiCourseActive", ({ courseName }) => {
+    //코스이름이 찍히는 구간
     console.log(courseName);
   });
   socket.on("receiveLocation", ({ roomName }) => {

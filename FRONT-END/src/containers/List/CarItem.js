@@ -17,15 +17,6 @@ import { yellow } from '@material-ui/core/colors';
 import storage from 'lib/storage';
 
 const useStyles = makeStyles(theme => ({
-    root: {
-      width: '100%',
-      height: '21rem',
-      // maxWidth: 400,
-      backgroundColor: theme.palette.background.paper,
-      position: 'relative',
-      overflow: 'auto',
-      maxHeight: '21rem',
-    },
     listSection: {
       backgroundColor: 'inherit',
     },
@@ -113,7 +104,7 @@ function CarItem({ groupId, courseInfo, myData, ListActions }) {
   };
 
   return myData[groupId] ? (
-    <ExpansionPanel className = {childin === true ? checkchild() : none()} >
+    <ExpansionPanel className = {childin === true ? checkchild() : none()} width="100%">
       {/*child 값에 따라서 색상 변경*/}
       <ExpansionPanelSummary
           expandIcon={<ExpandMoreIcon />}
@@ -121,12 +112,14 @@ function CarItem({ groupId, courseInfo, myData, ListActions }) {
           id="panel1bh-header"
       >
           <StarIcon style={{ color: yellow[500] }} className={classes.padding}/>
-          <Typography className={classes.heading}>이름: {groupInfo.name}</Typography>
+          <Typography className={classes.heading}>
+            이름: {groupInfo.name}
+          </Typography>
           {/* 위의 현재: 이후의 {}안에 현재 위치 값 받아오기를 넣어야 한다!*/}
       </ExpansionPanelSummary>
       {
         courseList.map(obj => (
-          <ExpansionPanelDetails>
+          <ExpansionPanelDetails style={{ padding: '0 24px 12px 24px'}}>
               <FavoriteExtendListItem title={obj.courseName} subContent={obj.stations}/>
           </ExpansionPanelDetails>
         ))

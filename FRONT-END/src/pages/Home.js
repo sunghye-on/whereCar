@@ -4,11 +4,11 @@ import { ListWrapper } from 'components/List';
 import { connect } from 'react-redux';
 import { HomeController } from 'containers/Information';
 
-function Home({loggedIn}) {
+function Home({loggedIn, history}) {
   return (
     loggedIn ? 
     <ListWrapper title="My Car List">
-      <FavoriteCarList />
+      <FavoriteCarList history={history}/>
     </ListWrapper>
     : <HomeController/>
   );

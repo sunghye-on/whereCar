@@ -15,16 +15,13 @@ import { DriverListSoc } from "sockets";
 import storage from "lib/storage";
 
 import { CarItem } from "containers/List";
+import { Button, Grid, IconButton } from "@material-ui/core";
+import FormatLineSpacingIcon from "@material-ui/icons/FormatLineSpacing";
 
 const useStyles = makeStyles((theme) => ({
   root: {
     width: "100%",
-    height: "21rem",
-    // maxWidth: 400,
-    backgroundColor: theme.palette.background.paper,
-    position: "relative",
-    overflow: "auto",
-    maxHeight: "21rem",
+    marginBottom: "0.5rem",
   },
   listSection: {
     backgroundColor: "inherit",
@@ -50,11 +47,16 @@ function FavoriteCarList({
   driverList,
   SocketActions,
   ListActions,
+  history,
 }) {
   const classes = useStyles();
   const [bottomValue, setBottomValue] = React.useState(0);
-  const copyMyList =
-    myList.mylist != undefined ? myList.mylist : storage.get("myList").mylist;
+  console.log("==========myList", myList);
+  const copyMyList = myList.user
+    ? myList.mylist
+    : storage.get("myList")
+    ? storage.get("myList").mylist
+    : null;
 
   /* ▼▼▼ [김성현님 수정바람] test용 데이터 송수신 ▼▼▼*/
   /* active socket event */
@@ -98,6 +100,11 @@ function FavoriteCarList({
     setExpanded(isExpanded ? panel : false);
   };
 
+  console.log("history=========", history);
+  const handleClick = (id) => {
+    history.push(`/search/result/${id}`);
+  };
+
   return (
     <ListWrapper>
       <LogoWrapper title="My Page" titleUrl="/"></LogoWrapper>
@@ -105,7 +112,28 @@ function FavoriteCarList({
         {copyMyList ? (
           copyMyList.groupList.map((obj) => {
             if (obj.group) {
-              return <CarItem groupId={obj.group} />;
+              return (
+                <Grid
+                  container
+                  className={classes.root}
+                  justify="center"
+                  alignItems="center"
+                >
+                  <Grid item xs={2} sm={2}>
+                    <Grid container justify="center" alignItems="center">
+                      <IconButton
+                        aria-label="delete"
+                        onClick={() => handleClick(obj.group)}
+                      >
+                        <FormatLineSpacingIcon />
+                      </IconButton>
+                    </Grid>
+                  </Grid>
+                  <Grid item xs={10} sm={10}>
+                    <CarItem groupId={obj.group} />
+                  </Grid>
+                </Grid>
+              );
             }
           })
         ) : (

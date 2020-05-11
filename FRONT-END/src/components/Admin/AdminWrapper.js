@@ -47,16 +47,26 @@ const Contents = styled.div`
     background: white;
     padding: 2rem;
     height: 400px;
+    ${media.wide`
+        width: 550px;
+    `}
+    ${media.desktop`
+        width: 550px;
+    `}
+    ${media.tablet`
+        width: 550px;
+    `}
     ${media.phone`
         padding: 1rem;
+        width: 20rem;
     `}
 `;
 
-const AdminWrapper = ({children}) => (
+const AdminWrapper = ({children, path, title}) => (
     <Positioner>
         <ShadowedBox>
             <LogoWrapper>
-                <Logo to="/admin/management">WHERE-CAR</Logo>
+                <Logo to={path?path:"/admin/management"}>{title?title:"WHERE-CAR"}</Logo>
             </LogoWrapper>
             <Contents>
                 {children}

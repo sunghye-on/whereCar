@@ -25,6 +25,9 @@ const GROUP_REGISTER = "list/GROUP_REGISTER";
 const SET_MYDATA = "list/SET_MYDATA";
 const ACTIVE_UPDATE = "list/ACTIVE_UPDATE";
 
+const ACTIVE_COURSE = "list/ACTIVE_COURSE"; // driver가 course를 선택
+const CHANGE_DRIVERINFO = "list/CHANGE_DRIVERINFO"; // cadId & courseId 변경
+
 export const getCars = createAction(GET_CARS, MyListAPI.getCars); // groupId
 export const getCar = createAction(GET_CAR, MyListAPI.getCar); // carId
 export const deleteCar = createAction(DELETE_CAR, MyListAPI.deleteCar); // carId
@@ -52,8 +55,8 @@ export const groupRegister = createAction(
 
 export const setMyData = createAction(SET_MYDATA, MyListAPI.getCourses); // groupId
 
-//socket 관련
-// export const
+export const activeCourse = createAction(ACTIVE_COURSE, MyListAPI.activeCourse); // courseId, carId
+export const changeDriverInfo = createAction(CHANGE_DRIVERINFO); // name: (courseId or carId), value
 
 const initialState = Map({
   carInfo: Map({
@@ -72,11 +75,26 @@ const initialState = Map({
     groupList: List([]),
   }),
   myData: Map({}),
-  result: Map({}),
+  result: Map({
+    car: null,
+    course: null,
+  }),
+  driverInfo: Map({
+    auth: false,
+    groupName: "",
+    groupId: "",
+    carId: "",
+    courseId: "",
+    coordinates: [],
+  }),
 });
 
 export default handleActions(
   {
+    [CHANGE_DRIVERINFO]: (state, action) => {
+      const { name, value } = action.payload;
+      return state.setIn(["driverInfo", name], value);
+    },
     ...pender({
       type: GET_CARS,
       onSuccess: (state, action) => state.set("carInfo", action.payload.data),
@@ -84,6 +102,25 @@ export default handleActions(
     }),
     ...pender({
       type: GET_CAR,
+      onSuccess: (state, action) =>
+        state.setIn(["result", "car"], Map(action.payload.data.car)),
+      onFailure: (state, action) => initialState,
+    }),
+
+    ...pender({
+      type: GET_COURSES,
+      onSuccess: (state, action) =>
+        state.set("courseInfo", Map(action.payload.data)),
+      onFailure: (state, action) => initialState,
+    }),
+    ...pender({
+      type: GET_COURSE,
+      onSuccess: (state, action) =>
+        state.setIn(["result", "course"], Map(action.payload.data.course)),
+      onFailure: (state, action) => initialState,
+    }),
+    ...pender({
+      type: DELETE_COURSE,
       onSuccess: (state, action) =>
         state.set("result", Map(action.payload.data)),
       onFailure: (state, action) => initialState,
@@ -132,13 +169,6 @@ export default handleActions(
     }),
 
     ...pender({
-      type: GROUP_REGISTER,
-      onSuccess: (state, action) =>
-        state.setIn(["courseInfo", "memberInfo"], action.payload.data),
-      onFailure: (state, action) => initialState,
-    }),
-
-    ...pender({
       type: SET_MYDATA,
       onSuccess: (state, action) => {
         const myData = state.get("myData").toJS();
@@ -163,14 +193,12 @@ export default handleActions(
       },
       onFailure: (state, action) => initialState,
     }),
+
     ...pender({
-      type: ACTIVE_UPDATE,
-      onSuccess: (state, action) => {
-        const myData = state.get("myData").toJS();
-        const { groupInfo, memberInfo, courseList } = action.payload.data;
-        console.log("asdasdasdasdasdasd", myData);
-      },
-      onFailure: () => initialState,
+      type: ACTIVE_COURSE,
+      onSuccess: (state, action) =>
+        state.setIn(["driverInfo", "auth"], action.payload.data),
+      onFailure: (state, action) => initialState,
     }),
   },
   initialState

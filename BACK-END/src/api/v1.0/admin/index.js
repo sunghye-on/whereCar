@@ -39,7 +39,7 @@ admin.put('/car', upload.single('carImage'), adminCtrl.carUpdate);
 // 자동차 삭제 
 admin.delete('/car/:id', adminCtrl.carDelete);
 
-// 그룹 아이디로 자동차리스트 가져오기
+// 아이디로 자동차 가져오기
 admin.get('/cars/:id', adminCtrl.getCars);
 
 // 그룹 아이디로 자동차리스트 가져오기
