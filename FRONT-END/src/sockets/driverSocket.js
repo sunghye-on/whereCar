@@ -1,6 +1,5 @@
 export const baseListening = (socket, roomName) => {
   socket.on("findDriver", () => {
-    console.log("findDrivers::::");
     socket.emit("findedDriver", { roomName });
   });
 };
