@@ -70,9 +70,9 @@ function DriverCtrl({
     data = storage.get("driverInfo") ? storage.get("driverInfo") : driverInfo;
     // myData =
     if (socket && data.auth) {
-      console.log("테스츠입니다");
       driverEvent.joinRoom(socket, data.courseId);
       driverEvent.baseListening(socket, data.courseId);
+      driverEvent.sendDriverGPS(socket, data.courseId);
     }
   }, [SocketActions, socket]);
 

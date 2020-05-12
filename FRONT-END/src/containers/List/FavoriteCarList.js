@@ -51,7 +51,6 @@ function FavoriteCarList({
 }) {
   const classes = useStyles();
   const [bottomValue, setBottomValue] = React.useState(0);
-  console.log("==========myList", myList);
   const copyMyList = myList.user
     ? myList.mylist
     : storage.get("myList")
@@ -60,9 +59,7 @@ function FavoriteCarList({
 
   /* ▼▼▼ [김성현님 수정바람] test용 데이터 송수신 ▼▼▼*/
   if (socket && myList.user) {
-    console.log("io===========", io);
-    // DriverListSoc(socket, ListActions, myList.mylist);
-    socketEvent.enterRooms(socket, copyMyList);
+    socketEvent.baseEmiter(socket, copyMyList);
     socketEvent.baseListening(socket);
     // socketEvent.requestLocation(socket, copyMyList);
   }

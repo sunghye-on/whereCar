@@ -27,20 +27,20 @@ const socketController = (socket, io) => {
     io.to(roomName).emit(events.driverActive, { roomName });
   });
   // refresh에 대한 이벤트
-  socket.on(events.requestLocation, ({ roomName, driver }) => {
-    driver ? io.to(roomName).emit(events.reciveLocation) : null;
+  socket.on(events.requestLocation, ({ roomName }) => {
+    io.to(roomName).emit(events.requestLocationToDriver, { roomName });
     console.log("send to ", roomName);
   });
   socket.on(events.receiveGPS, async (data) => {
     console.log(data);
     /* 계산 과정이 들어갈곳 */
-    // const locationName = await Station.getNearStation({
-    //   longitude: data.longitude,
-    //   latitude: data.latitude,
-    // });
-    // console.log(locationName);
+    const locationName = await Station.getNearStation({
+      longitude: data.longitude,
+      latitude: data.latitude,
+    });
+    console.log(locationName);
     // // 나중에 계산된 내용을 locationName에 넣어 보내주자
-    // io.to(data.roomName).emit(events.sendLocation, { locationName });
+    io.to(data.roomName).emit(events.sendLocation, { locationName });
   });
   socket.on(events.courseActive, async ({ courseId }) => {
     console.log(courseId);

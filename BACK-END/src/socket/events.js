@@ -16,6 +16,7 @@ const events = {
   joinRoom: "joinRoom", // 방에 입장하기 위한 이벤트
   leaveRoom: "leaveRoom",
   requestLocation: "requestLocation",
+  requestLocationToDriver: "requestLocationToDriver", //드라이버에게 위치요청
   courseActive: "courseActive",
   notifiCourseActive: "notifiCourseActive",
 };
