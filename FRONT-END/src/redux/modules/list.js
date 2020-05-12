@@ -27,6 +27,7 @@ const ACTIVE_UPDATE = "list/ACTIVE_UPDATE";
 
 const ACTIVE_COURSE = "list/ACTIVE_COURSE"; // driver가 course를 선택
 const CHANGE_DRIVERINFO = "list/CHANGE_DRIVERINFO"; // cadId & courseId 변경
+const CHANGE_DRIVERVIEW = "list/CHANGE_DRIVERVIEW";
 
 export const getCars = createAction(GET_CARS, MyListAPI.getCars); // groupId
 export const getCar = createAction(GET_CAR, MyListAPI.getCar); // carId
@@ -57,6 +58,7 @@ export const setMyData = createAction(SET_MYDATA, MyListAPI.getCourses); // grou
 
 export const activeCourse = createAction(ACTIVE_COURSE, MyListAPI.activeCourse); // courseId, carId
 export const changeDriverInfo = createAction(CHANGE_DRIVERINFO); // name: (courseId or carId), value
+export const changeDriverView = createAction(CHANGE_DRIVERVIEW); // name: (courseId or carId), value
 
 const initialState = Map({
   carInfo: Map({
@@ -87,6 +89,9 @@ const initialState = Map({
     courseId: "",
     coordinates: [],
   }),
+  driverView: Map({
+    setting: ["location"],
+  }),
 });
 
 export default handleActions(
@@ -94,6 +99,10 @@ export default handleActions(
     [CHANGE_DRIVERINFO]: (state, action) => {
       const { name, value } = action.payload;
       return state.setIn(["driverInfo", name], value);
+    },
+    [CHANGE_DRIVERVIEW]: (state, action) => {
+      const { name, value } = action.payload;
+      return state.setIn(["driverView", name], value);
     },
     ...pender({
       type: GET_CARS,
