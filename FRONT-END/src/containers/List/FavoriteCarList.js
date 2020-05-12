@@ -63,7 +63,7 @@ function FavoriteCarList({
     console.log("io===========", io);
     // DriverListSoc(socket, ListActions, myList.mylist);
     socketEvent.enterRooms(socket, copyMyList);
-    socketEvent.socketListening(socket, copyMyList);
+    socketEvent.baseListening(socket);
     // socketEvent.requestLocation(socket, copyMyList);
   }
 
@@ -75,10 +75,7 @@ function FavoriteCarList({
   /* initialize socket */
   useEffect(() => {
     // soket 초기화 부분
-    const endpoint = "http://localhost:4000";
-    const socket = io(endpoint);
-    console.log(socket);
-    SocketActions.setSocket({ socket });
+    SocketActions.setSocket();
   }, [SocketActions]);
 
   // 아이 탑승 여부에 따라서 학원 색상이 변경!

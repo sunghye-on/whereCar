@@ -40,6 +40,18 @@ const socketController = (socket, io) => {
       console.log("enter Romm", roomName);
     });
   });
+  /* 
+  socket Listening to user  
+  */
+  socket.on(events.isDriverActive, ({ roomName }) => {
+    console.log("sock::::::::::::::::::::::", socket.adapter.rooms);
+    console.log("roomname::::::::::::", roomName);
+    io.to(roomName).emit(events.findDriver);
+  });
+  socket.on(events.findedDriver, ({ roomName }) => {
+    io.to(roomName).emit(events.driverActive, { roomName });
+  });
+
   socket.emit(events.sendNotifDriverActive, { driver: driver1, active: true });
   socket.emit(events.sendNotifDriverActive, { driver: driver2, active: true });
 
