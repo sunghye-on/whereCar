@@ -27,7 +27,6 @@ const Course = require("db/models/Course");
 // socket: 연결된 소켓, io: 전역소켓(Server Socket)
 const socketController = (socket, io) => {
   console.log("❤  socket connecting success!!");
-
   // Driver가 활성화 되어있는지에 대하여 받는다.
   socket.on(events.driverActive, ({ driver, active }) => {
     // driver: 드라이버 유저정보 객체
@@ -45,20 +44,27 @@ const socketController = (socket, io) => {
   socket.emit(events.sendNotifDriverActive, { driver: driver2, active: true });
 
   // refresh에 대한 이벤트
-  socket.on(events.requestLocation, ({ roomName }) => {
-    io.to(roomName).emit(events.receiveLocation, { roomName });
+  socket.on(events.requestLocation, ({ roomName, driver }) => {
+    /* 드라이버라면 
+    io.to(roomName).emit(events.reciveLocation, { roomName });
+    를 실행 하여 위치를 알아 온다
+    */
+    /* 유저라면 
+   아무것도 안함
+   */
+    driver ? io.to(roomName).emit(events.reciveLocation) : null;
     console.log("send to ", roomName);
   });
   socket.on(events.receiveGPS, async (data) => {
-    // console.log(data);
+    console.log(data);
     /* 계산 과정이 들어갈곳 */
-    const locationName = await Station.getNearStation({
-      longitude: data.longitude,
-      latitude: data.latitude,
-    });
-    console.log(locationName);
-    // 나중에 계산된 내용을 locationName에 넣어 보내주자
-    io.to(data.roomName).emit(events.sendLocation, { locationName });
+    // const locationName = await Station.getNearStation({
+    //   longitude: data.longitude,
+    //   latitude: data.latitude,
+    // });
+    // console.log(locationName);
+    // // 나중에 계산된 내용을 locationName에 넣어 보내주자
+    // io.to(data.roomName).emit(events.sendLocation, { locationName });
   });
   socket.on(events.courseActive, async ({ courseId }) => {
     console.log(courseId);

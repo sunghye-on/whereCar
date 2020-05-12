@@ -6,12 +6,12 @@ import { LogoWrapper } from "components/List/Car";
 import { ListWrapper, BottomNav } from "components/List";
 import styled from "styled-components";
 
-import socketIOClient from "socket.io-client";
+import io from "socket.io-client";
 import { connect } from "react-redux";
 import { bindActionCreators } from "redux";
 import * as socketActions from "redux/modules/socket";
 import * as listActions from "redux/modules/list";
-import { DriverListSoc } from "sockets";
+import * as socketEvent from "sockets/listSocket";
 import storage from "lib/storage";
 
 import { CarItem } from "containers/List";
@@ -59,27 +59,27 @@ function FavoriteCarList({
     : null;
 
   /* ▼▼▼ [김성현님 수정바람] test용 데이터 송수신 ▼▼▼*/
-  /* active socket event */
-  useEffect(() => {
-    if (socket) {
-      DriverListSoc(socket, ListActions);
-    }
-    // (소켓 닫기)
-    return () => {};
-  }, [SocketActions, socket]);
-
-  /* initialize socket */
-  useEffect(() => {
-    // soket 초기화 부분
-    const endpoint = "http://localhost:4000";
-    const socket = socketIOClient(endpoint);
-    SocketActions.setSocket({ socket });
-  }, [SocketActions]);
+  if (socket && myList.user) {
+    console.log("io===========", io);
+    // DriverListSoc(socket, ListActions, myList.mylist);
+    socketEvent.enterRooms(socket, copyMyList);
+    socketEvent.socketListening(socket, copyMyList);
+    // socketEvent.requestLocation(socket, copyMyList);
+  }
 
   // MyList 갱신부분
   useEffect(() => {
     ListActions.getMyList(); // MyList 갱신
   }, [ListActions]);
+
+  /* initialize socket */
+  useEffect(() => {
+    // soket 초기화 부분
+    const endpoint = "http://localhost:4000";
+    const socket = io(endpoint);
+    console.log(socket);
+    SocketActions.setSocket({ socket });
+  }, [SocketActions]);
 
   // 아이 탑승 여부에 따라서 학원 색상이 변경!
   // 여기다가 아이가 탑승했다는 값을 받아와서 비교하고 아이가 탑승하고 있다면 색상 변경하는 id를 반환
