@@ -13,6 +13,7 @@ const DriverLog = new mongoose.Schema({
     },
     coordinates: [Number],
   },
+  locationLog: [],
   createdAt: {
     type: Date,
     default: Date.now,
@@ -27,6 +28,13 @@ DriverLog.statics.driverLogRegister = function ({ driverId, name, location }) {
   });
   driverLog.save();
   return driverLog;
+};
+
+DriverLog.statics.driverLogUpdate = ({ _id, locationLog, location }) => {
+  return (
+    this.findOneAndUpdate({ _id }, { $addToSet: { locationLog }, location })
+      .nModified === 1
+  );
 };
 
 module.exports = mongoose.model("DriverLog", DriverLog);

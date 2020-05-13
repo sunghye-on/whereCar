@@ -58,11 +58,14 @@ function FavoriteCarList({
     : null;
 
   /* ▼▼▼ [김성현님 수정바람] test용 데이터 송수신 ▼▼▼*/
-  if (socket && myList.user) {
-    socketEvent.baseEmiter(socket, copyMyList);
-    socketEvent.baseListening(socket);
-    // socketEvent.requestLocation(socket, copyMyList);
-  }
+
+  useEffect(() => {
+    if (socket && myList.user) {
+      socketEvent.baseEmiter(socket, copyMyList);
+      socketEvent.baseListening(socket);
+      // socketEvent.requestLocation(socket, copyMyList);
+    }
+  }, [socket, myList.user]);
 
   // MyList 갱신부분
   useEffect(() => {
@@ -73,7 +76,10 @@ function FavoriteCarList({
   useEffect(() => {
     // soket 초기화 부분
     SocketActions.setSocket();
-  }, [SocketActions]);
+    return () => {
+      SocketActions.removeSocket();
+    };
+  }, []);
 
   // 아이 탑승 여부에 따라서 학원 색상이 변경!
   // 여기다가 아이가 탑승했다는 값을 받아와서 비교하고 아이가 탑승하고 있다면 색상 변경하는 id를 반환

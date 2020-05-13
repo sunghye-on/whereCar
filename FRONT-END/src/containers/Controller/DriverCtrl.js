@@ -64,17 +64,7 @@ function DriverCtrl({
   useEffect(() => {
     // soket 초기화 부분
     SocketActions.setSocket();
-  }, [SocketActions]);
-
-  useEffect(() => {
-    data = storage.get("driverInfo") ? storage.get("driverInfo") : driverInfo;
-    // myData =
-    if (socket && data.auth) {
-      driverEvent.joinRoom(socket, data.courseId);
-      driverEvent.baseListening(socket, data.courseId);
-      driverEvent.sendDriverGPS(socket, data.courseId);
-    }
-  }, [SocketActions, socket]);
+  }, []);
 
   useEffect(() => {
     CustomConsole.correct("운전자페이지 접속", "화면에서 메뉴를 선택해주세요.");
@@ -83,7 +73,17 @@ function DriverCtrl({
       ListActions.getCourse({ id: data.courseId });
       ListActions.getCar({ id: data.carId });
     }
-  }, []);
+  }, [ListActions]);
+
+  useEffect(() => {
+    // myData =
+    data = storage.get("driverInfo") ? storage.get("driverInfo") : driverInfo;
+    if (socket && data.auth) {
+      driverEvent.joinRoom(socket, data.courseId);
+      driverEvent.baseListening(socket, data.courseId);
+      driverEvent.sendDriverGPS(socket, data.courseId);
+    }
+  }, [socket]);
 
   // 로컬저장소에 현재 운전할 정보를 저장
   useEffect(() => {

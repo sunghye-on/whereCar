@@ -20,7 +20,8 @@ export const baseListening = (socket, roomName) => {
 };
 
 export const joinRoom = (socket, roomName) => {
-  socket.emit("joinRoom", { roomName });
+  const driver = true;
+  socket.emit("joinRoom", { roomName, driver });
 };
 export const sendDriverGPS = (socket, roomName) => {
   const getLocation = () => {

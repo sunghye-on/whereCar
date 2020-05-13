@@ -2,6 +2,7 @@
 const events = require("./events");
 const Station = require("db/models/Station");
 const Course = require("db/models/Course");
+const CourseLog = require("db/models/CourseLog");
 // socket: 연결된 소켓, io: 전역소켓(Server Socket)
 const socketController = (socket, io) => {
   console.log("❤  socket connecting success!!");
@@ -12,7 +13,13 @@ const socketController = (socket, io) => {
     socket.emit(events.sendNotifDriverActive, { driver, active }); // 보내는 Data는 딱히 없다.
   });
 
-  socket.on(events.joinRoom, ({ roomName }) => {
+  socket.on(events.joinRoom, async ({ roomName, driver }) => {
+    console.log(driver);
+    if (driver) {
+      const courseLog = await CourseLog.register({ courseId: roomName });
+      console.log(courseLog);
+    }
+
     socket.join(roomName, function () {
       console.log("enter Romm", roomName);
     });
@@ -32,13 +39,13 @@ const socketController = (socket, io) => {
     console.log("send to ", roomName);
   });
   socket.on(events.receiveGPS, async (data) => {
-    console.log(data);
+    // console.log(data);
     /* 계산 과정이 들어갈곳 */
     const locationName = await Station.getNearStation({
       longitude: data.longitude,
       latitude: data.latitude,
     });
-    console.log(locationName);
+    // console.log(locationName);
     // // 나중에 계산된 내용을 locationName에 넣어 보내주자
     io.to(data.roomName).emit(events.sendLocation, { locationName });
   });
