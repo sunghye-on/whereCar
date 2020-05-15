@@ -80,7 +80,7 @@ function DriverCtrl({
     data = storage.get("driverInfo") ? storage.get("driverInfo") : driverInfo;
     if (socket && data.auth) {
       driverEvent.joinRoom(socket, data.courseId);
-      driverEvent.baseListening(socket, data.courseId);
+      driverEvent.baseListening(socket, data.courseId, data.groupId);
       driverEvent.sendDriverGPS(socket, data.courseId);
     }
   }, [socket]);

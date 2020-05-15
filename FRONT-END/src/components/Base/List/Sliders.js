@@ -86,7 +86,7 @@ const CourseSlider = withStyles({
   },
 })(Slider);
 
-export default function Sliders({ subContent }) {
+export default function Sliders({ subContent, active }) {
   const barLength = { height: 100 * subContent.length };
   const classes = useStyles(barLength);
   const len = Math.round(100 / (subContent.length - 1));

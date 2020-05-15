@@ -30,8 +30,8 @@ const socketController = (socket, io) => {
   socket.on(events.isDriverActive, ({ roomName }) => {
     io.to(roomName).emit(events.findDriver);
   });
-  socket.on(events.findedDriver, ({ roomName }) => {
-    io.to(roomName).emit(events.driverActive, { roomName });
+  socket.on(events.findedDriver, ({ roomName, groupId }) => {
+    io.to(roomName).emit(events.driverActive, { roomName, groupId });
   });
   // refresh에 대한 이벤트
   socket.on(events.requestLocation, ({ roomName }) => {

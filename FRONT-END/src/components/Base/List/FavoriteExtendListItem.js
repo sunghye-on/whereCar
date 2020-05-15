@@ -40,13 +40,13 @@ const Contents = styled(StepButton)`
     `}
 `;
 
-function HorizontalNonLinearStepper({ subContent }) {
+function HorizontalNonLinearStepper({ subContent, active }) {
   const classes = useStyles();
 
   return <Sliders subContent={subContent} />;
 }
 
-export default function FavoriteExtendListItem({ title, subContent }) {
+export default function FavoriteExtendListItem({ title, subContent, active }) {
   const classes = useStyles();
 
   return (
@@ -57,7 +57,7 @@ export default function FavoriteExtendListItem({ title, subContent }) {
         id="panel1a-header"
       >
         {/* currentLoc, active 는 소켓으로 받아오는 값 */}
-        <CourseTitle name={title} active={true} currentLoc={"집"} />
+        <CourseTitle name={title} active={active} currentLoc={"집"} />
       </ExpansionPanelSummary>
       <ExpansionPanelDetails style={{ paddingBottom: "30px" }}>
         <HorizontalNonLinearStepper subContent={subContent} />

@@ -11,10 +11,11 @@ export const baseEmiter = (socket, mylist) => {
     }
   }
 };
-export const baseListening = (socket) => {
-  socket.on("driverActive", ({ roomName }) => {
+export const baseListening = (socket, ListActions) => {
+  socket.on("driverActive", ({ groupId, roomName }) => {
     console.log("드라이버 있음");
-    console.log(roomName);
+    console.log(roomName, groupId, ListActions);
+    ListActions.activeUpdate({ groupId, courseId: roomName });
   });
   socket.on("sendLocation", ({ locationName }) => {
     console.log("locations:::::::::::::::::::", locationName);

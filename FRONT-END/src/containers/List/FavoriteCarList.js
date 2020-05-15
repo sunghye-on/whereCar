@@ -62,10 +62,10 @@ function FavoriteCarList({
   useEffect(() => {
     if (socket && myList.user) {
       socketEvent.baseEmiter(socket, copyMyList);
-      socketEvent.baseListening(socket);
+      socketEvent.baseListening(socket, ListActions);
       // socketEvent.requestLocation(socket, copyMyList);
     }
-  }, [socket, myList.user]);
+  }, [socket, myList.user, ListActions]);
 
   // MyList 갱신부분
   useEffect(() => {

@@ -62,7 +62,14 @@ const useStyles = makeStyles((theme) => ({
   },
 }));
 
-function CarItem({ groupId, courseInfo, myData, ListActions }) {
+const handleActive = ({ groupId, courseId, active }) => {
+  if (active[groupId]) {
+    return active[groupId][courseId];
+  }
+  return false;
+};
+
+function CarItem({ groupId, courseInfo, myData, active, ListActions }) {
   const classes = useStyles();
   const [data, setData] = useState({});
   let myRole,
@@ -136,6 +143,7 @@ function CarItem({ groupId, courseInfo, myData, ListActions }) {
             title={obj.courseName}
             subContent={obj.stations}
             id={obj._id}
+            active={handleActive({ groupId, courseId: obj._id, active })}
           />
         </ExpansionPanelDetails>
       ))}
@@ -151,6 +159,7 @@ export default connect(
   (state) => ({
     courseInfo: state.list.get("courseInfo").toJS(),
     myData: state.list.get("myData").toJS(),
+    active: state.list.get("active"),
   }),
   (dispatch) => ({
     ListActions: bindActionCreators(listActions, dispatch),

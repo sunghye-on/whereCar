@@ -38,7 +38,7 @@ export const getCourse = createAction(GET_COURSE, MyListAPI.getCourse); // cours
 export const deleteCourse = createAction(DELETE_COURSE, MyListAPI.deleteCourse); // courseId
 
 export const getMyList = createAction(GET_MYLIST, MyListAPI.getMyList); // no query & parameter
-export const activeUpdate = createAction(ACTIVE_UPDATE, MyListAPI.activeUpdate);
+export const activeUpdate = createAction(ACTIVE_UPDATE); // courseId, groupId
 
 export const groupPushRemove = createAction(
   GROUP_PUSH_REMOVE,
@@ -92,6 +92,7 @@ const initialState = Map({
   driverView: Map({
     setting: ["location"],
   }),
+  active: Map({}),
 });
 
 export default handleActions(
@@ -103,6 +104,15 @@ export default handleActions(
     [CHANGE_DRIVERVIEW]: (state, action) => {
       const { name, value } = action.payload;
       return state.setIn(["driverView", name], value);
+    },
+    [ACTIVE_UPDATE]: (state, action) => {
+      const { groupId, courseId } = action.payload;
+      let mydata = state.get("active");
+      if (mydata[groupId]) {
+        return state.setIn(["active", groupId], { [courseId]: true });
+      } else {
+        return state.set("active", { [groupId]: { [courseId]: true } });
+      }
     },
     ...pender({
       type: GET_CARS,

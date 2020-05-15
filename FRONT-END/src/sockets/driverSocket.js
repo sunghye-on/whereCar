@@ -1,6 +1,6 @@
-export const baseListening = (socket, roomName) => {
+export const baseListening = (socket, roomName, groupId) => {
   socket.on("findDriver", () => {
-    socket.emit("findedDriver", { roomName });
+    socket.emit("findedDriver", { roomName, groupId });
   });
   socket.on("requestLocationToDriver", ({ roomName }) => {
     const getLocation = () => {
