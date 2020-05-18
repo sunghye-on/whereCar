@@ -67,6 +67,9 @@ function DriverCtrl({
   useEffect(() => {
     // soket 초기화 부분
     SocketActions.setSocket();
+    return () => {
+      storage.remove("driverLog");
+    };
   }, []);
 
   useEffect(() => {
@@ -88,7 +91,8 @@ function DriverCtrl({
       driverEvent.baseListening(
         socket,
         data.courseId,
-        data.groupId
+        data.groupId,
+        ListActions
         // copyDriverLog._id,
         // copyDriverLog.name
       );

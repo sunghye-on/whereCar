@@ -25,14 +25,31 @@ export const baseListening = (socket, ListActions) => {
     console.log(roomName, groupId, ListActions);
     ListActions.activeUpdate({ groupId, courseId: roomName });
   });
-  socket.on("sendLocation", ({ locationName, driverLog }) => {
-    console.log("driverLog:::::::::", driverLog);
-    console.log("locations:::::::::::::::::::", locationName);
-    if (driverLog) {
-      storage.set("driverLog", driverLog);
+  socket.on(
+    "sendLocation",
+    ({ locationName, data, driverLog, distance, groupId }) => {
+      console.log("driverLog:::::::::", driverLog);
+      console.log(
+        "locations:::::::::::::::::::",
+        locationName,
+        data,
+        distance,
+        groupId
+      );
+      // nextStation, distPer, groupId, courseId
+      console.log("ListActions======", ListActions);
+      ListActions.courseUpdate({
+        nextStation: locationName,
+        distPer: distance,
+        groupId,
+        courseId: data.roomName,
+      });
+      if (driverLog) {
+        storage.set("driverLog", driverLog);
+      }
+      // driverLog ? storage.set("driverLog", driverLog) : null;
     }
-    // driverLog ? storage.set("driverLog", driverLog) : null;
-  });
+  );
 };
 
 function DriverListSoc(socket, ListActions, mylist) {}

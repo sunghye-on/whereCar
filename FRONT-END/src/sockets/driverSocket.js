@@ -1,6 +1,9 @@
 import storage from "lib/storage.js";
 
-export const baseListening = (socket, roomName, groupId) => {
+export const baseListening = (socket, roomName, groupId, ListActions) => {
+  socket.on("disconnect", () => {
+    console.log("driver DISCONNECT");
+  });
   socket.on("findDriver", () => {
     socket.emit("findedDriver", { roomName, groupId });
   });
@@ -32,6 +35,7 @@ export const joinRoom = (socket, roomName) => {
   socket.emit("joinRoom", { roomName, driver });
 };
 export const sendDriverGPS = (socket, roomName, driverLogId, name) => {
+  const driverLog = storage.get("driverLog");
   const getLocation = () => {
     if (navigator.geolocation) {
       navigator.geolocation.getCurrentPosition(showPosition);
@@ -46,7 +50,15 @@ export const sendDriverGPS = (socket, roomName, driverLogId, name) => {
       latitude: position.coords.latitude,
       roomName,
     };
-    socket.emit("receiveGPS", { data, driverId });
+    socket.emit("receiveGPS", {
+      data,
+      driverId,
+      name: driverLog ? driverLog.name : driverLog,
+    });
   };
   getLocation();
+  // 여기 수정하면
+  // setInterval(() => {
+  //   getLocation();
+  // }, 5000);
 };

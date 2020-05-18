@@ -51,7 +51,6 @@ const socketController = (socket, io) => {
       const locations = await Station.getNearStation({
         longitude: data.longitude,
         latitude: data.latitude,
-        courseId: data.roomName,
       });
       // const result = await locations.findByCourseId({
       //   courseId: data.roomName,
@@ -67,19 +66,67 @@ const socketController = (socket, io) => {
       if (driverId) {
         /* 해야할 일 : location만들기 */
         const firstStation = course.stations[0];
-        const name = firstStation.get("stationName");
+        // const name = firstStation.get("stationName");
 
-        const location = {
-          longitude: firstStation.get("longitude"),
-          latitude: firstStation.get("latitude"),
-        };
+        // const location = {
+        //   longitude: firstStation.get("longitude"),
+        //   latitude: firstStation.get("latitude"),
+        // };
         // console.log("location::::::::", firstStation);
-        driverLog = DriverLog.register({ driverId, name, location });
-        io.to(data.roomName).emit(events.driverLogSave, { driverLog });
+        // driverLog = DriverLog.register({ driverId, name, location });
+        // io.to(data.roomName).emit(events.driverLogSave, { driverLog });
+        // io.to(data.roomName).emit(events.sendLocation, {
+        //   locationName,
+        //   driverLog,
+        // });
+        // *****************임시*******************
+        const locationList = locations.filter(
+          (obj) => obj.courseId == data.roomName
+        );
+        const location = {
+          longitude: locationList[0].location.coordinates[0],
+          latitude: locationList[0].location.coordinates[1],
+        };
+        // console.log("같아요", locationList[0].name, name);
+        if (locationList[0].name !== name || !driverLog) {
+          driverLog = await DriverLog.register({
+            driverId,
+            name: locationList[0].name,
+            location,
+          });
+          io.to(data.roomName).emit(events.driverLogSave, { driverLog });
+        }
+        const groupId = await Course.findById({ _id: data.roomName });
+        console.log("testGRIPPPPPPPPPPPPPPPPPPP", groupId.group);
+        // 서버 -> 같은 룸안의 유저들 [위치정보+드라이버로그]
         io.to(data.roomName).emit(events.sendLocation, {
-          locationName,
+          locationName: locationList[0].name,
+          data,
           driverLog,
+          distance: locationList[0].distance,
+          groupId: groupId.group,
         });
+        // 서버 -> 드라이버 [드라이버로그]
+
+        // if (locations[k].courseId == data.roomName) {
+        //   console.log("first:::::::", locations[k].location.coordinates);
+
+        //   driverLog = await DriverLog.register({
+        //     driverId,
+        //     name: locations[k].name,
+        //     location,
+        //   });
+        //   // 서버 -> 같은 룸안의 유저들 [위치정보+드라이버로그]
+        //   io.to(data.roomName).emit(events.sendLocation, {
+        //     locationName: locations[k].name,
+        //     data,
+        //     driverLog,
+        //   });
+        //   // 서버 -> 드라이버 [드라이버로그]
+        //   io.to(data.roomName).emit(events.driverLogSave, { driverLog });
+        // }
+
+        // ****************************************
       }
       // 드라이버 로그가 있을때
       if (driverLogId) {
@@ -94,9 +141,9 @@ const socketController = (socket, io) => {
       // console.log(locationName);
       // // 나중에 계산된 내용을 locationName에 넣어 보내주자 + DriverLog까지
       console.log("log_______________:", driverLog);
-      io.to(data.roomName).emit(events.sendLocation, {
-        locationName,
-      });
+      // io.to(data.roomName).emit(events.sendLocation, {
+      //   locationName,
+      // });
     }
   );
   socket.on(events.courseActive, async ({ courseId }) => {

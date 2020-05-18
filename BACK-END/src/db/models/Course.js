@@ -1,62 +1,71 @@
-const mongoose = require('mongoose');
+const mongoose = require("mongoose");
 
 const Course = new mongoose.Schema({
   courseName: String,
-  stations: [ // Group에 속해있는 User들
+  stations: [
+    // Group에 속해있는 User들
     {
       type: mongoose.Schema.Types.Map,
-      of: mongoose.Schema.Types.String
-    }
+      of: mongoose.Schema.Types.String,
+    },
   ],
-  group: { // 해당 Admin이 속해있는 AdminGroup정보
+  group: {
+    // 해당 Admin이 속해있는 AdminGroup정보
     type: mongoose.Schema.Types.ObjectId,
-    ref: 'GroupInfo'
+    ref: "GroupInfo",
   },
-  driver: { 
+  driver: {
     type: mongoose.Schema.Types.ObjectId,
-    ref: 'User'
+    ref: "User",
   },
-  car: { 
+  car: {
     type: mongoose.Schema.Types.ObjectId,
-    ref: 'CarInfo'
+    ref: "CarInfo",
   },
   createdAt: {
     type: Date,
-    default: Date.now
-  }
+    default: Date.now,
+  },
 });
 
 // car register 회원가입
-Course.statics.courseRegister = function({ courseName, stations, group }) {
+Course.statics.courseRegister = function ({ courseName, stations, group }) {
   const course = new this({
     courseName,
     stations,
-    group
+    group,
   });
   course.save();
   return course;
-}; 
+};
 
-Course.statics.courseUpdateById = async function({ _id, courseName, stations }) {
+Course.statics.courseUpdateById = async function ({
+  _id,
+  courseName,
+  stations,
+}) {
   return this.updateOne({ _id }, { courseName, stations });
 };
+// Course.statics.findGroupId = function ({ _id }) {
+//   return this.findOne({ _id });
+// };
 
-Course.statics.removeById = function({ _id }) {
+Course.statics.removeById = function ({ _id }) {
   return this.deleteOne({ _id });
 };
-Course.statics.findById = function({ _id }) {
+Course.statics.findById = function ({ _id }) {
   return this.findOne({ _id });
 };
-Course.statics.findsByGroup = function({ group }) {
+Course.statics.findsByGroup = function ({ group }) {
   return this.find({ group });
 };
 
-Course.statics.activeCourse = function({ _id, userId, carId }) {
+Course.statics.activeCourse = function ({ _id, userId, carId }) {
   return this.updateOne({ _id }, { driver: userId, car: carId });
 };
 
-Course.statics.deactiveCourse = function({ _id }) {
+Course.statics.deactiveCourse = function ({ _id }) {
   return this.updateOne({ _id }, { driver: null, car: null });
 };
 
-module.exports = mongoose.model('Course', Course);
+module.exports = mongoose.model("Course", Course);

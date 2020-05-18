@@ -24,10 +24,12 @@ const GROUP_REGISTER = "list/GROUP_REGISTER";
 
 const SET_MYDATA = "list/SET_MYDATA";
 const ACTIVE_UPDATE = "list/ACTIVE_UPDATE";
+const COURSE_UPDATE = "list/COURSE_UPDATE";
 
 const ACTIVE_COURSE = "list/ACTIVE_COURSE"; // driver가 course를 선택
 const CHANGE_DRIVERINFO = "list/CHANGE_DRIVERINFO"; // cadId & courseId 변경
 const CHANGE_DRIVERVIEW = "list/CHANGE_DRIVERVIEW";
+const SET_DRIVERLOG = "list/SET_DRIVERLOG";
 
 export const getCars = createAction(GET_CARS, MyListAPI.getCars); // groupId
 export const getCar = createAction(GET_CAR, MyListAPI.getCar); // carId
@@ -39,6 +41,7 @@ export const deleteCourse = createAction(DELETE_COURSE, MyListAPI.deleteCourse);
 
 export const getMyList = createAction(GET_MYLIST, MyListAPI.getMyList); // no query & parameter
 export const activeUpdate = createAction(ACTIVE_UPDATE); // courseId, groupId
+export const courseUpdate = createAction(COURSE_UPDATE); // nextStation, distPer, groupId, courseId
 
 export const groupPushRemove = createAction(
   GROUP_PUSH_REMOVE,
@@ -55,6 +58,7 @@ export const groupRegister = createAction(
 ); // groupId
 
 export const setMyData = createAction(SET_MYDATA, MyListAPI.getCourses); // groupId
+export const setDriverLog = createAction(SET_MYDATA, MyListAPI.getCourses); // groupId
 
 export const activeCourse = createAction(ACTIVE_COURSE, MyListAPI.activeCourse); // courseId, carId
 export const changeDriverInfo = createAction(CHANGE_DRIVERINFO); // name: (courseId or carId), value
@@ -92,6 +96,7 @@ const initialState = Map({
   driverView: Map({
     setting: ["location"],
   }),
+  driverLog: Map({}),
   active: Map({}),
 });
 
@@ -113,6 +118,22 @@ export default handleActions(
       } else {
         return state.set("active", { [groupId]: { [courseId]: true } });
       }
+    },
+    [COURSE_UPDATE]: (state, action) => {
+      const { nextStation, distPer, groupId, courseId } = action.payload;
+      let mydata = state.get("myData").toJS();
+      if (mydata[groupId]) {
+        mydata[groupId].courseList.map((obj) => {
+          if (obj._id == courseId) {
+            obj.nextStation = nextStation;
+            obj.distPer = distPer;
+          }
+        });
+      }
+      return state.set("myData", Map(mydata));
+    },
+    [SET_DRIVERLOG]: (state, action) => {
+      return state.set("driverLog", action.payload.driverLog);
     },
     ...pender({
       type: GET_CARS,
