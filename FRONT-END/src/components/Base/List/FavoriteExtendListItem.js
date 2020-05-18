@@ -40,13 +40,33 @@ const Contents = styled(StepButton)`
     `}
 `;
 
-function HorizontalNonLinearStepper({ subContent, active }) {
+function HorizontalNonLinearStepper({
+  subContent,
+  active,
+  nextStation,
+  distPer,
+  driverLoc,
+}) {
   const classes = useStyles();
 
-  return <Sliders subContent={subContent} />;
+  return (
+    <Sliders
+      subContent={subContent}
+      distPer={distPer}
+      nextStation={nextStation}
+      driverLoc={driverLoc}
+    />
+  );
 }
 
-export default function FavoriteExtendListItem({ title, subContent, active }) {
+export default function FavoriteExtendListItem({
+  title,
+  subContent,
+  active,
+  distPer,
+  nextStation,
+  driverLoc,
+}) {
   const classes = useStyles();
 
   return (
@@ -60,7 +80,12 @@ export default function FavoriteExtendListItem({ title, subContent, active }) {
         <CourseTitle name={title} active={active} currentLoc={"집"} />
       </ExpansionPanelSummary>
       <ExpansionPanelDetails style={{ paddingBottom: "30px" }}>
-        <HorizontalNonLinearStepper subContent={subContent} />
+        <HorizontalNonLinearStepper
+          subContent={subContent}
+          distPer={distPer}
+          nextStation={nextStation}
+          driverLoc={driverLoc}
+        />
       </ExpansionPanelDetails>
     </ExpansionPanel>
   );

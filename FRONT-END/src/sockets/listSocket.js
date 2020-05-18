@@ -44,6 +44,8 @@ export const baseListening = (socket, ListActions) => {
         groupId,
         courseId: data.roomName,
       });
+
+      ListActions.getDriverLoc({ locData: data });
       if (driverLog) {
         storage.set("driverLog", driverLog);
       }

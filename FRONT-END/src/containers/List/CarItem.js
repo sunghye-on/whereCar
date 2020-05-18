@@ -69,7 +69,14 @@ const handleActive = ({ groupId, courseId, active }) => {
   return false;
 };
 
-function CarItem({ groupId, courseInfo, myData, active, ListActions }) {
+function CarItem({
+  groupId,
+  courseInfo,
+  myData,
+  active,
+  ListActions,
+  driverLoc,
+}) {
   const classes = useStyles();
   const [data, setData] = useState({});
   let myRole,
@@ -144,6 +151,9 @@ function CarItem({ groupId, courseInfo, myData, active, ListActions }) {
             subContent={obj.stations}
             id={obj._id}
             active={handleActive({ groupId, courseId: obj._id, active })}
+            distPer={obj.distPer}
+            nextStation={obj.nextStation}
+            driverLoc={driverLoc}
           />
         </ExpansionPanelDetails>
       ))}
@@ -160,6 +170,7 @@ export default connect(
     courseInfo: state.list.get("courseInfo").toJS(),
     myData: state.list.get("myData").toJS(),
     active: state.list.get("active"),
+    driverLoc: state.list.get("driverLoc"),
   }),
   (dispatch) => ({
     ListActions: bindActionCreators(listActions, dispatch),

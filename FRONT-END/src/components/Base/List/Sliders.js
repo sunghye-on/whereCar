@@ -86,16 +86,55 @@ const CourseSlider = withStyles({
   },
 })(Slider);
 
-export default function Sliders({ subContent, active }) {
+export default function Sliders({
+  subContent,
+  active,
+  distPer,
+  nextStation,
+  driverLoc,
+}) {
   const barLength = { height: 100 * subContent.length };
   const classes = useStyles(barLength);
   const len = Math.round(100 / (subContent.length - 1));
   const courselist = subContent;
   const stations = courselist.map((obj) => obj.stationName);
-
   const [percent, setPercent] = useState(100);
+  let currentStation;
+  let realNextStation;
   let [mark, setMarks] = useState([]);
   let [courselen, setCourseLen] = useState(0);
+
+  // 다음 스테이션 이름 찾는 부분
+  for (let i in courselist) {
+    if (courselist[i].stationName === nextStation) {
+      realNextStation = courselist[parseInt(i) + 1];
+      currentStation = courselist[i];
+    }
+  }
+
+  // 역간거리 퍼센테이지 계산 함수
+  const calDistance = (realNextStation, currentStation, distPer) => {
+    if (realNextStation != undefined && currentStation != undefined) {
+      let x1 = parseFloat(realNextStation.longitude);
+      let x2 = parseFloat(currentStation.longitude);
+      let y1 = parseFloat(realNextStation.latitude);
+      let y2 = parseFloat(currentStation.latitude);
+      console.log("점검");
+      let x = ((Math.cos(x1) * 6400 * 2 * 3.14) / 360) * Math.abs(y1 - y2);
+      let y = 111 * Math.abs(x1 - x2);
+      let sum = Math.pow(x, 2) + Math.pow(y, 2);
+      console.log(Math.sqrt(sum), "역간 거리");
+      return (distPer / Math.sqrt(sum)) * 100;
+    }
+  };
+  console.log(nextStation, "받은거");
+  console.log("11111111111111111111111111111111111111111111111");
+  console.log(distPer, "운전자와 이전정류장과의 거리");
+  console.log(currentStation, realNextStation, " 이전 / 다음 정류장");
+  console.log(
+    calDistance(realNextStation, currentStation, distPer),
+    "계산 결과"
+  );
 
   // 역간 거리 계산 함수
   const calculate = () => {

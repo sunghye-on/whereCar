@@ -30,6 +30,7 @@ const ACTIVE_COURSE = "list/ACTIVE_COURSE"; // driver가 course를 선택
 const CHANGE_DRIVERINFO = "list/CHANGE_DRIVERINFO"; // cadId & courseId 변경
 const CHANGE_DRIVERVIEW = "list/CHANGE_DRIVERVIEW";
 const SET_DRIVERLOG = "list/SET_DRIVERLOG";
+const GET_DRIVER_LOC = "list/GET_DRIVER_LOC";
 
 export const getCars = createAction(GET_CARS, MyListAPI.getCars); // groupId
 export const getCar = createAction(GET_CAR, MyListAPI.getCar); // carId
@@ -42,6 +43,7 @@ export const deleteCourse = createAction(DELETE_COURSE, MyListAPI.deleteCourse);
 export const getMyList = createAction(GET_MYLIST, MyListAPI.getMyList); // no query & parameter
 export const activeUpdate = createAction(ACTIVE_UPDATE); // courseId, groupId
 export const courseUpdate = createAction(COURSE_UPDATE); // nextStation, distPer, groupId, courseId
+export const getDriverLoc = createAction(GET_DRIVER_LOC); // data
 
 export const groupPushRemove = createAction(
   GROUP_PUSH_REMOVE,
@@ -98,6 +100,7 @@ const initialState = Map({
   }),
   driverLog: Map({}),
   active: Map({}),
+  driverLoc: Map({}),
 });
 
 export default handleActions(
@@ -134,6 +137,9 @@ export default handleActions(
     },
     [SET_DRIVERLOG]: (state, action) => {
       return state.set("driverLog", action.payload.driverLog);
+    },
+    [GET_DRIVER_LOC]: (state, action) => {
+      return state.set("driverLoc", action.payload);
     },
     ...pender({
       type: GET_CARS,
