@@ -4,6 +4,8 @@ const events = {
   findDriver: "findDriver", // 모든 사용자에게 운전자인지 묻는 요청
   findedDriver: "findedDriver", // 운전자일때만 발생하는 이벤트
 
+  driverLogSave: "driverLogSave",
+
   sendNotifDriverActive: "sendNotifDriverActive", // Driver의 활성상태를 유저들에게 알림
 
   reciveLocation: "reciveLocation", // Driver로 부터 전송된 위치좌표

@@ -1,8 +1,10 @@
+import storage from "lib/storage.js";
+
 export const baseListening = (socket, roomName, groupId) => {
   socket.on("findDriver", () => {
     socket.emit("findedDriver", { roomName, groupId });
   });
-  socket.on("requestLocationToDriver", ({ roomName }) => {
+  socket.on("requestLocationToDriver", ({ roomName, driverLogId, name }) => {
     const getLocation = () => {
       if (navigator.geolocation) {
         navigator.geolocation.getCurrentPosition(showPosition);
@@ -11,11 +13,17 @@ export const baseListening = (socket, roomName, groupId) => {
       }
     };
     const showPosition = (position) => {
-      const longitude = position.coords.longitude;
-      const latitude = position.coords.latitude;
-      socket.emit("receiveGPS", { longitude, latitude, roomName });
+      const data = {
+        longitude: position.coords.longitude,
+        latitude: position.coords.latitude,
+        roomName,
+      };
+      socket.emit("receiveGPS", { data, driverLogId, name });
     };
     getLocation();
+  });
+  socket.on("driverLogSave", ({ driverLog }) => {
+    storage.set("driverLog", driverLog);
   });
 };
 
@@ -23,7 +31,7 @@ export const joinRoom = (socket, roomName) => {
   const driver = true;
   socket.emit("joinRoom", { roomName, driver });
 };
-export const sendDriverGPS = (socket, roomName) => {
+export const sendDriverGPS = (socket, roomName, driverLogId, name) => {
   const getLocation = () => {
     if (navigator.geolocation) {
       navigator.geolocation.getCurrentPosition(showPosition);
@@ -32,9 +40,13 @@ export const sendDriverGPS = (socket, roomName) => {
     }
   };
   const showPosition = (position) => {
-    const longitude = position.coords.longitude;
-    const latitude = position.coords.latitude;
-    socket.emit("receiveGPS", { longitude, latitude, roomName });
+    const driverId = storage.get("loggedInfo")._id;
+    const data = {
+      longitude: position.coords.longitude,
+      latitude: position.coords.latitude,
+      roomName,
+    };
+    socket.emit("receiveGPS", { data, driverId });
   };
   getLocation();
 };

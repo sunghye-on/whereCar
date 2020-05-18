@@ -46,6 +46,7 @@ function DriverCtrl({
   SocketActions,
   carInfo,
   history,
+  driverLog,
 }) {
   const classes = useStyles();
   const [state, setState] = React.useState({
@@ -56,7 +57,9 @@ function DriverCtrl({
   const { setting } = driverView;
   // information component를 바꿔주는 스위치변수
   const infoSwitch = setting.indexOf("map") === -1;
-
+  const copyDriverLog = storage.get("driverLog")
+    ? storage.get("driverLog")
+    : driverLog;
   const handleChange = (event) => {
     setState({ ...state, [event.target.name]: event.target.checked });
   };
@@ -78,10 +81,23 @@ function DriverCtrl({
   useEffect(() => {
     // myData =
     data = storage.get("driverInfo") ? storage.get("driverInfo") : driverInfo;
+
     if (socket && data.auth) {
+      console.log("copy", copyDriverLog);
       driverEvent.joinRoom(socket, data.courseId);
-      driverEvent.baseListening(socket, data.courseId, data.groupId);
-      driverEvent.sendDriverGPS(socket, data.courseId);
+      driverEvent.baseListening(
+        socket,
+        data.courseId,
+        data.groupId
+        // copyDriverLog._id,
+        // copyDriverLog.name
+      );
+      driverEvent.sendDriverGPS(
+        socket,
+        data.courseId
+        // copyDriverLog._id,
+        // copyDriverLog.name
+      );
     }
   }, [socket]);
 

@@ -48,6 +48,7 @@ function FavoriteCarList({
   SocketActions,
   ListActions,
   history,
+  driverLog,
 }) {
   const classes = useStyles();
   const [bottomValue, setBottomValue] = React.useState(0);
@@ -56,12 +57,14 @@ function FavoriteCarList({
     : storage.get("myList")
     ? storage.get("myList").mylist
     : null;
-
+  const copyDriverLog = storage.get("driverLog")
+    ? storage.get("driverLog")
+    : driverLog;
   /* ▼▼▼ [김성현님 수정바람] test용 데이터 송수신 ▼▼▼*/
 
   useEffect(() => {
     if (socket && myList.user) {
-      socketEvent.baseEmiter(socket, copyMyList);
+      socketEvent.baseEmiter(socket, copyMyList, copyDriverLog);
       socketEvent.baseListening(socket, ListActions);
       // socketEvent.requestLocation(socket, copyMyList);
     }

@@ -30,8 +30,3 @@ export const coursePushRemove = ({ groupId, courseId }) =>
 // 그룹에 가입
 export const groupRegister = ({ groupId }) =>
   axios.post(`/api/v1.0/auth/register/group`, { groupId });
-
-export const activeUpdate = ({ id }) => {
-  console.log("%ccheck", "font-size:50px;", id);
-  axios.get(`/api/v1.0/admin/courses/` + id);
-};

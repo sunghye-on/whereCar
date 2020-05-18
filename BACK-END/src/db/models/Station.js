@@ -1,5 +1,5 @@
 const mongoose = require("mongoose");
-
+const Course = require("./Course");
 const Station = new mongoose.Schema({
   courseId: {
     type: mongoose.Schema.Types.ObjectId,
@@ -21,7 +21,12 @@ const Station = new mongoose.Schema({
 });
 Station.index({ location: "2dsphere" });
 
-Station.statics.getNearStation = async function ({ longitude, latitude }) {
+Station.statics.getNearStation = async function ({
+  longitude,
+  latitude,
+  courseId,
+}) {
+  const ObjectId = mongoose.Types.ObjectId;
   const a = await this.aggregate([
     {
       $geoNear: {
@@ -37,10 +42,23 @@ Station.statics.getNearStation = async function ({ longitude, latitude }) {
       },
     },
     {
-      $limit: 4,
+      $limit: 5,
     },
+    // {
+    //   $match: {
+    //     _id: new ObjectId(courseId),
+    //     index: courseId.index,
+    //   },
+    // },
   ]);
   return a;
+};
+Station.methods.findByCourseId2 = function ({ courseId }) {
+  return this.find({ courseId });
+};
+
+Station.statics.findByCourseId = function ({ courseId }) {
+  return this.find({ courseId });
 };
 Station.statics.registerStations = function ({ stations, courseId }) {
   let station = [];
